@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: todoless-db
+    environment:
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    networks:
+      - todoless-network
+
+  redis:
+    image: redis:latest
+    container_name: todoless-redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - todoless-network
+
+networks:
+  todoless-network:
+    driver: bridge
+
+volumes:
+  db_data:
