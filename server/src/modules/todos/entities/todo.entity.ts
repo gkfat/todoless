@@ -1,4 +1,3 @@
-import { EnumTodoStatus } from 'src/enums/todo-status.enum';
 import { Account } from 'src/modules/accounts/entities/account.entity';
 import { Category } from 'src/modules/categories/entities/categories.entity';
 import {
@@ -42,11 +41,9 @@ export class Todo {
     @ApiProperty({ description: 'Due date of a todo' })
         due_date: Date;
 
-    @Column({
-        type: 'enum', enum: EnumTodoStatus, default: EnumTodoStatus.NEW, 
-    })
-    @ApiProperty({ description: 'Status of a todo' })
-        status: EnumTodoStatus;
+    @Column({ default: false })
+    @ApiProperty({ description: 'Completed status of a todo' })
+        completed: boolean;
 
     @CreateDateColumn()
     @ApiProperty()

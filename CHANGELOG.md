@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 server
 
-- init 專案
 - Auth 相關
   - API 註冊
   - API 發送驗證碼

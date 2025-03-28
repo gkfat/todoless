@@ -67,13 +67,13 @@ export class CategoriesService {
     }
 
     async create(account: Account, req: CreateCategoryDto) {
-        const getMaxOrder = await this.categoriesRepository
+        const getMinOrder = await this.categoriesRepository
             .createQueryBuilder('category')
             .where('category.account_id = :accountId', { accountId: account.id })
-            .select('MAX(category.order)', 'maxOrder')
+            .select('MIN(category.order)', 'minOrder')
             .getRawOne();
 
-        const newOrder = (getMaxOrder?.maxOrder ?? 0) + 1;
+        const newOrder = (getMinOrder?.minOrder && getMinOrder.minOrder > 0 ? getMinOrder.minOrder - 1 : 0);
 
         const newCategory = this.categoriesRepository.create({
             ...req,
