@@ -21,4 +21,28 @@ export const Permissions = {
      * 權限相關
      */
     privilege: { roles: { get: 'privilege.roles.get' } },
+
+    /**
+     * 標籤相關
+     */
+    label: {
+        labels: {
+            get: 'label.labels.get',
+            add: 'label.labels.add',
+            update: 'label.labels.update',
+            delete: 'label.labels.delete', 
+        }, 
+    },
+
+    /**
+     * 待辦相關
+     */
+    todo: {
+        todos: {
+            get: 'todo.todos.get',
+            add: 'todo.todos.add',
+            update: 'todo.todos.update',
+            delete: 'todo.todos.delete', 
+        }, 
+    },
 };

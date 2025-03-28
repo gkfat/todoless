@@ -1,4 +1,6 @@
+import { Label } from 'src/modules/labels/entities/label.entity';
 import { Role } from 'src/modules/privileges/entities/role.entity';
+import { Todo } from 'src/modules/todos/entities/todo.entity';
 import {
     Column,
     CreateDateColumn,
@@ -75,5 +77,15 @@ export class Account {
         cascade: true, onDelete: 'CASCADE', 
     })
         auths: AccountAuth[];
+
+    @OneToMany(() => Label, (label) => label.account, {
+        cascade: true, onDelete: 'CASCADE', 
+    })
+        labels: Label[];
+
+    @OneToMany(() => Todo, (todo) => todo.account, {
+        cascade: true, onDelete: 'CASCADE', 
+    })
+        todos: Todo[];
 }
 

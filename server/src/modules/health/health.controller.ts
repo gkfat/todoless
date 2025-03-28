@@ -1,10 +1,10 @@
 import {
-  Controller,
-  Get,
+    Controller,
+    Get,
 } from '@nestjs/common';
 import {
-  HealthCheck,
-  HealthCheckService,
+    HealthCheck,
+    HealthCheckService,
 } from '@nestjs/terminus';
 
 @Controller('health')

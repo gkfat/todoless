@@ -3,7 +3,9 @@ import fs from 'node:fs';
 import { AppModule } from 'src/app.module';
 import { AccountAuth } from 'src/modules/accounts/entities/account-auth.entity';
 import { Account } from 'src/modules/accounts/entities/account.entity';
+import { Label } from 'src/modules/labels/entities/label.entity';
 import { Role } from 'src/modules/privileges/entities/role.entity';
+import { Todo } from 'src/modules/todos/entities/todo.entity';
 import {
     DataSource,
     DataSourceOptions,
@@ -40,6 +42,8 @@ async function run() {
                 Account,
                 AccountAuth,
                 Role,
+                Todo,
+                Label,
             ],
     
             seeds: ['src/database/seeds/**/*{.ts,.js}'],

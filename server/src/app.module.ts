@@ -14,7 +14,9 @@ import { MiddlewaresModule } from './middlewares/middlewares.module';
 import { AccountsModule } from './modules/accounts/accounts.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
+import { LabelsModule } from './modules/labels/labels.module';
 import { PrivilegesModule } from './modules/privileges/privileges.module';
+import { TodosModule } from './modules/todos/todos.module';
 
 const envFilePath = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env'; 
 
@@ -47,6 +49,8 @@ const envFilePath = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.en
         AuthModule,
         AccountsModule,
         PrivilegesModule,
+        TodosModule,
+        LabelsModule,
     ],
 })
 export class AppModule {}

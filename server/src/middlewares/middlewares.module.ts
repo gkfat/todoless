@@ -1,7 +1,10 @@
 import { CacheService } from 'src/middlewares/cache.service';
 
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import {
+    JwtModule,
+    JwtService,
+} from '@nestjs/jwt';
 
 import { AuthGuard } from './auth.guard';
 import { PermissionsGuard } from './permissions.guard';
@@ -12,6 +15,8 @@ import { PermissionsGuard } from './permissions.guard';
         AuthGuard,
         PermissionsGuard,
         CacheService,
+        JwtService,
     ],
+    exports: [CacheService, JwtService],
 })
 export class MiddlewaresModule {}
