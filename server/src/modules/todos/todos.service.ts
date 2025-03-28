@@ -23,6 +23,10 @@ export class TodosService {
     async findAllByAccountId(accountId: number) {
         const res = await this.todosRepository.find({
             where: { account: { id: accountId } },
+            relations: {
+                account: true,
+                category: true,
+            },
             select: {
                 id: true,
                 title: true,
@@ -39,8 +43,12 @@ export class TodosService {
                 account: { id: true },
             },
             order: {
-                category: { order: 'ASC' },
+                category: {
+                    order: 'ASC', 
+                    create_at: 'DESC',
+                },
                 order: 'ASC', 
+                create_at: 'DESC',
             },
             withDeleted: false,
         });
@@ -51,6 +59,10 @@ export class TodosService {
     async findAllByCategoryId(categoryId: number) {
         const res = await this.todosRepository.find({
             where: { category: { id: categoryId } },
+            relations: {
+                account: true,
+                category: true,
+            },
             select: {
                 id: true,
                 title: true,
@@ -60,10 +72,20 @@ export class TodosService {
                 create_at: true,
                 update_at: true,
                 delete_at: true,
-                category: { id: true },
+                category: {
+                    id: true,
+                    order: true, 
+                },
                 account: { id: true },
             },
-            order: { order: 'ASC' },
+            order: {
+                category: {
+                    order: 'ASC', 
+                    create_at: 'DESC',
+                },
+                order: 'ASC', 
+                create_at: 'DESC',
+            },
             withDeleted: false,
         });
         

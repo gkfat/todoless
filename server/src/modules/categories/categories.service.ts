@@ -25,7 +25,8 @@ export class CategoriesService {
         const res = await this.entityManager.find(Category, {
             where: { account: { id: accountId } },
             relations: {
-                account: true,  todos: true, 
+                account: true,
+                todos: true, 
             },
             select: {
                 id: true,
@@ -38,7 +39,10 @@ export class CategoriesService {
                 account: { id: true },
             },
             withDeleted: false,
-            order: { order: 'ASC' },
+            order: {
+                order: 'ASC',
+                create_at: 'DESC',
+            },
         });
         
         return res;
@@ -48,7 +52,8 @@ export class CategoriesService {
         const res = await this.entityManager.findOne(Category, {
             where: { id },
             relations: {
-                account: true, todos: true, 
+                account: true,
+                todos: true, 
             },
             select: {
                 id: true,

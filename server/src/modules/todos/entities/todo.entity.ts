@@ -5,7 +5,6 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
-    Index,
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
@@ -19,7 +18,6 @@ import {
 
 @ApiSchema({ name: 'TodoDto' })
 @Entity()
-@Index(['order', 'category'], { unique: true }) // 同個類別內排序為唯一值
 export class Todo {
     constructor(data: Partial<Todo>) {
         Object.assign(this, data);
