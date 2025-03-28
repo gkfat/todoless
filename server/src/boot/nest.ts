@@ -1,10 +1,13 @@
 import { AppModule } from 'src/app.module';
+import { traceLog } from 'src/plugins/trace';
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
-async function initNest () {
+const initNest = async () => {
     const app = await NestFactory.create(AppModule);
+
+    app.use(traceLog);
 
     app.enableCors();
     app.setGlobalPrefix('api/v1');
@@ -14,6 +17,6 @@ async function initNest () {
     app.enableShutdownHooks();
     
     return app;
-}
+};
 
 export default initNest;
