@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { MiddlewaresModule } from '../../middlewares/middlewares.module';
 import { AccountsService } from '../accounts/accounts.service';
-import { AccountAuth } from '../accounts/entities/account-auth.entity';
-import { Account } from '../accounts/entities/account.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { EmailService } from './email.service';
 import { OAuthService } from './oauth.service';
 
 @Module({
-    imports: [MiddlewaresModule, TypeOrmModule.forFeature([Account, AccountAuth])],
+    imports: [MiddlewaresModule],
     controllers: [AuthController],
     providers: [
         AuthService,

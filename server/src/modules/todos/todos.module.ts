@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Todo } from './entities/todo.entity';
+import { MiddlewaresModule } from '../../middlewares/middlewares.module';
+import { AccountsModule } from '../accounts/accounts.module';
+import { CategoriesService } from '../categories/categories.service';
+import { TodosController } from './todos.controller';
+import { TodosService } from './todos.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Todo])],
-    controllers: [],
-    providers: [],
-    exports: [],
+    imports: [AccountsModule, MiddlewaresModule],
+    controllers: [TodosController],
+    providers: [CategoriesService, TodosService],
+    exports: [TodosService],
 })
 export class TodosModule {}
