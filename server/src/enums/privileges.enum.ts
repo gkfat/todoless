@@ -5,7 +5,7 @@ const {
     account,
     dashboard,
     todo,
-    label,
+    category,
 } = Permissions;
 
 const basicPermissions = [
@@ -13,10 +13,10 @@ const basicPermissions = [
     account.me.update,
     dashboard.dashboard.get,
 
-    label.labels.get,
-    label.labels.add,
-    label.labels.update,
-    label.labels.delete,
+    category.categories.get,
+    category.categories.add,
+    category.categories.update,
+    category.categories.delete,
 
     todo.todos.get,
     todo.todos.add,

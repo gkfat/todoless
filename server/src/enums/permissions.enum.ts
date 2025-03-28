@@ -23,14 +23,14 @@ export const Permissions = {
     privilege: { roles: { get: 'privilege.roles.get' } },
 
     /**
-     * 標籤相關
+     * 類別相關
      */
-    label: {
-        labels: {
-            get: 'label.labels.get',
-            add: 'label.labels.add',
-            update: 'label.labels.update',
-            delete: 'label.labels.delete', 
+    category: {
+        categories: {
+            get: 'category.categories.get',
+            add: 'category.categories.add',
+            update: 'category.categories.update',
+            delete: 'category.categories.delete', 
         }, 
     },
 

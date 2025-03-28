@@ -8,16 +8,15 @@ import {
     ApiSchema,
 } from '@nestjs/swagger';
 
-@ApiSchema({ name: 'UpdateLabelRequest' })
-export class UpdateLabelDto {
+@ApiSchema({ name: 'CreateCategoryRequest' })
+export class CreateCategoryDto {
     @IsNotEmpty()
     @IsString()
-    @ApiProperty({ description: 'label title' })
+    @ApiProperty({ description: 'category title' })
         title: string;
 
     @ApiProperty({
-        description: 'label color', required: false, 
+        description: 'category color', required: false, 
     })
         color?: string;
 }
-

@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { AppModule } from 'src/app.module';
 import { AccountAuth } from 'src/modules/accounts/entities/account-auth.entity';
 import { Account } from 'src/modules/accounts/entities/account.entity';
-import { Label } from 'src/modules/labels/entities/label.entity';
+import { Category } from 'src/modules/categories/entities/categories.entity';
 import { Role } from 'src/modules/privileges/entities/role.entity';
 import { Todo } from 'src/modules/todos/entities/todo.entity';
 import {
@@ -43,7 +43,7 @@ async function run() {
                 AccountAuth,
                 Role,
                 Todo,
-                Label,
+                Category,
             ],
     
             seeds: ['src/database/seeds/**/*{.ts,.js}'],

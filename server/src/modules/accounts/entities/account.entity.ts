@@ -1,4 +1,4 @@
-import { Label } from 'src/modules/labels/entities/label.entity';
+import { Category } from 'src/modules/categories/entities/categories.entity';
 import { Role } from 'src/modules/privileges/entities/role.entity';
 import { Todo } from 'src/modules/todos/entities/todo.entity';
 import {
@@ -78,10 +78,10 @@ export class Account {
     })
         auths: AccountAuth[];
 
-    @OneToMany(() => Label, (label) => label.account, {
+    @OneToMany(() => Category, (category) => category.account, {
         cascade: true, onDelete: 'CASCADE', 
     })
-        labels: Label[];
+        categories: Category[];
 
     @OneToMany(() => Todo, (todo) => todo.account, {
         cascade: true, onDelete: 'CASCADE', 

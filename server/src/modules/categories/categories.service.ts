@@ -7,22 +7,22 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Account } from '../accounts/entities/account.entity';
-import { CreateLabelDto } from './dto/create-label.dto';
-import { SortLabelsDto } from './dto/sort-labels.dto';
-import { UpdateLabelDto } from './dto/update-label.dto';
-import { Label } from './entities/label.entity';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { SortCategoriesDto } from './dto/sort-categories.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from './entities/categories.entity';
 
 @Injectable()
-export class LabelsService {
+export class CategoriesService {
 
     constructor(
-        @InjectRepository(Label)
-        private readonly labelRepository: Repository<Label>,
+        @InjectRepository(Category)
+        private readonly categoriesRepository: Repository<Category>,
         private readonly entityManager: EntityManager,
     ) {}
     
     async findAllByAccountId(accountId: number) {
-        const res = await this.entityManager.find(Label, {
+        const res = await this.entityManager.find(Category, {
             where: { account: { id: accountId } },
             relations: {
                 account: true,  todos: true, 
@@ -45,7 +45,7 @@ export class LabelsService {
     }
 
     async findOne(id: number) {
-        const res = await this.entityManager.findOne(Label, {
+        const res = await this.entityManager.findOne(Category, {
             where: { id },
             relations: {
                 account: true, todos: true, 
@@ -66,56 +66,56 @@ export class LabelsService {
         return res;
     }
 
-    async create(account: Account, req: CreateLabelDto) {
-        const getMaxOrder = await this.labelRepository
-            .createQueryBuilder('label')
-            .where('label.account_id = :accountId', { accountId: account.id })
-            .select('MAX(label.order)', 'maxOrder')
+    async create(account: Account, req: CreateCategoryDto) {
+        const getMaxOrder = await this.categoriesRepository
+            .createQueryBuilder('category')
+            .where('category.account_id = :accountId', { accountId: account.id })
+            .select('MAX(category.order)', 'maxOrder')
             .getRawOne();
 
         const newOrder = (getMaxOrder?.maxOrder ?? 0) + 1;
 
-        const newLabel = this.labelRepository.create({
+        const newCategory = this.categoriesRepository.create({
             ...req,
             order: newOrder,
             account,
         });
 
-        const saveLabel = await this.labelRepository.save(newLabel);
+        const saveCategory = await this.categoriesRepository.save(newCategory);
 
-        return saveLabel;
+        return saveCategory;
     }
 
-    async update(id: number, req: UpdateLabelDto) {
+    async update(id: number, req: UpdateCategoryDto) {
         const result = await this.entityManager.transaction(async (trx) => {
-            const findLabel = await trx.findOne(Label, {
+            const findCategory = await trx.findOne(Category, {
                 where: { id }, withDeleted: false, 
             });
 
-            findLabel.title = req.title;
+            findCategory.title = req.title;
 
             if (req.color) {
-                findLabel.color = req.color;
+                findCategory.color = req.color;
             }
 
-            return await trx.save(findLabel);
+            return await trx.save(findCategory);
         });
 
         return result.id;
     }
 
-    async sortLabels(req: SortLabelsDto) {
+    async sort(req: SortCategoriesDto) {
         return await this.entityManager.transaction(async (trx) => {
             await trx
                 .createQueryBuilder()
-                .update(Label)
-                .set({ order: () => 'CASE id ' + req.labels.map((l) => `WHEN ${l.id} THEN ${l.order}`).join(' ') + ' END' })
-                .where('id IN (:...ids)', { ids: req.labels.map((l) => l.id) })
+                .update(Category)
+                .set({ order: () => 'CASE id ' + req.categories.map((c) => `WHEN ${c.id} THEN ${c.order}`).join(' ') + ' END' })
+                .where('id IN (:...ids)', { ids: req.categories.map((c) => c.id) })
                 .execute();
 
-            const accountId = req.labels[0].accountId;
+            const accountId = req.categories[0].accountId;
 
-            return await trx.find(Label, {
+            return await trx.find(Category, {
                 where: { account: { id: accountId } },
                 relations: { account: true },
                 withDeleted: false,
@@ -125,9 +125,9 @@ export class LabelsService {
     }
 
     async delete(id: number) {
-        // FIXME: 此標籤下的 todo 將會失去標籤
+        // FIXME: 此類別下的 todo 將會變成未分類
         return await this.entityManager.transaction(async trx => {
-            await trx.softDelete(Label, { id });
+            await trx.softDelete(Category, { id });
 
             return id;
         });

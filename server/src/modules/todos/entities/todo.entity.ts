@@ -1,6 +1,6 @@
 import { EnumTodoStatus } from 'src/enums/todo-status.enum';
 import { Account } from 'src/modules/accounts/entities/account.entity';
-import { Label } from 'src/modules/labels/entities/label.entity';
+import { Category } from 'src/modules/categories/entities/categories.entity';
 import {
     Column,
     CreateDateColumn,
@@ -20,7 +20,7 @@ import {
 
 @ApiSchema({ name: 'TodoDto' })
 @Entity()
-@Index(['order', 'label'], { unique: true }) // 同個標籤內排序為唯一值
+@Index(['order', 'category'], { unique: true }) // 同個類別內排序為唯一值
 export class Todo {
     constructor(data: Partial<Todo>) {
         Object.assign(this, data);
@@ -60,9 +60,9 @@ export class Todo {
     @ApiProperty()
         delete_at: Date;
 
-    @ManyToOne(() => Label, (label) => label.todos, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'label_id' })
-        label: Label;
+    @ManyToOne(() => Category, (category) => category.todos, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'category_id' })
+        category: Category;
 
     @ManyToOne(() => Account, (account) => account.todos, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'account_id' })

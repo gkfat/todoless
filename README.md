@@ -25,5 +25,5 @@ A Todo app.
     - [x] Auth
     - [x] Accounts
     - [x] Privileges
-    - [x] Labels
+    - [x] Categories
     - [ ] Todos
