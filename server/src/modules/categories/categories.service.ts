@@ -72,17 +72,9 @@ export class CategoriesService {
     }
 
     async create(account: Account, req: CreateCategoryDto) {
-        const getMinOrder = await this.categoriesRepository
-            .createQueryBuilder('category')
-            .where('category.account_id = :accountId', { accountId: account.id })
-            .select('MIN(category.order)', 'minOrder')
-            .getRawOne();
-
-        const newOrder = (getMinOrder?.minOrder && getMinOrder.minOrder > 0 ? getMinOrder.minOrder - 1 : 0);
-
         const newCategory = this.categoriesRepository.create({
             ...req,
-            order: newOrder,
+            order: 0,
             account,
         });
 
@@ -93,14 +85,21 @@ export class CategoriesService {
 
     async update(id: number, req: UpdateCategoryDto) {
         const result = await this.entityManager.transaction(async (trx) => {
+            const {
+                title,
+                color,
+            } = req;
+
             const findCategory = await trx.findOne(Category, {
                 where: { id }, withDeleted: false, 
             });
 
-            findCategory.title = req.title;
+            if (title) {
+                findCategory.title = req.title;
+            }
 
-            if (req.color) {
-                findCategory.color = req.color;
+            if (color) {
+                findCategory.color = color;
             }
 
             return await trx.save(findCategory);
@@ -110,23 +109,11 @@ export class CategoriesService {
     }
 
     async sort(req: SortCategoriesDto) {
-        return await this.entityManager.transaction(async (trx) => {
-            await trx
-                .createQueryBuilder()
-                .update(Category)
-                .set({ order: () => 'CASE id ' + req.categories.map((c) => `WHEN ${c.id} THEN ${c.order}`).join(' ') + ' END' })
-                .where('id IN (:...ids)', { ids: req.categories.map((c) => c.id) })
-                .execute();
-
-            const accountId = req.categories[0].accountId;
-
-            return await trx.find(Category, {
-                where: { account: { id: accountId } },
-                relations: { account: true },
-                withDeleted: false,
-                order: { order: 'ASC' },
-            });
-        });
+        await this.entityManager.createQueryBuilder()
+            .update(Category)
+            .set({ order: () => 'CASE id ' + req.categories.map((c) => `WHEN ${c.id} THEN ${c.order}`).join(' ') + ' END' })
+            .where('id IN (:...ids)', { ids: req.categories.map((c) => c.id) })
+            .execute();
     }
 
     async delete(id: number) {

@@ -142,7 +142,9 @@ export class CategoriesController {
             }
         });
 
-        const rs = await this.categoriesService.sort(reqBody);
+        await this.categoriesService.sort(reqBody);
+        
+        const rs = await this.categoriesService.findAllByAccountId(+sub);
 
         return res.json(rs);
     }

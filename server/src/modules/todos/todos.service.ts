@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from '../accounts/entities/account.entity';
 import { Category } from '../categories/entities/categories.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './entities/todo.entity';
 
 @Injectable()
@@ -95,6 +96,10 @@ export class TodosService {
     async findOne(id: number) {
         const res = await this.todosRepository.findOne({
             where: { id },
+            relations: {
+                account: true,
+                category: true,
+            },
             select: {
                 id: true,
                 title: true,
@@ -114,20 +119,9 @@ export class TodosService {
     }
 
     async create(account: Account, category: Category, req: CreateTodoDto) {
-        const getMinOrder = await this.todosRepository
-            .createQueryBuilder('todo')
-            .where('todo.account_id = :accountId AND todo.category_id = :categoryId', {
-                accountId: account.id,
-                categoryId: req.categoryId,
-            })
-            .select('MIN(todo.order)', 'minOrder')
-            .getRawOne();
-
-        const newOrder = (getMinOrder?.minOrder && getMinOrder.minOrder > 0 ? getMinOrder.minOrder - 1 : 0);
-
         const newTodo = this.todosRepository.create({
             ...req,
-            order: newOrder,
+            order: 0,
             account,
             category,
         });
@@ -135,6 +129,45 @@ export class TodosService {
         const saveTodo = await this.todosRepository.save(newTodo);
 
         return saveTodo;
+    }
+
+    async update(id: number, req: UpdateTodoDto) {
+        const result = await this.entityManager.transaction(async (trx) => {
+            const {
+                title,
+                dueDate,
+            } = req;
+            
+            const findTodo = await trx.findOne(Todo, {
+                where: { id }, withDeleted: false, 
+            });
+
+            if (title) {
+                findTodo.title = title;
+            }
+     
+            if (dueDate) {
+                findTodo.due_date = dueDate;
+            }
+
+            return await trx.save(findTodo);
+        });
+
+        return result.id;
+    }
+
+    async completed(id: number) {
+        const result = await this.entityManager.transaction(async (trx) => {
+            const findTodo = await trx.findOne(Todo, {
+                where: { id }, withDeleted: false, 
+            });
+
+            findTodo.completed = !findTodo.completed;
+
+            return await trx.save(findTodo);
+        });
+
+        return result.id;
     }
 }
 

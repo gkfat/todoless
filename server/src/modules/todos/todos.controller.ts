@@ -13,8 +13,11 @@ import {
     Controller,
     Get,
     NotFoundException,
+    Param,
     Post,
+    Put,
     Res,
+    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import {
@@ -25,6 +28,7 @@ import {
 import { AccountsService } from '../accounts/accounts.service';
 import { CategoriesService } from '../categories/categories.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './entities/todo.entity';
 import { TodosService } from './todos.service';
 
@@ -73,6 +77,61 @@ export class TodosController {
 
         const rs = await this.todosService.create(account, findCategory,  reqBody);
 
+        return res.json(rs);
+    }
+   
+    @Put(':id/update')
+    @UseGuards(AuthGuard, PermissionsGuard)
+    @RequirePermissions(Permissions.todo.todos.update)
+    @ApiOkResponse({ type: Todo })
+    async update(
+        @$TokenPayload() payload: ITokenPayload,
+        @Param('id') id: string,
+        @Body() reqBody: UpdateTodoDto,
+        @Res() res: Response<Todo>,
+    ) {
+        const { scope: { sub } } = payload;
+
+        const findTodo = await this.todosService.findOne(+id);
+
+        if (!findTodo) {
+            throw new NotFoundException(`Todo ${id} not found`);
+        }
+
+        if (findTodo.account.id !== sub) {
+            throw new UnauthorizedException('Unauthorized to update this todo');
+        }
+
+        const todoId = await this.todosService.update(+id, reqBody);
+        const rs = await this.todosService.findOne(todoId);
+        
+        return res.json(rs);
+    }
+    
+    @Put(':id/completed')
+    @UseGuards(AuthGuard, PermissionsGuard)
+    @RequirePermissions(Permissions.todo.todos.update)
+    @ApiOkResponse({ type: Todo })
+    async completed(
+        @$TokenPayload() payload: ITokenPayload,
+        @Param('id') id: string,
+        @Res() res: Response<Todo>,
+    ) {
+        const { scope: { sub } } = payload;
+
+        const findTodo = await this.todosService.findOne(+id);
+
+        if (!findTodo) {
+            throw new NotFoundException(`Todo ${id} not found`);
+        }
+
+        if (findTodo.account.id !== sub) {
+            throw new UnauthorizedException('Unauthorized to update this todo');
+        }
+
+        const todoId = await this.todosService.completed(+id);
+        const rs = await this.todosService.findOne(todoId);
+        
         return res.json(rs);
     }
 

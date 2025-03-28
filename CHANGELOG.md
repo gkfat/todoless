@@ -28,7 +28,13 @@ server
   - API 取得權限列表
 - 類別相關
   - API 取得類別
+  - API 取得類別下的 Todo
   - API 建立類別
   - API 更新類別
   - API 排序類別
   - API 移除類別
+- Todo 相關
+  - API 取得 Todo
+  - API 建立 Todo
+  - API 更新 Todo
+  - API 完成/未完成 Todo
