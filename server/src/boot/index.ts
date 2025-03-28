@@ -1,11 +1,8 @@
-import bootNest from './nest';
-import initRbac from './rbac';
+import initNest from './nest';
 import initSwagger from './swagger';
 
 async function bootApp() {
-    await initRbac();
-    
-    const app = await bootNest();
+    const app = await initNest();
 
     initSwagger(app);
 
