@@ -4,12 +4,17 @@ A Todo app.
 
 ## Tech stacks
 
+- React.js
 - Nest.js
 - Mysql
 - Redis
 - Casbin
 
 ## Features
+
+- Client
+  - Infra
+    - [x] Boot app
 
 - Server
   - Infra
