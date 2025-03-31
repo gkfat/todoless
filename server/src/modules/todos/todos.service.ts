@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Account } from '../accounts/entities/account.entity';
 import { Category } from '../categories/entities/categories.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { SortTodosDto } from './dto/sort-todos.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './entities/todo.entity';
 
@@ -168,6 +169,22 @@ export class TodosService {
         });
 
         return result.id;
+    }
+
+    async sort(req: SortTodosDto) {
+        await this.entityManager.createQueryBuilder()
+            .update(Todo)
+            .set({ order: () => 'CASE id ' + req.todos.map((t) => `WHEN ${t.id} THEN ${t.order}`).join(' ') + ' END' })
+            .where('id IN (:...ids)', { ids: req.todos.map((t) => t.id) })
+            .execute();
+    }
+    
+    async delete(id: number) {
+        return await this.entityManager.transaction(async trx => {
+            await trx.softDelete(Todo, { id });
+    
+            return id;
+        });
     }
 }
 
