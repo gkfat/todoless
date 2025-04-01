@@ -3,10 +3,7 @@ import { StrictMode } from 'react';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 
-import {
-    CssBaseline,
-    ThemeProvider,
-} from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 import {
     QueryClient,
     QueryClientProvider,
@@ -25,8 +22,6 @@ export function boot() {
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={theme}>
-                        {/* 重置瀏覽器預設樣式 */}
-                        <CssBaseline/>
                         <RouterProvider router={router} />
                     </ThemeProvider>
                 </QueryClientProvider>

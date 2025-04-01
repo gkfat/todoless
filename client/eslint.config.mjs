@@ -45,6 +45,8 @@ export default tseslint.config(
             ],
             'array-element-newline': ['error', { minItems: 3 }],
             '@typescript-eslint/no-namespace': 'off',
+            'no-unused-vars': 'warn',
+            '@typescript-eslint/no-unused-vars': 'warn',
         },
     },
 
