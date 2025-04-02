@@ -8,13 +8,17 @@ import {
     Button,
     Card as MuiCard,
     CssBaseline,
+    Divider,
     FormControl,
     FormLabel,
+    Link,
     Stack,
     styled,
     TextField,
     Typography,
 } from '@mui/material';
+
+import ForgotPassword from './components/ForgotPassword';
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -36,20 +40,37 @@ const Card = styled(MuiCard)(({ theme }) => ({
 const SignInContainer = styled(Stack)(({ theme }) => ({
     height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
     minHeight: '100%',
+    padding: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: { padding: theme.spacing(4) },
+    '&::before': {
+        content: '""',
+        display: 'block',
+        position: 'absolute',
+        zIndex: -1,
+        inset: 0,
+        backgroundImage:
+        'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
+        backgroundRepeat: 'no-repeat',
+        ...theme.applyStyles('dark', {
+            backgroundImage:
+          'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+        }),
+    },
 }));
 
-const Login = () => {
+export default function Login() {
     const [emailError, setEmailError] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
     const [passwordError, setPasswordError] = useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const [open, setOpen] = useState(false);
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        if (emailError || passwordError) {
-            event.preventDefault();
-            return;
-        }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const validateInputs = () => {
@@ -79,6 +100,13 @@ const Login = () => {
         return isValid;
     };
 
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        if (emailError || passwordError) {
+            event.preventDefault();
+            return;
+        }
+    };
+
     return (
         <div>
             <CssBaseline />
@@ -90,7 +118,7 @@ const Login = () => {
                         variant="h4"
                         sx={{ width: '100%' }}
                     >
-                        登入
+                        Sign in
                     </Typography>
                     <Box
                         component="form"
@@ -109,7 +137,7 @@ const Login = () => {
                                 error={emailError}
                                 helperText={emailErrorMessage}
                                 id="email"
-                                placeholder="請輸入信箱"
+                                placeholder="your@email.com"
                                 autoComplete="email"
                                 required
                                 fullWidth
@@ -136,7 +164,6 @@ const Login = () => {
                             />
                         </FormControl>
 
-                        {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
                         <Button
                             type="submit"
                             fullWidth
@@ -145,11 +172,46 @@ const Login = () => {
                         >
                             Sign in
                         </Button>
+                        <Link
+                            component="button"
+                            type="button"
+                            onClick={handleClickOpen}
+                            variant="body2"
+                            sx={{ alignSelf: 'center' }}
+                        >
+                            Forgot your password?
+                        </Link>
+                    </Box>
+
+                    <Divider>or</Divider>
+
+                    {/* social login */}
+                    <Box sx={{
+                        display: 'flex', flexDirection: 'column', gap: 2, 
+                    }}>
+                        {/* <Button
+                            fullWidth
+                            variant="outlined"
+                            onClick={() => alert('Sign in with Google')}
+                            startIcon={<GoogleIcon />}
+                        >
+                            Sign in with Google
+                        </Button> */}
+                        <Typography sx={{ textAlign: 'center' }}>
+                            Don&apos;t have an account?{' '}
+                            <Link
+                                href="/material-ui/getting-started/templates/sign-in/"
+                                variant="body2"
+                                sx={{ alignSelf: 'center' }}
+                            >
+                                Sign up
+                            </Link>
+                        </Typography>
                     </Box>
                 </Card>
             </SignInContainer>
+
+            <ForgotPassword open={open} handleClose={handleClose} />
         </div>
     );
 };
-
-export default Login;
