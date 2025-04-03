@@ -3,62 +3,38 @@ import {
     useState,
 } from 'react';
 
+import { useDispatch } from 'react-redux';
+import {
+    NavLink,
+    useNavigate,
+} from 'react-router-dom';
+
 import {
     Box,
     Button,
-    Card as MuiCard,
     CssBaseline,
     Divider,
     FormControl,
     FormLabel,
     Link,
-    Stack,
-    styled,
     TextField,
     Typography,
 } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 
-import ForgotPassword from './components/ForgotPassword';
+import { AuthApi } from '../../../api/auth';
+import { Card } from '../../../components/Card';
+import { login } from '../../../store/authSlice';
+import { Regex } from '../../../utils/regex';
+import { Container } from '../components/Container';
+import ForgotPassword from '../components/ForgotPassword';
 
-const Card = styled(MuiCard)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignSelf: 'center',
-    width: '100%',
-    padding: theme.spacing(4),
-    gap: theme.spacing(2),
-    margin: 'auto',
-    [theme.breakpoints.up('sm')]: { maxWidth: '450px' },
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-    ...theme.applyStyles('dark', {
-        boxShadow:
-        'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-    }),
-}));
+export const SignInPage = ()=> {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-const SignInContainer = styled(Stack)(({ theme }) => ({
-    height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
-    minHeight: '100%',
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: { padding: theme.spacing(4) },
-    '&::before': {
-        content: '""',
-        display: 'block',
-        position: 'absolute',
-        zIndex: -1,
-        inset: 0,
-        backgroundImage:
-        'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-        backgroundRepeat: 'no-repeat',
-        ...theme.applyStyles('dark', {
-            backgroundImage:
-          'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
-        }),
-    },
-}));
-
-export default function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
     const [passwordError, setPasswordError] = useState(false);
@@ -74,12 +50,9 @@ export default function Login() {
     };
 
     const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-    
         let isValid = true;
-    
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+
+        if (!email || !Regex.email.test(email)) {
             setEmailError(true);
             setEmailErrorMessage('Please enter a valid email address.');
             isValid = false;
@@ -88,9 +61,9 @@ export default function Login() {
             setEmailErrorMessage('');
         }
     
-        if (!password.value || password.value.length < 6) {
+        if (!password || !Regex.password.test(password)) {
             setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
+            setPasswordErrorMessage('Password must be contains at least 1 character and 1 digit, between 6 ~ 10 long.');
             isValid = false;
         } else {
             setPasswordError(false);
@@ -100,25 +73,44 @@ export default function Login() {
         return isValid;
     };
 
+    const signInMutation = useMutation({
+        mutationFn: AuthApi.signIn,
+        onSuccess: (response) => {
+            const { token } = response;
+            dispatch(login(token));
+            navigate('/dashboard');
+        },
+        onError: (error: any) => {
+            console.error(error);
+        },
+    });
+
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        if (emailError || passwordError) {
-            event.preventDefault();
+        event.preventDefault();
+
+        if (!validateInputs()) {
             return;
         }
+       
+        signInMutation.mutate({
+            type: 'password',
+            email,
+            password,
+        });
     };
 
     return (
         <div>
             <CssBaseline />
 
-            <SignInContainer direction="column" justifyContent="space-between">
-                <Card variant="outlined">
+            <Container direction="column" justifyContent="space-between">
+                <Card variant="outlined" sx={{ backgroundColor: 'white' }}>
                     <Typography
                         component="h1"
                         variant="h4"
                         sx={{ width: '100%' }}
                     >
-                        Sign in
+                        Sign In
                     </Typography>
                     <Box
                         component="form"
@@ -143,6 +135,8 @@ export default function Login() {
                                 fullWidth
                                 variant="outlined"
                                 color={emailError ? 'error': 'primary'}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </FormControl>
 
@@ -161,6 +155,8 @@ export default function Login() {
                                 fullWidth
                                 variant="outlined"
                                 color={passwordError ? 'error' : 'primary'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </FormControl>
 
@@ -168,9 +164,9 @@ export default function Login() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            onClick={validateInputs}
+                            disabled={signInMutation.isPending}
                         >
-                            Sign in
+                            {signInMutation.isPending ? 'Signing In...' : 'Sign In'}
                         </Button>
                         <Link
                             component="button"
@@ -199,17 +195,13 @@ export default function Login() {
                         </Button> */}
                         <Typography sx={{ textAlign: 'center' }}>
                             Don&apos;t have an account?{' '}
-                            <Link
-                                href="/material-ui/getting-started/templates/sign-in/"
-                                variant="body2"
-                                sx={{ alignSelf: 'center' }}
-                            >
+                            <NavLink to="/sign-up">
                                 Sign up
-                            </Link>
+                            </NavLink>
                         </Typography>
                     </Box>
                 </Card>
-            </SignInContainer>
+            </Container>
 
             <ForgotPassword open={open} handleClose={handleClose} />
         </div>

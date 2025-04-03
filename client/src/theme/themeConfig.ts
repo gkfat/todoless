@@ -36,6 +36,8 @@ const defaultTheme = createTheme();
 
 const customShadows: Shadows = [...defaultTheme.shadows];
 
+export const white = { 400: 'hsl(0, 0.00%, 100.00%)' };
+
 export const brand = {
     50: 'hsl(210, 100%, 95%)',
     100: 'hsl(210, 100%, 92%)',
@@ -110,6 +112,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
     return {
         palette: {
             mode,
+            white: { main: white[400] },
             primary: {
                 light: brand[200],
                 main: brand[400],

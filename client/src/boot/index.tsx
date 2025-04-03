@@ -11,7 +11,7 @@ import {
 import { registerPlugins } from '../plugins/index.ts';
 import { router } from '../routes/index.tsx';
 import { store } from '../store/index.ts';
-import AppTheme from './theme/AppTheme.tsx';
+import AppTheme from '../theme/AppTheme.tsx';
 
 export function boot() {
     const queryClient = new QueryClient;

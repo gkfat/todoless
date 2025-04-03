@@ -2,7 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import AuthGuard from '../components/AuthGuard';
 import { Layout } from '../layout/Layout';
-import LoginPage from '../pages/login/LoginPage';
+import { SignInPage } from '../pages/auth/sign-in/SignInPage';
+import SignUpPage from '../pages/auth/sign-up/SignUpPage';
 import { homeRoutes } from './home';
 import { notfoundRoutes } from './notfound';
 
@@ -16,8 +17,13 @@ export const router = createBrowserRouter([
                 children: [...homeRoutes],
             }, ...notfoundRoutes,
         ],
-    }, {
-        path: '/login',
-        element: <LoginPage />,
+    },
+    {
+        path: 'sign-in',
+        element: <SignInPage />,
+    },
+    {
+        path: 'sign-up',
+        element: <SignUpPage />,
     },
 ]);

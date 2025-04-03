@@ -11,7 +11,7 @@ const AuthGuard = () => {
         return state.auth.isAuthenticated;
     });
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+    return isAuthenticated ? <Outlet /> : <Navigate to="/sign-in" replace />;
 };
 
 export default AuthGuard;

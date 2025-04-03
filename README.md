@@ -15,6 +15,12 @@ A Todo app.
 - Client
   - Infra
     - [x] Boot app
+  - APIs
+    - [x] Auth
+    - [x] Accounts
+  - Pages
+    - [x] Sign up page
+    - [x] Sign in page
 
 - Server
   - Infra
