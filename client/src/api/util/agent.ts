@@ -10,7 +10,7 @@ const beforeRequestInterceptor = async (config: InternalAxiosRequestConfig) => {
     const { token } = store.getState().auth;
 
     if (token) {
-        config.headers['X-Auth-Token'] = `Bearer ${token}`;
+        config.headers['authorization'] = `Bearer ${token}`;
     }
 
     return config;

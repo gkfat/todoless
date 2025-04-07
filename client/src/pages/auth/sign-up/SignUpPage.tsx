@@ -99,7 +99,7 @@ export default function SignUp() {
 
     return (
         <div>
-            <CssBaseline />
+            <CssBaseline enableColorScheme />
 
             <Container direction="column" justifyContent="space-between">
                 <Card variant="outlined" sx={{ backgroundColor: 'white' }}>

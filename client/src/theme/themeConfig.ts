@@ -244,6 +244,7 @@ export const getDesignTokens = (mode: PaletteMode) => {
 };
 
 export const colorSchemes = {
+    
     light: {
         palette: {
             primary: {

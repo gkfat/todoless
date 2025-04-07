@@ -4,7 +4,7 @@ import AuthGuard from '../components/AuthGuard';
 import { Layout } from '../layout/Layout';
 import { SignInPage } from '../pages/auth/sign-in/SignInPage';
 import SignUpPage from '../pages/auth/sign-up/SignUpPage';
-import { homeRoutes } from './home';
+import { dashboardRoutes } from './dashboard';
 import { notfoundRoutes } from './notfound';
 
 export const router = createBrowserRouter([
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 element: <AuthGuard />,
-                children: [...homeRoutes],
+                children: [...dashboardRoutes],
             }, ...notfoundRoutes,
         ],
     },

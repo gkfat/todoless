@@ -1,12 +1,14 @@
 import {
+    cloneElement,
     ReactNode,
     useMemo,
+    useState,
 } from 'react';
 
 import { ThemeProvider } from '@emotion/react';
 import {
     createTheme,
-    ThemeOptions,
+    CssBaseline,
 } from '@mui/material';
 
 import { inputsCustomizations } from './components/inputs';
@@ -19,16 +21,22 @@ import {
 
 interface AppThemeProps {
     children: ReactNode;
-    themeComponents?: ThemeOptions['components'];
   }
   
-export default function AppTheme(props: AppThemeProps) {
-    const {
-        children, themeComponents, 
-    } = props;
+export const AppTheme = (props: AppThemeProps) => {
+    const [mode, setMode] = useState<'light' | 'dark' | 'system'>(() => {
+        const savedMode = localStorage.getItem('themeMode');
+        return (savedMode as 'light' | 'dark' | 'system') || 'light';
+    });
+
+    const { children } = props;
     
     const theme = useMemo(() => {
         return createTheme({
+            palette: {
+                mode,
+                ...(mode === 'system' ? {} : colorSchemes[mode]),
+            },
             cssVariables: {
                 colorSchemeSelector: 'data-mui-color-scheme',
                 cssVarPrefix: 'template',
@@ -37,19 +45,20 @@ export default function AppTheme(props: AppThemeProps) {
             typography,
             shadows,
             shape,
-            components: {
-                ...inputsCustomizations,
-                // ...navigationCustomizations,
-                // ...surfacesCustomizations,
-                ...themeComponents,
-            },
+            components: { ...inputsCustomizations },
         });
-    }, [themeComponents]);
+    }, [mode]);
+
+    const handleModeChange = (newMode: 'light' | 'dark' | 'system') => {
+        setMode(newMode);
+        localStorage.setItem('themeMode', newMode);
+    };
    
     return (
         <ThemeProvider theme={theme}>
-            {children}
+            <CssBaseline enableColorScheme />
+            {cloneElement(children as React.ReactElement, { setMode: handleModeChange })}
         </ThemeProvider>
     );
-}
+};
   
