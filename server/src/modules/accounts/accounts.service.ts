@@ -85,6 +85,15 @@ export class AccountsService {
     async findOne(id: number) {
         const account = await this.accountRepository.findOne({
             where: { id },
+            select: {
+                id: true,
+                create_at: true,
+                email: true,
+                last_login_at: true,
+                name: true,
+                roles: true,
+                update_at: true,
+            },
             relations: { roles: true },
             withDeleted: false,
         });
