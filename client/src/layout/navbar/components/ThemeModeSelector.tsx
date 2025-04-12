@@ -9,13 +9,15 @@ import {
     IconButton,
     Menu,
     MenuItem,
-    useColorScheme,
 } from '@mui/material';
 
-export const ColorModeSelector = () => {
+import { useThemeMode } from '../../../theme/ThemeModeContext';
+
+export const ThemeModeSelector = () => {
     const {
-        mode, systemMode, setMode, 
-    } = useColorScheme();
+        mode, setMode, 
+    } = useThemeMode();
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,7 +33,13 @@ export const ColorModeSelector = () => {
         handleClose();
     };
 
-    const resolvedMode = (systemMode || mode) as 'light' | 'dark';
+    const resolvedMode = (() => {
+        if (mode === 'system') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return mode;
+    })();
+
     const icon = {
         light: <LightModeIcon />,
         dark: <DarkModeIcon />,

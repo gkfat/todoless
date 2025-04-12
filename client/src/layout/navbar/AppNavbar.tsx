@@ -12,8 +12,8 @@ import MuiToolbar from '@mui/material/Toolbar';
 
 import { Account } from '../../types/account';
 import { AppSideMenuMobile } from '../sidemenu/AppSideMenuMobile';
-import { ColorModeSelector } from './components/ColorModeSelector';
 import { MenuButton } from './components/MenuButton';
+import { ThemeModeSelector } from './components/ThemeModeSelector';
 
 const Toolbar = styled(MuiToolbar)({
     width: '100%',
@@ -80,7 +80,7 @@ export const AppNavbar = ({ account }: {account: Account}) => {
                         </Typography>
                     </Stack>
 
-                    <ColorModeSelector />
+                    <ThemeModeSelector />
                     
                     <MenuButton
                         aria-label="menu"

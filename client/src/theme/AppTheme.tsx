@@ -1,5 +1,4 @@
-import {
-    cloneElement,
+import React, {
     ReactNode,
     useMemo,
     useState,
@@ -18,28 +17,29 @@ import {
     shape,
     typography,
 } from './themeConfig';
+import { ThemeModeContext } from './ThemeModeContext';
 
-interface AppThemeProps {
-    children: ReactNode;
-  }
+type ThemeMode = 'light' | 'dark' | 'system';
+
+const STORAGE_THEME = 'todoless-theme';
   
-export const AppTheme = (props: AppThemeProps) => {
-    const [mode, setMode] = useState<'light' | 'dark' | 'system'>(() => {
-        const savedMode = localStorage.getItem('themeMode');
-        return (savedMode as 'light' | 'dark' | 'system') || 'light';
+export const AppTheme = ({ children }: { children: ReactNode}) => {
+    const [mode, setMode] = useState<ThemeMode>(() => {
+        return (localStorage.getItem(STORAGE_THEME as ThemeMode) || 'light');
     });
 
-    const { children } = props;
+    const resolvedMode = useMemo(() => {
+        if (mode === 'system') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return mode;
+    }, [mode]);
     
     const theme = useMemo(() => {
         return createTheme({
             palette: {
-                mode,
-                ...(mode === 'system' ? {} : colorSchemes[mode]),
-            },
-            cssVariables: {
-                colorSchemeSelector: 'data-mui-color-scheme',
-                cssVarPrefix: 'template',
+                mode: resolvedMode,
+                ...colorSchemes[resolvedMode],
             },
             colorSchemes,
             typography,
@@ -47,18 +47,17 @@ export const AppTheme = (props: AppThemeProps) => {
             shape,
             components: { ...inputsCustomizations },
         });
-    }, [mode]);
+    }, [resolvedMode]);
 
-    const handleModeChange = (newMode: 'light' | 'dark' | 'system') => {
-        setMode(newMode);
-        localStorage.setItem('themeMode', newMode);
-    };
-   
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline enableColorScheme />
-            {cloneElement(children as React.ReactElement, { setMode: handleModeChange })}
-        </ThemeProvider>
+        <ThemeModeContext.Provider value={{
+            mode, setMode, 
+        }}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline enableColorScheme />
+                {children}
+            </ThemeProvider>
+        </ThemeModeContext.Provider>
     );
 };
   
