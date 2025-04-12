@@ -9,19 +9,22 @@ import {
 } from '@tanstack/react-query';
 
 import { registerPlugins } from '../plugins/index.ts';
-import { router } from '../routes/index.tsx';
+import { routes } from '../routes/index.tsx';
+import { init as initAuthStore } from '../store/authSlice.ts';
 import { store } from '../store/index.ts';
 import { AppTheme } from '../theme/AppTheme.tsx';
 
 export function boot() {
     const queryClient = new QueryClient;
 
+    store.dispatch(initAuthStore());
+
     const app = (
         <StrictMode>
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
                     <AppTheme>
-                        <RouterProvider router={router} />
+                        <RouterProvider router={routes} />
                     </AppTheme>
                 </QueryClientProvider>
             </Provider>

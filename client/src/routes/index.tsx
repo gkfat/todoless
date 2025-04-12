@@ -1,21 +1,26 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import AuthGuard from '../components/AuthGuard';
 import { Layout } from '../layout/Layout';
 import { SignInPage } from '../pages/auth/sign-in/SignInPage';
-import SignUpPage from '../pages/auth/sign-up/SignUpPage';
+import { SignUpPage } from '../pages/auth/sign-up/SignUpPage';
 import { dashboardRoutes } from './dashboard';
 import { notfoundRoutes } from './notfound';
+import { settingsRoutes } from './settings';
+import { AuthGuard } from './utils/AuthGuard';
 
-export const router = createBrowserRouter([
+export const routes = createBrowserRouter([
     {
         path: '/',
-        element: <Layout />,
+        element: <AuthGuard />,
         children: [
             {
-                element: <AuthGuard />,
-                children: [...dashboardRoutes],
-            }, ...notfoundRoutes,
+                element: <Layout />,
+                children: [
+                    ...dashboardRoutes,
+                    ...settingsRoutes,
+                    ...notfoundRoutes,
+                ],
+            },
         ],
     },
     {
@@ -25,5 +30,9 @@ export const router = createBrowserRouter([
     {
         path: 'sign-up',
         element: <SignUpPage />,
+    },
+    {
+        path: '**',
+        element: <SignInPage />,
     },
 ]);

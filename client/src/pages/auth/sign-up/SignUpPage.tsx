@@ -26,7 +26,7 @@ import { Card } from '../../../components/Card';
 import { Regex } from '../../../utils/regex';
 import { Container } from '../components/Container';
 
-export default function SignUp() {
+export const SignUpPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

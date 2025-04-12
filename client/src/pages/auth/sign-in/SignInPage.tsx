@@ -29,7 +29,7 @@ import { Regex } from '../../../utils/regex';
 import { Container } from '../components/Container';
 import ForgotPassword from '../components/ForgotPassword';
 
-export const SignInPage = ()=> {
+export const SignInPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

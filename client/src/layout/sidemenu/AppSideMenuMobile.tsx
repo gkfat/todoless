@@ -1,14 +1,13 @@
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import {
     Box,
-    Button,
     Divider,
     Stack,
 } from '@mui/material';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 
 import { Account } from '../../types/account';
-import { AvatarBlock } from './components/AvatarBlock';
+import { AvatarBlock } from '../components/AvatarBlock';
+import { LogoutButton } from '../components/LogoutButton';
 import { MenuContent } from './components/MenuContent';
 
 interface SideMenuMobileProps {
@@ -60,9 +59,7 @@ export const AppSideMenuMobile = ({
                 <Divider />
 
                 <Box sx={{ p: 2 }}>
-                    <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
-                        Logout
-                    </Button>
+                    <LogoutButton />
                 </Box>
             </Stack>
         </Drawer>

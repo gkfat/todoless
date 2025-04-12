@@ -1,7 +1,5 @@
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import {
     Box,
-    Button,
     Divider,
     drawerClasses,
     Stack,
@@ -9,7 +7,8 @@ import {
 
 import { Drawer } from '../../components/Drawer';
 import { Account } from '../../types/account';
-import { AvatarBlock } from './components/AvatarBlock';
+import { AvatarBlock } from '../components/AvatarBlock';
+import { LogoutButton } from '../components/LogoutButton';
 import { MenuContent } from './components/MenuContent';
 
 export const AppSideMenu = ({ account }: {account: Account}) => {
@@ -42,9 +41,7 @@ export const AppSideMenu = ({ account }: {account: Account}) => {
             <Divider />
 
             <Box sx={{ p: 2 }}>
-                <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
-                    Logout
-                </Button>
+                <LogoutButton />
             </Box>
         </Drawer>
     );

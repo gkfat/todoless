@@ -5,7 +5,7 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Account } from '../../../types/account';
+import { Account } from '../../types/account';
 
 export const AvatarBlock = ({ account }: {account: Account}) => {
     return (

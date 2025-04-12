@@ -6,11 +6,11 @@ import {
     Stack,
     styled,
     tabsClasses,
-    Typography,
 } from '@mui/material';
 import MuiToolbar from '@mui/material/Toolbar';
 
 import { Account } from '../../types/account';
+import { AppLogo } from '../components/AppLogo';
 import { AppSideMenuMobile } from '../sidemenu/AppSideMenuMobile';
 import { MenuButton } from './components/MenuButton';
 import { ThemeModeSelector } from './components/ThemeModeSelector';
@@ -63,22 +63,7 @@ export const AppNavbar = ({ account }: {account: Account}) => {
                         gap: 1,
                     }}
                 >
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        sx={{
-                            justifyContent: 'center',
-                            mr: 'auto',
-                        }}
-                    >
-                        <Typography
-                            variant="h4"
-                            component="h1"
-                            sx={{ color: 'text.primary' }}
-                        >
-                            TodoLess
-                        </Typography>
-                    </Stack>
+                    <AppLogo />
 
                     <ThemeModeSelector />
                     
