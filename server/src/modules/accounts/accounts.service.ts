@@ -93,6 +93,8 @@ export class AccountsService {
                 name: true,
                 roles: true,
                 update_at: true,
+                email_verified: true,
+                enabled: true,
             },
             relations: { roles: true },
             withDeleted: false,
