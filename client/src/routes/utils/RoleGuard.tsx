@@ -1,20 +1,20 @@
+import React from 'react';
+
 import { useSelector } from 'react-redux';
-import {
-    Navigate,
-    Outlet,
-} from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { RoleEnum } from '../../enums/role';
 import { RootState } from '../../store';
-import { AppRoute } from '../../types/route';
 
 interface RoleGuardProps {
-    children?: AppRoute[];
+    children?: React.ReactNode;
     allowRoles: RoleEnum[];
 }
 
 export const RoleGuard = (props: RoleGuardProps) => {
-    const { allowRoles } = props;
+    const {
+        allowRoles, children, 
+    } = props;
     const account = useSelector((state: RootState) => {
         return state.auth.account;
     });
@@ -29,5 +29,5 @@ export const RoleGuard = (props: RoleGuardProps) => {
         return <Navigate to="/403" replace />;
     }
 
-    return <Outlet />;
+    return children;
 };
