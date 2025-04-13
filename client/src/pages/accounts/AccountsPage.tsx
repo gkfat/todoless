@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 
 import { AccountApi } from '../../api/accounts';
+import { PageContainer } from '../../components/PageContainer';
 
-export const AccountsPage = () => {
+const AccountsList = () => {
     const dispatch = useDispatch();
 
     const {
@@ -31,3 +32,12 @@ export const AccountsPage = () => {
         </div>
     );
 };
+
+export const AccountsPage = () => {
+    return (
+        <PageContainer>
+            <AccountsList />
+        </PageContainer>
+    );
+};
+

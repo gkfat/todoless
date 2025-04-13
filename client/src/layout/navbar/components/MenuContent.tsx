@@ -30,6 +30,10 @@ export const MenuContent = () => {
         return !route.roles || route.roles.some((role) => accountRoles.some((r) => r.role === role));
     });
 
+    const isSelected = (path: string) => {
+        return location.pathname.startsWith(`/${path}`);
+    }; 
+
     return (
         <Stack
             sx={{
@@ -41,13 +45,16 @@ export const MenuContent = () => {
                 {accessibleRoutes.map((route, index) => (
                     <ListItem key={index} disablePadding>
                         <ListItemButton
-                            selected={location.pathname.startsWith(`/${route.path}`)}
+                            selected={isSelected(route.path)}
                             onClick={() => navigate(`/${route.path}`)}
                         >
-                            <ListItemIcon>{route.icon}</ListItemIcon>
-                            <ListItemText sx={{ py: 1 }}>
-                                {t(`nav.${route.path}`)}
-                            </ListItemText>
+                            <ListItemIcon>
+                                {route.icon}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={t(`nav.${route.path}`)}
+                                slotProps={{ primary: { fontWeight: isSelected(route.path) ? 'bold' : 'normal' } }}
+                            />
                         </ListItemButton>
                     </ListItem>
                 ))}
