@@ -79,10 +79,12 @@ export const ThemeModeSelector = () => {
                     },
                 }}
                 transformOrigin={{
-                    horizontal: 'right', vertical: 'top', 
+                    horizontal: 'right',
+                    vertical: 'top', 
                 }}
                 anchorOrigin={{
-                    horizontal: 'right', vertical: 'bottom', 
+                    horizontal: 'right',
+                    vertical: 'bottom', 
                 }}
             >
                 {modes.map((m) => (

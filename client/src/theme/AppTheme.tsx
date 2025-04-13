@@ -50,9 +50,12 @@ export const AppTheme = ({ children }: { children: ReactNode}) => {
     }, [resolvedMode]);
 
     return (
-        <ThemeModeContext.Provider value={{
-            mode, setMode, 
-        }}>
+        <ThemeModeContext.Provider
+            value={{
+                mode,
+                setMode, 
+            }}
+        >
             <ThemeProvider theme={theme}>
                 <CssBaseline enableColorScheme />
                 {children}

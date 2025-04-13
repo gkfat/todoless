@@ -20,7 +20,8 @@ export const AvatarBlock = ({ account }: {account: Account}) => {
                 sizes="small"
                 src={account?.avatar ?? ''}
                 sx={{
-                    width: 36, height: 36, 
+                    width: 36,
+                    height: 36, 
                 }}
             />
             <Box sx={{ mr: 'auto' }}>

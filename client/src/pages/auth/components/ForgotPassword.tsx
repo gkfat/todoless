@@ -61,13 +61,19 @@ export default function ForgotPassword({
                     fullWidth
                 />
             </DialogContent>
-            <DialogActions sx={{
-                pb: 3, px: 3, 
-            }}>
+            <DialogActions
+                sx={{
+                    pb: 3,
+                    px: 3, 
+                }}
+            >
                 <Button onClick={handleClose}>
                     {t('common.btn_cancel')}
                 </Button>
-                <Button variant="contained" type="submit">
+                <Button
+                    variant="contained"
+                    type="submit"
+                >
                     {t('common.btn_continue')}
                 </Button>
             </DialogActions>

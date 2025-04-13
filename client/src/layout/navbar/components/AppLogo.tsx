@@ -15,7 +15,10 @@ export const AppLogo = () => {
             }}
         >
             
-            <FactCheckIcon fontSize="large" color="primary" />
+            <FactCheckIcon
+                fontSize="large"
+                color="primary"
+            />
             
             <Typography
                 variant="h4"

@@ -104,8 +104,14 @@ export const SignUpPage = () => {
         <div>
             <CssBaseline enableColorScheme />
 
-            <Container direction="column" justifyContent="space-between">
-                <Card variant="outlined" sx={{ backgroundColor: 'white' }}>
+            <Container
+                direction="column"
+                justifyContent="space-between"
+            >
+                <Card
+                    variant="outlined"
+                    sx={{ backgroundColor: 'white' }}
+                >
 
                     <Stack direction="row">
                         <Typography
@@ -200,9 +206,13 @@ export const SignUpPage = () => {
                     <Divider>{t('common.label_or')}</Divider>
 
                     {/* social login */}
-                    <Box sx={{
-                        display: 'flex', flexDirection: 'column', gap: 2, 
-                    }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2, 
+                        }}
+                    >
                         {/* <Button
                             fullWidth
                             variant="outlined"

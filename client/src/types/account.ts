@@ -3,6 +3,7 @@ import { Role } from './roles';
 export interface Account {
     id: number;
     email: string;
+    email_verified: boolean;
     name: string;
     avatar: string;
     enabled: boolean;

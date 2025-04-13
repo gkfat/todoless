@@ -20,13 +20,19 @@ export const RoleGuard = (props: RoleGuardProps) => {
     });
 
     if (!account) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate
+            to="/dashboard"
+            replace
+        />;
     }
 
     const valid = account.roles.map((v) => v.role).some((role) => allowRoles.includes(role));
 
     if (!valid) {
-        return <Navigate to="/403" replace />;
+        return <Navigate
+            to="/403"
+            replace
+        />;
     }
 
     return children;

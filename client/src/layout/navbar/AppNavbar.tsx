@@ -62,10 +62,14 @@ export const AppNavbar = ({ account }: {account: Account}) => {
                             gap: 1,
                             width: '100%',
                             justifyContent: 'space-between',
-                        }}>
+                        }}
+                    >
                         <AppLogo />
 
-                        <Stack direction="row" sx={{ gap: 1 }}>
+                        <Stack
+                            direction="row"
+                            sx={{ gap: 1 }}
+                        >
                             <LanguageSelector />
                             <ThemeModeSelector />
 

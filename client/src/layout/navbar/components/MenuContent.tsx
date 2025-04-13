@@ -43,7 +43,10 @@ export const MenuContent = () => {
         >
             <List dense>
                 {accessibleRoutes.map((route, index) => (
-                    <ListItem key={index} disablePadding>
+                    <ListItem
+                        key={index}
+                        disablePadding
+                    >
                         <ListItemButton
                             selected={isSelected(route.path)}
                             onClick={() => navigate(`/${route.path}`)}

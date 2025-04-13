@@ -113,8 +113,14 @@ export const SignInPage = () => {
         <div>
             <CssBaseline enableColorScheme />
 
-            <Container direction="column" justifyContent="space-between">
-                <Card variant="outlined" sx={{ backgroundColor: 'white' }}>
+            <Container
+                direction="column"
+                justifyContent="space-between"
+            >
+                <Card
+                    variant="outlined"
+                    sx={{ backgroundColor: 'white' }}
+                >
                     <Stack direction="row">
                         <Typography
                             component="h1"
@@ -197,11 +203,13 @@ export const SignInPage = () => {
                     <Divider>{t('common.label_or')}</Divider>
 
                     {/* social login */}
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2, 
-                    }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2, 
+                        }}
+                    >
                         {/* <Button
                             fullWidth
                             variant="outlined"
@@ -220,7 +228,10 @@ export const SignInPage = () => {
                 </Card>
             </Container>
 
-            <ForgotPassword open={open} handleClose={handleClose} />
+            <ForgotPassword
+                open={open}
+                handleClose={handleClose}
+            />
         </div>
     );
 };

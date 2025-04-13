@@ -21,9 +21,11 @@ interface Item {
 
 const langItems: Item[] = [
     {
-        title: '繁體中文', value: 'zh', 
+        title: '繁體中文',
+        value: 'zh', 
     }, {
-        title: 'English', value: 'en', 
+        title: 'English',
+        value: 'en', 
     },
 ];
 
@@ -68,10 +70,12 @@ export const LanguageSelector = () => {
                     },
                 }}
                 transformOrigin={{
-                    horizontal: 'right', vertical: 'top', 
+                    horizontal: 'right',
+                    vertical: 'top', 
                 }}
                 anchorOrigin={{
-                    horizontal: 'right', vertical: 'bottom', 
+                    horizontal: 'right',
+                    vertical: 'bottom', 
                 }}
             >
                 {langItems.map((item) => (

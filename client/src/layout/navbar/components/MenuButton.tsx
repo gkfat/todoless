@@ -7,7 +7,10 @@ interface MenuButtonProps {
 
 export const MenuButton = ({ onClick }: MenuButtonProps) => {
     return (
-        <IconButton size="small" onClick={onClick}>
+        <IconButton
+            size="small"
+            onClick={onClick}
+        >
             <MenuRoundedIcon />
         </IconButton>
     );

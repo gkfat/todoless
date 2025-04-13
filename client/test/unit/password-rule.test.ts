@@ -21,25 +21,32 @@ describe('Password rule', () => {
 
     describe.each([
         {
-            value: '', expected: errorString.required, 
+            value: '',
+            expected: errorString.required, 
         },
         {
-            value: null, expected: errorString.required, 
+            value: null,
+            expected: errorString.required, 
         },
         {
-            value: undefined, expected: errorString.required, 
+            value: undefined,
+            expected: errorString.required, 
         },
         {
-            value: 'ab', expected: errorString.notMatch, 
+            value: 'ab',
+            expected: errorString.notMatch, 
         },
         {
-            value: '1', expected: errorString.notMatch, 
+            value: '1',
+            expected: errorString.notMatch, 
         },
         {
-            value: 'aaaaaaa', expected: errorString.notMatch, 
+            value: 'aaaaaaa',
+            expected: errorString.notMatch, 
         },
         {
-            value: '1111111', expected: errorString.notMatch, 
+            value: '1111111',
+            expected: errorString.notMatch, 
         },
     ])('should throw error: $expected with value: $value', ({
         value, expected, 

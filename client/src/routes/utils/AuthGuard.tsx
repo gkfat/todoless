@@ -17,5 +17,8 @@ export const AuthGuard = () => {
         return null;
     }
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/sign-in" replace />;
+    return isAuthenticated ? <Outlet /> : <Navigate
+        to="/sign-in"
+        replace
+    />;
 };
