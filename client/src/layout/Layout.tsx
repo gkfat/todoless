@@ -7,7 +7,6 @@ import {
     alpha,
     Box,
     CssBaseline,
-    Stack,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -42,13 +41,11 @@ export const Layout = () => {
                         ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
                         : alpha(theme.palette.background.default, 1),
                     overflow: 'auto',
-                    px: 2,
-                    pt: 2,
+                    paddingTop: '64px',
+                    [theme.breakpoints.up('md')]: { marginLeft: '240px' },
                 })}
             >
-                <Stack spacing={2}>
-                    <Outlet />
-                </Stack>
+                <Outlet />
             </Box>
         </div>
     );
