@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import MuiToolbar from '@mui/material/Toolbar';
 
+import { LanguageSelector } from '../../components/LanguageSelector';
 import { Account } from '../../types/account';
 import { AppSideMenu } from './AppSideMenu';
 import { AppLogo } from './components/AppLogo';
@@ -65,6 +66,7 @@ export const AppNavbar = ({ account }: {account: Account}) => {
                         <AppLogo />
 
                         <Stack direction="row" sx={{ gap: 1 }}>
+                            <LanguageSelector />
                             <ThemeModeSelector />
 
                             {isMobile && <MenuButton onClick={toggleDrawer(true)} />}

@@ -5,32 +5,34 @@ import React, {
 
 import { useTranslation } from 'react-i18next';
 
-import DarkModeIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeIcon from '@mui/icons-material/LightModeRounded';
+import LanguageIcon from '@mui/icons-material/Language';
 import {
     IconButton,
     Menu,
     MenuItem,
 } from '@mui/material';
 
-import { useThemeMode } from '../../../theme/ThemeModeContext';
+type Language = 'zh'|'en';
 
-type ThemeMode = 'light' | 'dark' | 'system';
+interface Item {
+    title: string;
+    value: Language;
+}
 
-const modes: ThemeMode[] = [
-    'system',
-    'light',
-    'dark',
+const langItems: Item[] = [
+    {
+        title: '繁體中文', value: 'zh', 
+    }, {
+        title: 'English', value: 'en', 
+    },
 ];
 
-export const ThemeModeSelector = () => {
-    const { t } = useTranslation();
-    const {
-        mode, setMode, 
-    } = useThemeMode();
+export const LanguageSelector = () => {
+    const { i18n } = useTranslation();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -39,31 +41,18 @@ export const ThemeModeSelector = () => {
         setAnchorEl(null);
     };
 
-    const handleMode = (targetMode: ThemeMode) => () => {
-        setMode(targetMode);
-        handleClose();
+    const onLangChange = (lang: Language) => () => {
+        i18n.changeLanguage(lang);
     };
-
-    const resolvedMode = (() => {
-        if (mode === 'system') {
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        return mode;
-    })();
-
-    const icon = {
-        light: <LightModeIcon />,
-        dark: <DarkModeIcon />,
-    }[resolvedMode];
     
     return (
         <Fragment>
             <IconButton
                 onClick={handleClick}
-                disableRipple
                 size="small"
+                disableRipple
             >
-                {icon}
+                {<LanguageIcon />}
             </IconButton>
             <Menu
                 anchorEl={anchorEl}
@@ -85,12 +74,13 @@ export const ThemeModeSelector = () => {
                     horizontal: 'right', vertical: 'bottom', 
                 }}
             >
-                {modes.map((m) => (
+                {langItems.map((item) => (
                     <MenuItem
-                        selected={mode === m}
-                        onClick={handleMode(m)}
+                        key={item.value}
+                        selected={i18n.language === item.value}
+                        onClick={onLangChange(item.value)}
                     >
-                        {t(`theme.${m}`)}
+                        {item.title}
                     </MenuItem>
                 ))}
             </Menu>

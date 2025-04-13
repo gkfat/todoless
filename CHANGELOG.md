@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 client
 
 - 新增了註冊/登入頁面
+- 新增了路由配置
+- 新增了多語系
 
 server
 

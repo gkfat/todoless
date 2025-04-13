@@ -3,6 +3,7 @@ import {
     useState,
 } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import {
     NavLink,
@@ -17,6 +18,7 @@ import {
     FormControl,
     FormLabel,
     Link,
+    Stack,
     TextField,
     Typography,
 } from '@mui/material';
@@ -24,6 +26,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
 import { Card } from '../../../components/Card';
+import { LanguageSelector } from '../../../components/LanguageSelector';
 import {
     login,
     setAccount,
@@ -33,6 +36,7 @@ import { Container } from '../components/Container';
 import ForgotPassword from '../components/ForgotPassword';
 
 export const SignInPage = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -111,13 +115,17 @@ export const SignInPage = () => {
 
             <Container direction="column" justifyContent="space-between">
                 <Card variant="outlined" sx={{ backgroundColor: 'white' }}>
-                    <Typography
-                        component="h1"
-                        variant="h4"
-                        sx={{ width: '100%' }}
-                    >
-                        Sign In
-                    </Typography>
+                    <Stack direction="row">
+                        <Typography
+                            component="h1"
+                            variant="h4"
+                            sx={{ width: '100%' }}
+                        >
+                            {t('view_auth.title_sign_in')}
+                        </Typography>
+
+                        <LanguageSelector />
+                    </Stack>
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -170,9 +178,10 @@ export const SignInPage = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
+                            loading={signInMutation.isPending}
                             disabled={signInMutation.isPending}
                         >
-                            {signInMutation.isPending ? 'Signing In...' : 'Sign In'}
+                            {t('common.btn_continue')}
                         </Button>
                         <Link
                             component="button"
@@ -181,15 +190,17 @@ export const SignInPage = () => {
                             variant="body2"
                             sx={{ alignSelf: 'center' }}
                         >
-                            Forgot your password?
+                            {t('view_auth.message_forgot_password')}
                         </Link>
                     </Box>
 
-                    <Divider>or</Divider>
+                    <Divider>{t('common.label_or')}</Divider>
 
                     {/* social login */}
                     <Box sx={{
-                        display: 'flex', flexDirection: 'column', gap: 2, 
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2, 
                     }}>
                         {/* <Button
                             fullWidth
@@ -200,9 +211,9 @@ export const SignInPage = () => {
                             Sign in with Google
                         </Button> */}
                         <Typography sx={{ textAlign: 'center' }}>
-                            Don&apos;t have an account?{' '}
+                            {t('view_auth.message_no_account')}
                             <NavLink to="/sign-up">
-                                Sign up
+                                {t('view_auth.btn_to_sign_up')}
                             </NavLink>
                         </Typography>
                     </Box>

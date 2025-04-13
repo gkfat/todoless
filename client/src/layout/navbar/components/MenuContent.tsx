@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
     useLocation,
@@ -19,6 +20,7 @@ import { protectedRoutes } from '../../../routes/routesConfig';
 import { RootState } from '../../../store';
 
 export const MenuContent = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const account = useSelector((state: RootState) => state.auth.account);
@@ -43,7 +45,9 @@ export const MenuContent = () => {
                             onClick={() => navigate(`/${route.path}`)}
                         >
                             <ListItemIcon>{route.icon}</ListItemIcon>
-                            <ListItemText primary={route.name} />
+                            <ListItemText sx={{ py: 1 }}>
+                                {t(`nav.${route.path}`)}
+                            </ListItemText>
                         </ListItemButton>
                     </ListItem>
                 ))}

@@ -3,7 +3,7 @@ import {
     useState,
 } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
     NavLink,
     useNavigate,
@@ -16,6 +16,7 @@ import {
     Divider,
     FormControl,
     FormLabel,
+    Stack,
     TextField,
     Typography,
 } from '@mui/material';
@@ -23,11 +24,13 @@ import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
 import { Card } from '../../../components/Card';
+import { LanguageSelector } from '../../../components/LanguageSelector';
 import { Regex } from '../../../utils/regex';
 import { Container } from '../components/Container';
 
 export const SignUpPage = () => {
-    const dispatch = useDispatch();
+    const { t } = useTranslation();
+    
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -103,13 +106,19 @@ export const SignUpPage = () => {
 
             <Container direction="column" justifyContent="space-between">
                 <Card variant="outlined" sx={{ backgroundColor: 'white' }}>
-                    <Typography
-                        component="h1"
-                        variant="h4"
-                        sx={{ width: '100%' }}
-                    >
-                        Sign Up
-                    </Typography>
+
+                    <Stack direction="row">
+                        <Typography
+                            component="h1"
+                            variant="h4"
+                            sx={{ width: '100%' }}
+                        >
+                            {t('view_auth.title_sign_up')}
+                        </Typography>
+                    
+                        <LanguageSelector />
+                    </Stack>
+                 
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -181,13 +190,14 @@ export const SignUpPage = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
+                            loading={signUpMutation.isPending}
                             disabled={signUpMutation.isPending}
                         >
-                            {signUpMutation.isPending ? 'Signing Up...' : 'Sign Up'}
+                            {t('common.btn_continue')}
                         </Button>
                     </Box>
 
-                    <Divider>or</Divider>
+                    <Divider>{t('common.label_or')}</Divider>
 
                     {/* social login */}
                     <Box sx={{
@@ -202,9 +212,9 @@ export const SignUpPage = () => {
                             Sign in with Google
                         </Button> */}
                         <Typography sx={{ textAlign: 'center' }}>
-                            Already have an account? {' '}
+                            {t('view_auth.message_already_have_account')}
                             <NavLink to="/sign-in">
-                                Sign in
+                                {t('view_auth.btn_to_sign_in')}
                             </NavLink>
                         </Typography>
                     </Box>

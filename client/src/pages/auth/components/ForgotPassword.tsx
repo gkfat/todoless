@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import {
     Button,
     Dialog,
@@ -16,6 +18,8 @@ interface ForgotPasswordProps {
 export default function ForgotPassword({
     open, handleClose, 
 }: ForgotPasswordProps) {
+    const { t } = useTranslation();
+
     return (
         <Dialog
             open={open}
@@ -31,15 +35,19 @@ export default function ForgotPassword({
                 },
             }}
         >
-            <DialogTitle>Reset password</DialogTitle>
+            <DialogTitle>
+                {t('view_auth.title_reset_password')}
+            </DialogTitle>
             <DialogContent
                 sx={{
-                    display: 'flex', flexDirection: 'column', gap: 2, width: '100%', 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    width: '100%', 
                 }}
             >
                 <DialogContentText>
-                    Enter your account&apos;s email address, and we&apos;ll send you a link to
-                    reset your password.
+                    {t('view_auth.message_reset_password_description')}
                 </DialogContentText>
                 <OutlinedInput
                     autoFocus
@@ -56,9 +64,11 @@ export default function ForgotPassword({
             <DialogActions sx={{
                 pb: 3, px: 3, 
             }}>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>
+                    {t('common.btn_cancel')}
+                </Button>
                 <Button variant="contained" type="submit">
-                    Continue
+                    {t('common.btn_continue')}
                 </Button>
             </DialogActions>
 

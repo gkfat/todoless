@@ -9,4 +9,9 @@
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "eslint.format.enable": true,
     "editor.formatOnSave": true,
+    "i18n-ally.localesPaths": [
+        "src/locales"
+    ],
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.sortKeys": true
 }

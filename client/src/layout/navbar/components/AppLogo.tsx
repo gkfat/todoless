@@ -1,5 +1,4 @@
-import FormatListBulletedRoundedIcon
-    from '@mui/icons-material/FormatListBulletedRounded';
+import FactCheckIcon from '@mui/icons-material/FactCheckRounded';
 import {
     Stack,
     Typography,
@@ -15,7 +14,8 @@ export const AppLogo = () => {
                 justifyContent: 'center',
             }}
         >
-            <FormatListBulletedRoundedIcon color="primary" />
+            
+            <FactCheckIcon fontSize="large" color="primary" />
             
             <Typography
                 variant="h4"

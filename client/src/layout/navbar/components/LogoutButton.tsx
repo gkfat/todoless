@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ import { Button } from '@mui/material';
 import { logout } from '../../../store/authSlice';
 
 export const LogoutButton = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ export const LogoutButton = () => {
             startIcon={<LogoutRoundedIcon />}
             onClick={onLogoutClick}
         >
-            Logout
+            {t('common.btn_logout')}
         </Button>
     );
 };

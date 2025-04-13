@@ -1,0 +1,29 @@
+{
+  "common": {
+    "btn_cancel": "Cancel",
+    "btn_continue": "Continue",
+    "btn_logout": "Logout",
+    "label_or": "or"
+  },
+  "nav": {
+    "accounts": "Accounts",
+    "dashboard": "Dashboard"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
+  },
+  "view_auth": {
+    "btn_continue": "Continue",
+    "btn_to_sign_in": "Sign In",
+    "btn_to_sign_up": "Sign Up",
+    "message_already_have_account": "Already habve an account?",
+    "message_forgot_password": "Forgot your password?",
+    "message_no_account": "Don't have an account?",
+    "message_reset_password_description": "Enter your account's email address, and we'll send you a link to reset your password.",
+    "title_reset_password": "Reset Password",
+    "title_sign_in": "Sign In",
+    "title_sign_up": "Sign Up"
+  }
+}
