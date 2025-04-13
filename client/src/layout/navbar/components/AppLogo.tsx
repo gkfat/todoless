@@ -13,7 +13,6 @@ export const AppLogo = () => {
             sx={{
                 alignItems: 'center',
                 justifyContent: 'center',
-                mr: 'auto',
             }}
         >
             <FormatListBulletedRoundedIcon color="primary" />

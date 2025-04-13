@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
 import {
@@ -9,22 +10,25 @@ import {
 import { useQuery } from '@tanstack/react-query';
 
 import { AccountApi } from '../api/accounts';
+import { setAccount } from '../store/authSlice';
 import { AppNavbar } from './navbar/AppNavbar';
-import { AppSideMenu } from './sidemenu/AppSideMenu';
 
 export const Layout = () => {
+    const dispatch = useDispatch();
+
     const { data: account } = useQuery({
-        queryKey: ['account', 'me'], // 唯一鍵，用於快取
-        queryFn: AccountApi.me, // 獲取資料的函數
+        queryKey: ['account', 'me'],
+        queryFn: AccountApi.me,
     });
+
+    if (account) {
+        dispatch(setAccount(account));
+    }
     
     return (
         <div>
             <CssBaseline enableColorScheme />
-            
             <AppNavbar account={account!} />
-
-            <AppSideMenu account={account!} />
 
             <Box
                 component="main"
@@ -34,20 +38,11 @@ export const Layout = () => {
                         ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
                         : alpha(theme.palette.background.default, 1),
                     overflow: 'auto',
+                    px: 2,
+                    pt: 2,
                 })}
             >
-                <Stack
-                    spacing={2}
-                    sx={{
-                        alignItems: 'center',
-                        mx: 3,
-                        pb: 5,
-                        mt: {
-                            xs: 8,
-                            md: 0,
-                        },
-                    }}
-                >
+                <Stack spacing={2}>
                     <Outlet />
                 </Stack>
             </Box>

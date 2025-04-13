@@ -48,13 +48,9 @@ export const ThemeModeSelector = () => {
     return (
         <Fragment>
             <IconButton
-                data-screenshot="toggle-mode"
                 onClick={handleClick}
                 disableRipple
                 size="small"
-                aria-controls={open ? 'color-scheme-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
             >
                 {icon}
             </IconButton>

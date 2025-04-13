@@ -1,26 +1,14 @@
-import Badge, { badgeClasses } from '@mui/material/Badge';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import { IconButton } from '@mui/material';
 
-export interface MenuButtonProps extends IconButtonProps {
-  showBadge?: boolean;
+interface MenuButtonProps {
+    onClick?: () => void;
 }
 
-export const  MenuButton = ({
-    showBadge = false,
-    ...props
-}: MenuButtonProps) => {
+export const MenuButton = ({ onClick }: MenuButtonProps) => {
     return (
-        <Badge
-            color="error"
-            variant="dot"
-            invisible={!showBadge}
-            sx={{
-                [`& .${badgeClasses.badge}`]: {
-                    right: 2, top: 2, 
-                }, 
-            }}
-        >
-            <IconButton size="small" {...props} />
-        </Badge>
+        <IconButton size="small" onClick={onClick}>
+            <MenuRoundedIcon />
+        </IconButton>
     );
 };

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { Button } from '@mui/material';
 
-import { logout } from '../../store/authSlice';
+import { logout } from '../../../store/authSlice';
 
 export const LogoutButton = () => {
     const dispatch = useDispatch();

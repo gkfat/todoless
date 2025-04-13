@@ -24,7 +24,10 @@ import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
 import { Card } from '../../../components/Card';
-import { login } from '../../../store/authSlice';
+import {
+    login,
+    setAccount,
+} from '../../../store/authSlice';
 import { Regex } from '../../../utils/regex';
 import { Container } from '../components/Container';
 import ForgotPassword from '../components/ForgotPassword';
@@ -76,8 +79,11 @@ export const SignInPage = () => {
     const signInMutation = useMutation({
         mutationFn: AuthApi.signIn,
         onSuccess: (response) => {
-            const { token } = response;
+            const {
+                token, account, 
+            } = response;
             dispatch(login(token));
+            dispatch(setAccount(account));
             navigate('/dashboard');
         },
         onError: (error: any) => {

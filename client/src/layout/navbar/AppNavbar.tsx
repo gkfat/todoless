@@ -1,17 +1,18 @@
 import { useState } from 'react';
 
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import {
     AppBar,
     Stack,
     styled,
     tabsClasses,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import MuiToolbar from '@mui/material/Toolbar';
 
 import { Account } from '../../types/account';
-import { AppLogo } from '../components/AppLogo';
-import { AppSideMenuMobile } from '../sidemenu/AppSideMenuMobile';
+import { AppSideMenu } from './AppSideMenu';
+import { AppLogo } from './components/AppLogo';
 import { MenuButton } from './components/MenuButton';
 import { ThemeModeSelector } from './components/ThemeModeSelector';
 
@@ -33,54 +34,51 @@ const Toolbar = styled(MuiToolbar)({
   
 export const AppNavbar = ({ account }: {account: Account}) => {
     const [isOpen, setOpen] = useState(false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const toggleDrawer = (open: boolean) => () => {
         setOpen(open);
     };
 
     return (
-        <AppBar
-            position="fixed"
-            sx={{
-                display: {
-                    xs: 'auto', md: 'none', 
-                },
-                boxShadow: 0,
-                bgcolor: 'background.paper',
-                backgroundImage: 'none',
-                borderBottom: '1px solid',
-                borderColor: 'divider',
-                top: 'var(--template-frame-height, 0px)',
-            }}
-        >
-            <Toolbar variant="regular">
-                <Stack
-                    direction="row"
-                    sx={{
-                        alignItems: 'center',
-                        flexGrow: 1,
-                        width: '100%',
-                        gap: 1,
-                    }}
-                >
-                    <AppLogo />
+        <>
+            <AppBar
+                component="nav"
+                position="fixed"
+                elevation={0}
+                sx={{
+                    bgcolor: 'background.paper',
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+            >
+                <Toolbar>
+                    <Stack
+                        direction="row"
+                        sx={{
+                            gap: 1,
+                            width: '100%',
+                            justifyContent: 'space-between',
+                        }}>
+                        <AppLogo />
 
-                    <ThemeModeSelector />
-                    
-                    <MenuButton
-                        aria-label="menu"
-                        onClick={toggleDrawer(true)}
-                    >
-                        <MenuRoundedIcon />
-                    </MenuButton>
-                    
-                    <AppSideMenuMobile
-                        open={isOpen}
-                        account={account}
-                        toggleDrawer={toggleDrawer}
-                    />
-                </Stack>
-            </Toolbar>
-        </AppBar>
+                        <Stack direction="row" sx={{ gap: 1 }}>
+                            <ThemeModeSelector />
+
+                            {isMobile && <MenuButton onClick={toggleDrawer(true)} />}
+                        </Stack>
+                    </Stack>
+                </Toolbar>
+            </AppBar>
+
+            <AppSideMenu
+                account={account}
+                isMobile={isMobile}
+                open={isOpen}
+                toggleDrawer={toggleDrawer}
+            />
+        </>
     );
 };
