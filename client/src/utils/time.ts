@@ -41,15 +41,15 @@ export const createDate = (time?: ConfigType, keepLocalTime: boolean = false) =>
 
 /**
  * human readable date-time string formatter
- *
- * @param format - see https://day.js.org/docs/en/parse/string-format
  */
-export const humanReadable = (time: ConfigType, format: string = 'YYYY-MM-DD HH:mm:ss'): string => {
-    if (dayjs.isDayjs(time)) {
-        return dayjs(time).format(format);
+export const humanReadable = (time: ConfigType, formatOrRelative: string | true = 'YYYY-MM-DD HH:mm:ss'): string => {
+    const d = dayjs(time).utcOffset(timezoneOffset);
+
+    if (typeof formatOrRelative === 'boolean' && formatOrRelative) {
+        return d.fromNow();
     }
 
-    return dayjs(time).utcOffset(timezoneOffset).format(format);
+    return d.format(formatOrRelative);
 };
 
 /**

@@ -22,7 +22,9 @@ export const AppSideMenu = ({
     account, isMobile, open, toggleDrawer, 
 }: AppSideMenuProps) => {
     const drawerContent = (
-        <Stack sx={{ height: '100%' }}>
+        <Stack
+            sx={{ height: '100%' }}
+        >
             {!isMobile && <Toolbar/>}
             <Stack sx={{ flexGrow: 1 }}>
                 <MenuContent />
@@ -64,14 +66,12 @@ export const AppSideMenu = ({
             variant="permanent"
             drawerWidth="auto"
             sx={{
-                width: 240,
                 flexShrink: 0,
                 display: {
                     xs: 'none',
                     md: 'block',
                 },
                 '& .MuiDrawer-paper': {
-                    width: 240,
                     boxSizing: 'border-box',
                     backgroundColor: 'background.paper',
                 },

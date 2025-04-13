@@ -43,7 +43,7 @@ export const Layout = () => {
                     overflow: 'auto',
                     paddingTop: '65px',
                     height: '100vh',
-                    [theme.breakpoints.up('md')]: { marginLeft: '240px' },
+                    [theme.breakpoints.up('md')]: { marginLeft: '183px' },
                 })}
             >
                 <Outlet />

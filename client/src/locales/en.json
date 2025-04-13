@@ -9,6 +9,9 @@
     "accounts": "Accounts",
     "dashboard": "Dashboard"
   },
+  "roles": {
+    "super": "Super"
+  },
   "theme": {
     "dark": "Dark",
     "light": "Light",

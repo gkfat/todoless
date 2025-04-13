@@ -9,6 +9,9 @@
     "accounts": "帳號管理",
     "dashboard": "主控板"
   },
+  "roles": {
+    "super": "超級管理員"
+  },
   "theme": {
     "dark": "深色",
     "light": "淺色",
