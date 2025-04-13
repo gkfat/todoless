@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { useSelector } from 'react-redux';
 import {
     useLocation,
@@ -19,10 +21,11 @@ import { RootState } from '../../../store';
 export const MenuContent = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const userRoles = useSelector((state: RootState) => state.auth.account?.roles ?? []);
+    const account = useSelector((state: RootState) => state.auth.account);
+    const accountRoles = useMemo(() => account?.roles ?? [], [account]);
 
     const accessibleRoutes = protectedRoutes.filter(route => {
-        return !route.roles || route.roles.some((role) => userRoles.some((r) => r.role === role));
+        return !route.roles || route.roles.some((role) => accountRoles.some((r) => r.role === role));
     });
 
     return (

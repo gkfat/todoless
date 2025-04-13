@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
@@ -21,9 +23,11 @@ export const Layout = () => {
         queryFn: AccountApi.me,
     });
 
-    if (account) {
-        dispatch(setAccount(account));
-    }
+    useEffect(() => {
+        if (account) {
+            dispatch(setAccount(account));
+        }
+    }, [account, dispatch]);
     
     return (
         <div>
