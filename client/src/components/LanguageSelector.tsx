@@ -12,6 +12,8 @@ import {
     MenuItem,
 } from '@mui/material';
 
+import { changeDayjsLanguage } from '../utils/time';
+
 type Language = 'zh'|'en';
 
 interface Item {
@@ -44,12 +46,15 @@ export const LanguageSelector = () => {
     };
 
     const onLangChange = (lang: Language) => () => {
+        console.log(lang);
         i18n.changeLanguage(lang);
+        changeDayjsLanguage(lang);
     };
     
     return (
         <Fragment>
             <IconButton
+                className="app-button"
                 onClick={handleClick}
                 size="small"
                 disableRipple

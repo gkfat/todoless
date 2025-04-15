@@ -3,6 +3,7 @@
     "btn_cancel": "Cancel",
     "btn_continue": "Continue",
     "btn_logout": "Logout",
+    "label_create_at": "Created At",
     "label_or": "or"
   },
   "nav": {
@@ -17,11 +18,20 @@
     "light": "Light",
     "system": "System"
   },
+  "view_accounts": {
+    "label_create_at": "Created At",
+    "label_email_verified": "Verified",
+    "label_enabled": "Enabled",
+    "label_last_login_at": "Last Login At",
+    "label_name": "Name",
+    "label_roles": "Roles",
+    "title": "Accounts Management"
+  },
   "view_auth": {
     "btn_continue": "Continue",
     "btn_to_sign_in": "Sign In",
     "btn_to_sign_up": "Sign Up",
-    "message_already_have_account": "Already habve an account?",
+    "message_already_have_account": "Already have an account?",
     "message_forgot_password": "Forgot your password?",
     "message_no_account": "Don't have an account?",
     "message_reset_password_description": "Enter your account's email address, and we'll send you a link to reset your password.",

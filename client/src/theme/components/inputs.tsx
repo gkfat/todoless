@@ -192,15 +192,20 @@ export const inputsCustomizations: Components<Theme> = {
     },
     MuiIconButton: {
         styleOverrides: {
-            root: ({ theme }) => ({
+            root: ({
+                theme, ownerState, 
+            }) => ({
+                ...(ownerState.className?.includes('app-button')) && {
+                    border: '1px solid ',
+                    borderColor: gray[200],
+                },
                 boxShadow: 'none',
                 borderRadius: (theme.vars || theme).shape.borderRadius,
                 textTransform: 'none',
                 fontWeight: theme.typography.fontWeightMedium,
                 letterSpacing: 0,
                 color: (theme.vars || theme).palette.text.primary,
-                border: '1px solid ',
-                borderColor: gray[200],
+               
                 backgroundColor: alpha(gray[50], 0.3),
                 '&:hover': {
                     backgroundColor: gray[100],

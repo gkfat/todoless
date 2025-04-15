@@ -59,6 +59,7 @@ export const ThemeModeSelector = () => {
     return (
         <Fragment>
             <IconButton
+                className="app-button"
                 onClick={handleClick}
                 disableRipple
                 size="small"
@@ -87,8 +88,9 @@ export const ThemeModeSelector = () => {
                     vertical: 'bottom', 
                 }}
             >
-                {modes.map((m) => (
+                {modes.map((m, index) => (
                     <MenuItem
+                        key={index}
                         selected={mode === m}
                         onClick={handleMode(m)}
                     >

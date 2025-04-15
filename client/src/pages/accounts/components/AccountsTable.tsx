@@ -1,45 +1,31 @@
-import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import {
+    forwardRef,
+    useImperativeHandle,
+} from 'react';
 
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { useTranslation } from 'react-i18next';
+
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import {
     Chip,
-    Paper,
     Stack,
-    Typography,
 } from '@mui/material';
-import {
-    DataGrid,
-    GridColDef,
-} from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 
 import { AccountApi } from '../../../api/accounts';
+import { AppDataGrid } from '../../../components/AppDataGrid';
 import { Account } from '../../../types/account';
 import { humanReadable } from '../../../utils/time';
 
-const EmailDataCell = ({ account }: {account: Account}) => {
-    return (
-        <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-                flexWrap: 'wrap',
-                width: '100%', 
-            }}
-        >
-       
-            <Typography
-                sx={{
-                    wordBreak: 'break-word',
-                    flex: 1,
-                }}
-            >
-                {account.email}
-            </Typography>
+type Language = 'zh'|'en';
 
-            {account.email_verified && <CheckBoxIcon color="success" />}
-        </Stack>
+const TrueFalseIcon = ({ value }: {value: boolean}) => {
+    return (
+        value
+            ? <CheckIcon color="success" />
+            :  <CloseIcon color="error" />
     );
 };
 
@@ -61,6 +47,7 @@ const RolesDataCell = ({ account }: {account: Account}) => {
                         <Chip
                             key={i}
                             label={t(`roles.${role.role}`)}
+                            size="small"
                         />
                     );
                 })
@@ -69,88 +56,89 @@ const RolesDataCell = ({ account }: {account: Account}) => {
     );
 };
 
-const columns: GridColDef<Account>[] = [
-    {
-        field: 'id',
-        headerName: 'ID',
-        flex: 1,
-    },
-    {
-        field: 'name',
-        headerName: 'Name',
-        sortable: false,
-        flex: 1,
-    },
-    {
-        field: 'email',
-        headerName: 'Email',
-        sortable: false,
-        flex: 1,
-        renderCell: ({ row }) => <EmailDataCell account={row} />,
-    },
-    {
-        field: 'enabled',
-        headerName: 'Enable',
-        flex: 1,
-        sortable: false,
-    },
-    {
-        field: 'last_login_at',
-        headerName: 'LastLogin',
-        flex: 1,
-        valueFormatter: (_, row) => humanReadable(row.last_login_at, true),
-    },
-    {
-        field: 'roles',
-        headerName: 'Roles',
-        flex: 1,
-        sortable: false,
-        renderCell: ({ row }) => <RolesDataCell account={row} />,
-    },
-];
+export const AccountsTable = forwardRef((_, ref) => {
+    const { t } = useTranslation();
 
-export const AccountsTable = () => {
-    const dispatch = useDispatch();
+    const columns: GridColDef<Account>[] = [
+        {
+            field: 'id',
+            headerName: 'ID',
+            flex: 1,
+        },
+        {
+            field: 'create_at',
+            headerName: t('view_accounts.label_create_at'),
+            flex: 1,
+            valueFormatter: (_, row) => humanReadable(row.create_at),
+        },
+        {
+            field: 'name',
+            headerName: t('view_accounts.label_name'),
+            sortable: false,
+            flex: 1,
+        },
+        {
+            field: 'email',
+            headerName: 'Email',
+            sortable: false,
+            flex: 1,
+        },
+        {
+            field: 'email_verified',
+            headerName: t('view_accounts.label_email_verified'),
+            flex: 1,
+            sortable: false,
+            renderCell: ({ row }) => <TrueFalseIcon value={row.email_verified} />,
+        },
+        {
+            field: 'enabled',
+            headerName: t('view_accounts.label_enabled'),
+            flex: 1,
+            sortable: false,
+            renderCell: ({ row }) => <TrueFalseIcon value={row.enabled} />,
+        },
+        {
+            field: 'roles',
+            headerName: t('view_accounts.label_roles'),
+            flex: 1,
+            sortable: false,
+            renderCell: ({ row }) => <RolesDataCell account={row} />,
+        },
+        {
+            field: 'last_login_at',
+            headerName: t('view_accounts.label_last_login_at'),
+            flex: 1,
+            valueFormatter: (_, row) => humanReadable(row.last_login_at, true),
+        },
+    ];
 
     const {
         data: accounts,
         isLoading,
         isError,
+        refetch,
     } = useQuery({
         queryKey: ['accounts', 'list'],
         queryFn: AccountApi.list,
         refetchOnMount: true,
     });
 
-    if (isLoading) {
+    // 將 refetch 暴露給父元件使用
+    useImperativeHandle(ref, () => ({ refetch }));
+
+    if (isError) {
         return (
-            <div>is loading...</div>
+            <div>
+                Fetching data error.
+            </div>
         );
     }
 
-    console.log(accounts);
-    
     return (
-        <Paper>
-            <DataGrid
-                rows={accounts}
-                columns={columns}
-                getRowHeight={() => 'auto'}
-                autosizeOptions={{
-                    includeHeaders: true,
-                    includeOutliers: true,
-                    outliersFactor: 1,
-                    expand: true,
-                }}
-                sx={{
-                    width: '100%',
-                    height: '100%',
-                    '& .MuiDataGrid-cell': {
-                        whiteSpace: 'normal', // 允許換行
-                        wordBreak: 'break-word', // 避免單一長字串超出
-                    },
-                }}
-            />
-        </Paper>
+        <AppDataGrid
+            rows={accounts ?? []}
+            columns={columns}
+            loading={isLoading}
+        />
     );
-};
+});

@@ -1,3 +1,6 @@
+import 'dayjs/locale/zh-tw';
+import 'dayjs/locale/en';
+
 import dayjs, { ConfigType } from 'dayjs';
 import isLeapYear from 'dayjs/plugin/isLeapYear';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -8,8 +11,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isLeapYear);
 dayjs.extend(relativeTime);
-
-export default dayjs;
 
 let timezoneOffset = 480;
 
@@ -91,18 +92,18 @@ export const getRelativeRangeOfDay = (offset: number = 0): {
     };
 };
 
-export const toSeconds = (timestamp: number) => {
-    if (String(timestamp).length === 10) {
-        return timestamp;
-    }
+export const changeDayjsLanguage = (lang: string) => {
+    const localeMap: Record<string, string> = {
+        zh: 'zh-tw',
+        en: 'en',
+    };
 
-    return Math.floor(timestamp / 1000);
+    const dayjsLocale = localeMap[lang] ?? 'en';
+
+    dayjs.locale(dayjsLocale);
 };
 
-export const toMiliSeconds = (timestamp: number) => {
-    if (String(timestamp).length === 10) {
-        return timestamp * 1000;
-    }
+const defaultLang = localStorage.getItem('todoless-lang') || 'zh';
+changeDayjsLanguage(defaultLang);
 
-    return timestamp;
-};
+export default dayjs;
