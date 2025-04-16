@@ -40,6 +40,7 @@ export class TodosService {
                 delete_at: true,
                 category: {
                     id: true,
+                    title: true,
                     order: true, 
                 },
                 account: { id: true },
@@ -76,6 +77,7 @@ export class TodosService {
                 delete_at: true,
                 category: {
                     id: true,
+                    title: true,
                     order: true, 
                 },
                 account: { id: true },
