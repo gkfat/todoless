@@ -13,7 +13,7 @@ import {
     MenuItem,
 } from '@mui/material';
 
-import { useThemeMode } from '../../../theme/ThemeModeContext';
+import { useThemeMode } from '../../../plugins/theme/ThemeModeContext';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 

@@ -19,8 +19,6 @@ import { AppDataGrid } from '../../../components/AppDataGrid';
 import { Account } from '../../../types/account';
 import { humanReadable } from '../../../utils/time';
 
-type Language = 'zh'|'en';
-
 const TrueFalseIcon = ({ value }: {value: boolean}) => {
     return (
         value

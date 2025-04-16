@@ -25,13 +25,13 @@ import {
 import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
-import { Card } from '../../../components/Card';
 import { LanguageSelector } from '../../../components/LanguageSelector';
 import {
     login,
     setAccount,
 } from '../../../store/authSlice';
 import { Regex } from '../../../utils/regex';
+import { Card } from '../components/Card';
 import { Container } from '../components/Container';
 import ForgotPassword from '../components/ForgotPassword';
 

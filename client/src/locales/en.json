@@ -1,10 +1,13 @@
 {
   "common": {
+    "btn_add": "Add",
     "btn_cancel": "Cancel",
     "btn_continue": "Continue",
     "btn_logout": "Logout",
+    "label_category": "Category",
     "label_create_at": "Created At",
-    "label_or": "or"
+    "label_or": "or",
+    "lable_please_select_category": "Please Select Category"
   },
   "nav": {
     "accounts": "Accounts",
@@ -38,5 +41,12 @@
     "title_reset_password": "Reset Password",
     "title_sign_in": "Sign In",
     "title_sign_up": "Sign Up"
+  },
+  "view_dashboard": {
+    "title": "Dashboard"
+  },
+  "view_dashboard_add_todo": {
+    "placeholder_add_todo": "What to do today?",
+    "title": "What to do today?"
   }
 }
