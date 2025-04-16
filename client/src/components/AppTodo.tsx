@@ -5,7 +5,7 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Todo } from '../../../types/todo';
+import { Todo } from '../types/todo';
 
 export const AppTodo = ({ todo }: {todo: Todo}) => {
     return (

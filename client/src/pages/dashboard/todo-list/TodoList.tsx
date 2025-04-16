@@ -14,7 +14,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 
 import { TodoApi } from '../../../api/todos';
-import { AppTodo } from '../../../layout/navbar/components/AppTodo';
+import { AppTodo } from '../../../components/AppTodo';
 import { Card } from '../components/Card';
 
 export const TodoList = forwardRef((_, ref) => {
@@ -32,10 +32,6 @@ export const TodoList = forwardRef((_, ref) => {
     return (
         <>
             <Card
-                sx={{
-                    maxWidth: '300px',
-                    alignSelf: 'stretch', 
-                }}
                 variant="outlined"
             >
                 <CardContent>

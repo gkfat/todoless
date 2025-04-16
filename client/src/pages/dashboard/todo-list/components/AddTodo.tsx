@@ -25,9 +25,9 @@ import {
     useQuery,
 } from '@tanstack/react-query';
 
-import { CategoryApi } from '../../../api/categories';
-import { TodoApi } from '../../../api/todos';
-import { Card } from '../components/Card';
+import { CategoryApi } from '../../../../api/categories';
+import { TodoApi } from '../../../../api/todos';
+import { Card } from '../../components/Card';
 
 const addTodoFormSchema = yup.object({
     todoTitle: yup
