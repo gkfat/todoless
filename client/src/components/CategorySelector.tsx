@@ -50,7 +50,7 @@ export const CategorySelector = () => {
                 <MenuItem
                     disabled
                 >
-                    {t('common.lable_please_select_category')}
+                    {t('common.label_please_select_category')}
                 </MenuItem>
 
                 {(categories ?? []).map((category) => {
