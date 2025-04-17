@@ -1,58 +1,42 @@
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
+import CloseIcon from '@mui/icons-material/Close';
 import {
-    Button,
-    CardContent,
-    Chip,
     IconButton,
-    InputAdornment,
+    Paper,
     Stack,
     TextField,
-    Typography,
+    useTheme,
 } from '@mui/material';
-import {
-    useMutation,
-    useQuery,
-} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { CategoryApi } from '../../../../api/categories';
-import { Card } from '../../components/Card';
 
 const addCategoryFormSchema = yup.object({
     title: yup
         .string()
         .required('此為必填欄位')
         .max(20, '類別標題不可超過 20 個字'),
-    color: yup
-        .string(),
 });
 
-export const AddCategory = ({ onRefresh } : { onRefresh: () => void}) => {
-    const { t } = useTranslation();
+export const AddCategory = ({
+    onRefresh, onClose, 
+} : { onRefresh: () => void; onClose: () => void }) => {
+    const theme = useTheme();
 
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset,
-        resetField,
     } = useForm({ resolver: yupResolver(addCategoryFormSchema) });
-
-    const { data: categories } = useQuery({
-        queryKey: ['categories', 'list'],
-        queryFn: CategoryApi.list,
-        refetchOnMount: true,
-    });
 
     const createCategoryMutation = useMutation({
         mutationFn: CategoryApi.create,
         onSuccess: () => {
-            // TODO: notification
             reset();
             onRefresh();
         },
@@ -62,94 +46,51 @@ export const AddCategory = ({ onRefresh } : { onRefresh: () => void}) => {
     });
 
     const onSubmit = (data: {title: string, color?: string}) => {
-
         createCategoryMutation.mutate({
             title: data.title,
-            color: data.color,
+            color: theme.palette.primary.main,
         });
     };
 
+    const handleCloseClick = () => {
+        reset();
+        onClose();
+    };
+
     return (
-        <>
-            <Card variant="outlined">
-                <CardContent>
-                    <Typography
-                        variant="h5"
-                        sx={{ mb: 1 }}
+        <Paper
+            sx={{ width: '100%' }}
+        >
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack
+                    direction="row"
+                    spacing={1}
+                    alignItems="center"
+                >
+                    <TextField
+                        {...register('title')}
+                        placeholder={'新增分類'}
+                        fullWidth
+                        variant="outlined"
+                        error={!!errors.title}
+                        helperText={errors.title?.message}
+                    />
+
+                    <IconButton
+                        type="submit"
+                        sx={{ borderRadius: '50%' }}
                     >
-                        {t('view_dashboard_add_todo.title')}
-                    </Typography>
+                        <CheckIcon color="success" />
+                    </IconButton>
 
-                    <Stack
-                        direction="row"
-                        sx={{
-                            gap: 1,
-                            mb: 2, 
-                        }}
+                    <IconButton
+                        sx={{ borderRadius: '50%' }}
+                        onClick={handleCloseClick}
                     >
-                        {
-                            (categories ?? []).map((category) => {
-                                const isSelected = category.id === categoryId;
-
-                                return (
-                                    <Chip
-                                        key={category.id}
-                                        label={category.title}
-                                        icon={isSelected ? <CheckIcon color="success" /> : undefined}
-                                        onClick={onCategorySelect(category.id)}
-                                        variant={isSelected ? 'filled' : 'outlined'}
-                                        sx={{
-                                            backgroundColor: isSelected ? category.color ?? 'default' : 'default',
-                                            borderColor: category.color,
-                                        }}
-                                    />
-                                );
-                            })
-                        }
-                    </Stack>
-
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Stack
-                            direction="row"
-                            sx={{ mb: 2 }}
-                        >
-                            <TextField
-                                {...register('todoTitle')}
-                                placeholder={t('view_dashboard_add_todo.placeholder_add_todo')}
-                                fullWidth
-                                variant="outlined"
-                                error={!!errors.todoTitle}
-                                helperText={errors.todoTitle?.message}
-                                slotProps={{
-                                    input: {
-                                        endAdornment:  <InputAdornment position="end">
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => resetField('todoTitle')}
-                                            >
-                                                <ClearIcon />
-                                            </IconButton>
-                                        </InputAdornment>,
-                                    },
-                                }}
-                            />
-                        </Stack>
-
-                        <Stack
-                            direction="row"
-                            sx={{ justifyContent: 'flex-end' }}
-                        >
-                            <Button
-                                type="submit"
-                                variant="contained"
-                            >
-                                {t('common.btn_add')}
-                            </Button>
-                        </Stack>
-                    </form>
-
-                </CardContent>
-            </Card>
-        </>
+                        <CloseIcon color="error" />
+                    </IconButton>
+                </Stack>
+            </form>
+        </Paper>
     );
 };

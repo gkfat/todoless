@@ -7,7 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 
-export const ControlPanel = ({ onRefresh } : { onRefresh: () => void}) => {
+export const ControlPanel = ({ onRefresh } : { onRefresh?: () => void}) => {
     const { t } = useTranslation();
 
     return (
@@ -21,12 +21,15 @@ export const ControlPanel = ({ onRefresh } : { onRefresh: () => void}) => {
                     {t('view_dashboard.title')}
                 </Typography>
                 
-                <IconButton
-                    sx={{ ml: 'auto' }}
-                    onClick={onRefresh}
-                >
-                    <RefreshIcon/>
-                </IconButton>
+                {
+                    onRefresh && <IconButton
+                        sx={{ ml: 'auto' }}
+                        onClick={onRefresh}
+                    >
+                        <RefreshIcon/>
+                    </IconButton>
+                }
+             
             </Stack>
         </>
     );

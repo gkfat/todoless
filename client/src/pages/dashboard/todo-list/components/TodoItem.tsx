@@ -5,9 +5,9 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Todo } from '../types/todo';
+import { Todo } from '../../../../types/todo';
 
-export const AppTodo = ({ todo }: {todo: Todo}) => {
+export const TodoItem = ({ todo }: {todo: Todo}) => {
     return (
         <>
             <Card
@@ -22,7 +22,7 @@ export const AppTodo = ({ todo }: {todo: Todo}) => {
                             width="100%"
                             variant="caption"
                         >
-                            {todo.category.title}
+                            {todo.category?.title ?? '未分類'}
                         </Typography>
                     </Stack>
 
