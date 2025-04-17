@@ -1,7 +1,5 @@
 import {
-    forwardRef,
     useEffect,
-    useImperativeHandle,
     useState,
 } from 'react';
 
@@ -17,34 +15,30 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import {
-    useMutation,
-    useQuery,
-} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { CategoryApi } from '../../../api/categories';
+import { Category } from '../../../types/category';
 import { Card } from '../components/Card';
 import { AddCategory } from './components/AddCategory';
 import { CategoryItem } from './components/CategoryItem';
 
-export const CategoryList = forwardRef((_, ref) => {
+interface CategoryListProps {
+    categories: Category[];
+    onRefresh: () => void;
+}
+
+export const CategoryList = ({
+    categories, onRefresh, 
+}: CategoryListProps) => {
     const theme = useTheme();
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
-    
-    const {
-        data: categories,
-        refetch, 
-    } = useQuery({
-        queryKey: ['categories', 'list'],
-        queryFn: CategoryApi.list,
-        refetchOnMount: true,
-    });
 
     const createCategoryMutation = useMutation({
         mutationFn: CategoryApi.create,
         onSuccess: () => {
-            refetch();
+            onRefresh();
         },
     });
 
@@ -61,11 +55,9 @@ export const CategoryList = forwardRef((_, ref) => {
         theme,
     ]);
 
-    useImperativeHandle(ref, () => ({ refetch }));
-
     const onAddCategory =() => {
         setShowAddCategory(false);
-        refetch();
+        onRefresh();
     };
 
     return (
@@ -102,7 +94,7 @@ export const CategoryList = forwardRef((_, ref) => {
                     }
 
                     <IconButton
-                        onClick={() => refetch()}
+                        onClick={() => onRefresh()}
                     >
                         <RefreshIcon />
                     </IconButton>
@@ -141,7 +133,7 @@ export const CategoryList = forwardRef((_, ref) => {
                                     <CategoryItem
                                         key={item.id}
                                         category={item}
-                                        onUpdate={() => refetch()}
+                                        onUpdate={() => onRefresh()}
                                         editingCategoryId={editingCategoryId}
                                         setEditingCategoryId={setEditingCategoryId}
                                     />
@@ -152,4 +144,4 @@ export const CategoryList = forwardRef((_, ref) => {
             </CardContent>
         </Card>
     );
-});
+};

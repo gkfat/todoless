@@ -1,8 +1,3 @@
-import {
-    forwardRef,
-    useImperativeHandle,
-} from 'react';
-
 import FactCheckIcon from '@mui/icons-material/FactCheckRounded';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
@@ -13,23 +8,27 @@ import {
     Stack,
     Typography,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 
-import { TodoApi } from '../../../api/todos';
+import { Category } from '../../../types/category';
+import { Todo } from '../../../types/todo';
 import { Card } from '../components/Card';
 import { TodoItem } from './components/TodoItem';
 
-export const TodoList = forwardRef((_, ref) => {
-    const {
-        data: todos,
-        refetch, 
-    } = useQuery({
-        queryKey: ['todos', 'list'],
-        queryFn: TodoApi.list,
-        refetchOnMount: true,
-    });
+interface TodoListProps {
+    todos: Todo[];
+    onRefresh: () => void;
+    categories: Category[];
+    selectedCategory?: Category;
+    onSelectedCategoryChange: (c?: Category) => void
+}
 
-    useImperativeHandle(ref, () => ({ refetch }));
+export const TodoList = ({
+    todos,
+    onRefresh,
+    categories,
+    selectedCategory,
+    onSelectedCategoryChange,
+}: TodoListProps) => {
 
     return (
         <Card
@@ -57,7 +56,7 @@ export const TodoList = forwardRef((_, ref) => {
 
                     <IconButton
                         sx={{ ml: 'auto' }}
-                        onClick={() => refetch()}
+                        onClick={() => onRefresh()}
                     >
                         <RefreshIcon />
                     </IconButton>
@@ -89,4 +88,4 @@ export const TodoList = forwardRef((_, ref) => {
             </CardContent>
         </Card>
     );
-});
+};
