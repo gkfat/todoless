@@ -25,7 +25,7 @@ export const DashboardPage = () => {
     } = useQuery({
         queryKey: ['categories', 'list'],
         queryFn: CategoryApi.list,
-        refetchOnMount: true,
+        refetchOnMount: false,
     });
 
     const [selectedCategory, setSelectedCategory] = useState<Category>();
@@ -41,7 +41,7 @@ export const DashboardPage = () => {
     
             return TodoApi.list(params);
         },
-        refetchOnMount: true,
+        refetchOnMount: false,
     });
 
     const onCategoryListUpdate = () => {
