@@ -11,6 +11,7 @@ import {
     IconButton,
     InputAdornment,
     MenuItem,
+    Paper,
     Select,
     SelectChangeEvent,
     Stack,
@@ -72,55 +73,57 @@ export const AddTodo = ({
     };
 
     return (
-        <Stack
-            direction="row"
-            sx={{
-                gap: 1,
-                alignItems: 'center',
-                flex: 1,
-            }}
+        <Paper
+            sx={{ width: '100%' }}
         >
-            <Select
-                value={selectedCategoryId}
-                displayEmpty
-                onChange={handleSelectCategoryChange}
-            >
-                <MenuItem value={-1}>未分類</MenuItem>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Stack
+                    direction="row"
+                    spacing={1}
+                    alignItems="start"
+                >
+                    <Select
+                        value={selectedCategoryId}
+                        displayEmpty
+                        onChange={handleSelectCategoryChange}
+                    >
+                        <MenuItem value={-1}>未分類</MenuItem>
                         
-                {categories.map((c) => (
-                    <MenuItem value={c.id}>{c.title}</MenuItem>
-                ))}
-            </Select>
+                        {categories.map((c) => (
+                            <MenuItem value={c.id}>{c.title}</MenuItem>
+                        ))}
+                    </Select>
 
-            <TextField
-                {...register('todoTitle')}
-                placeholder={'今天做什麼好呢？'}
-                fullWidth
-                variant="outlined"
-                error={!!errors.todoTitle}
-                helperText={errors.todoTitle?.message}
-                autoFocus
-                slotProps={{
-                    input: {
-                        endAdornment:  <InputAdornment position="end">
-                            <IconButton
-                                size="small"
-                                onClick={() => resetField('todoTitle')}
-                            >
-                                <ClearIcon />
-                            </IconButton>
-                        </InputAdornment>,
-                    },
-                }}
-            />
+                    <TextField
+                        {...register('todoTitle')}
+                        placeholder={'今天做什麼好呢？'}
+                        fullWidth
+                        variant="outlined"
+                        error={!!errors.todoTitle}
+                        helperText={errors.todoTitle?.message}
+                        autoFocus
+                        slotProps={{
+                            input: {
+                                endAdornment:  <InputAdornment position="end">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => resetField('todoTitle')}
+                                    >
+                                        <ClearIcon />
+                                    </IconButton>
+                                </InputAdornment>,
+                            },
+                        }}
+                    />
 
-            <Button
-                type="submit"
-                variant="contained"
-                onClick={handleSubmit(onSubmit)}
-            >
-                {t('common.btn_add')}
-            </Button>
-        </Stack>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                    >
+                        {t('common.btn_add')}
+                    </Button>
+                </Stack>
+            </form>
+        </Paper>
     );
 };
