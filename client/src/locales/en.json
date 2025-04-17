@@ -44,9 +44,5 @@
   },
   "view_dashboard": {
     "title": "Dashboard"
-  },
-  "view_dashboard_add_todo": {
-    "placeholder_add_todo": "What to do today?",
-    "title": "What to do today?"
   }
 }

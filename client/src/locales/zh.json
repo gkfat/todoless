@@ -44,9 +44,5 @@
   },
   "view_dashboard": {
     "title": "主控板"
-  },
-  "view_dashboard_add_todo": {
-    "placeholder_add_todo": "今天要做什麼？",
-    "title": "來個待辦吧？"
   }
 }

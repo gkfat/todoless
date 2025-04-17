@@ -29,16 +29,15 @@ export const DashboardPage = () => {
     });
 
     const [selectedCategory, setSelectedCategory] = useState<Category>();
-    const params: GetTodosRequest = { categoryId: selectedCategory?.id };
     
     const {
         data: todos,
         isLoading: isLoadingTodos,
         refetch: refetchTodos,
     } = useQuery({
-        queryKey: ['todos', params],
-        queryFn: ({ queryKey }) => {
-            const params = queryKey[1] as GetTodosRequest;
+        queryKey: ['todos', selectedCategory?.id],
+        queryFn: () => {
+            const params: GetTodosRequest = { categoryId: selectedCategory?.id };
     
             return TodoApi.list(params);
         },

@@ -1,33 +1,25 @@
-import {
-    useEffect,
-    useState,
-} from 'react';
+import { useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import {
     Button,
-    CardContent,
-    Chip,
     IconButton,
     InputAdornment,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
     Stack,
     TextField,
-    Typography,
 } from '@mui/material';
-import {
-    useMutation,
-    useQuery,
-} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
-import { CategoryApi } from '../../../../api/categories';
 import { TodoApi } from '../../../../api/todos';
-import { Card } from '../../components/Card';
+import { Category } from '../../../../types/category';
 
 const addTodoFormSchema = yup.object({
     todoTitle: yup
@@ -35,8 +27,14 @@ const addTodoFormSchema = yup.object({
         .required('此為必填欄位')
         .max(150, '待辦事項不可超過 150 個字'),
 });
+interface AddTodoProps {
+    categories: Category[];
+    onRefresh: () => void;
+}
 
-export const AddTodo = ({ onRefresh } : { onRefresh: () => void}) => {
+export const AddTodo = ({
+    categories, onRefresh, 
+}: AddTodoProps) => {
     const { t } = useTranslation();
 
     const {
@@ -47,28 +45,17 @@ export const AddTodo = ({ onRefresh } : { onRefresh: () => void}) => {
         resetField,
     } = useForm({ resolver: yupResolver(addTodoFormSchema) });
 
-    const [categoryId, setCategoryId] = useState<number>();
-        
-    const { data: categories } = useQuery({
-        queryKey: ['categories', 'list'],
-        queryFn: CategoryApi.list,
-        refetchOnMount: true,
-    });
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
 
-    useEffect(() => {
-        if (categories && categories.length > 0) {
-            setCategoryId(categories[0].id);
-        }
-    }, [categories]);
-
-    const onCategorySelect = (categoryId: number) => () => {
-        setCategoryId(categoryId);
+    const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
+        const id = e.target.value as number;
+ 
+        setSelectedCategoryId(id);
     };
 
     const createTodoMutation = useMutation({
         mutationFn: TodoApi.create,
         onSuccess: () => {
-            // TODO: notification
             reset();
             onRefresh();
         },
@@ -78,97 +65,62 @@ export const AddTodo = ({ onRefresh } : { onRefresh: () => void}) => {
     });
 
     const onSubmit = (data: {todoTitle: string}) => {
-        if (!categoryId) {
-            return;
-        }
-
         createTodoMutation.mutate({
-            categoryId,
+            categoryId: selectedCategoryId,
             title: data.todoTitle,
         });
     };
 
     return (
-        <>
-            <Card variant="outlined">
-                <CardContent>
-                    <Typography
-                        variant="h5"
-                        sx={{ mb: 1 }}
-                    >
-                        {t('view_dashboard_add_todo.title')}
-                    </Typography>
+        <Stack
+            direction="row"
+            sx={{
+                gap: 1,
+                alignItems: 'center',
+                flex: 1,
+            }}
+        >
+            <Select
+                value={selectedCategoryId}
+                displayEmpty
+                onChange={handleSelectCategoryChange}
+            >
+                <MenuItem value={-1}>未分類</MenuItem>
+                        
+                {categories.map((c) => (
+                    <MenuItem value={c.id}>{c.title}</MenuItem>
+                ))}
+            </Select>
 
-                    <Stack
-                        direction="row"
-                        sx={{
-                            gap: 1,
-                            mb: 2, 
-                        }}
-                    >
-                        {
-                            (categories ?? []).map((category) => {
-                                const isSelected = category.id === categoryId;
-
-                                return (
-                                    <Chip
-                                        key={category.id}
-                                        label={category.title}
-                                        icon={isSelected ? <CheckIcon color="success" /> : undefined}
-                                        onClick={onCategorySelect(category.id)}
-                                        variant={isSelected ? 'filled' : 'outlined'}
-                                        sx={{
-                                            backgroundColor: isSelected ? category.color ?? 'default' : 'default',
-                                            borderColor: category.color,
-                                        }}
-                                    />
-                                );
-                            })
-                        }
-                    </Stack>
-
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Stack
-                            direction="row"
-                            sx={{ mb: 2 }}
-                        >
-                            <TextField
-                                {...register('todoTitle')}
-                                placeholder={t('view_dashboard_add_todo.placeholder_add_todo')}
-                                fullWidth
-                                variant="outlined"
-                                error={!!errors.todoTitle}
-                                helperText={errors.todoTitle?.message}
-                                slotProps={{
-                                    input: {
-                                        endAdornment:  <InputAdornment position="end">
-                                            <IconButton
-                                                size="small"
-                                                onClick={() => resetField('todoTitle')}
-                                            >
-                                                <ClearIcon />
-                                            </IconButton>
-                                        </InputAdornment>,
-                                    },
-                                }}
-                            />
-                        </Stack>
-
-                        <Stack
-                            direction="row"
-                            sx={{ justifyContent: 'flex-end' }}
-                        >
-                            <Button
-                                type="submit"
-                                variant="contained"
+            <TextField
+                {...register('todoTitle')}
+                placeholder={'今天做什麼好呢？'}
+                fullWidth
+                variant="outlined"
+                error={!!errors.todoTitle}
+                helperText={errors.todoTitle?.message}
+                autoFocus
+                slotProps={{
+                    input: {
+                        endAdornment:  <InputAdornment position="end">
+                            <IconButton
+                                size="small"
+                                onClick={() => resetField('todoTitle')}
                             >
-                                {t('common.btn_add')}
-                            </Button>
-                        </Stack>
-                    </form>
+                                <ClearIcon />
+                            </IconButton>
+                        </InputAdornment>,
+                    },
+                }}
+            />
 
-                </CardContent>
-            </Card>
-        </>
+            <Button
+                type="submit"
+                variant="contained"
+                onClick={handleSubmit(onSubmit)}
+            >
+                {t('common.btn_add')}
+            </Button>
+        </Stack>
     );
 };
