@@ -60,7 +60,7 @@ export class TodosController {
             const findCategory = await this.categoriesService.findOne(+categoryId);
 
             if (!findCategory || findCategory.account.id !== sub) {
-                throw new UnauthorizedException('Unauthorized to  this category');
+                throw new UnauthorizedException('Unauthorized to operate this category');
             }
 
             const rs = await this.todosService.findAllByCategoryId(findCategory.id);
@@ -88,7 +88,7 @@ export class TodosController {
         const findCategory = await this.categoriesService.findOne(reqBody.categoryId);
 
         if (!findCategory) {
-            throw new NotFoundException(`Category ${reqBody.categoryId} not found`);
+            reqBody.categoryId = null;
         }
 
         const rs = await this.todosService.create(account, findCategory,  reqBody);
@@ -116,6 +116,12 @@ export class TodosController {
 
         if (findTodo.account.id !== sub) {
             throw new UnauthorizedException('Unauthorized to update this todo');
+        }
+
+        const findCategory = await this.categoriesService.findOne(reqBody.categoryId);
+
+        if (!findCategory || findCategory.account.id === sub) {
+            reqBody.categoryId = null;
         }
 
         const todoId = await this.todosService.update(+id, reqBody);
