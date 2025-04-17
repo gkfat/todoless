@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
     Card,
+    CardContent,
     Dialog,
     DialogActions,
     DialogContent,
@@ -139,68 +140,77 @@ export const CategoryItem = ({
                     borderRadius: 2,
                 }}
             >
-                <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: 'center' }}
+                <CardContent
+                    sx={{
+                        p: 0,
+                        '&:last-child': { pb: 0 },
+                    }}
                 >
-                    {/* 顏色選擇器 */}
-                    <ColorPicker
-                        color={category.color ?? theme.palette.primary.main}
-                        onChange={handleColorChange}
-                    />
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        sx={{ alignItems: 'center' }}
+                    >
+                        {/* 顏色選擇器 */}
+                        <ColorPicker
+                            color={category.color ?? theme.palette.primary.main}
+                            onChange={handleColorChange}
+                        />
                     
-                    {
-                        !isEditing
-                            ?  <>
-                                <Typography
-                                    variant="h6"
-                                >
-                                    {category.title}
-                                </Typography>
-
-                                <IconButton
-                                    onClick={() => setEditingCategoryId(category.id)}
-                                >
-                                    <EditIcon />
-                                </IconButton>
-
-                                <IconButton
-                                    onClick={handleDeleteClick}
-                                >
-                                    <DeleteIcon color="error" />
-                                </IconButton>
-                            </>
-                            :  
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <Stack
-                                    direction="row"
-                                >
-                                    <TextField
-                                        {...register('title')}
-                                        placeholder={'分類名稱'}
-                                        fullWidth
-                                        variant="outlined"
-                                        error={!!errors.title}
-                                        helperText={errors.title?.message}
-                                        autoFocus
-                                    />
+                        {
+                            !isEditing
+                                ?  <>
+                                    <Typography
+                                        variant="h6"
+                                    >
+                                        {category.title}
+                                    </Typography>
 
                                     <IconButton
-                                        type="submit"
+                                        onClick={() => setEditingCategoryId(category.id)}
+                                        sx={{ p: 0 }}
                                     >
-                                        <CheckIcon color="success" />
+                                        <EditIcon />
                                     </IconButton>
 
                                     <IconButton
-                                        onClick={() => setEditingCategoryId(null)}
+                                        onClick={handleDeleteClick}
+                                        sx={{ p: 0 }}
                                     >
-                                        <CloseIcon color="error" />
+                                        <DeleteIcon color="error" />
                                     </IconButton>
-                                </Stack>
-                            </form>
-                    }
-                </Stack>
+                                </>
+                                :  
+                                <form onSubmit={handleSubmit(onSubmit)}>
+                                    <Stack
+                                        direction="row"
+                                    >
+                                        <TextField
+                                            {...register('title')}
+                                            placeholder={'分類名稱'}
+                                            fullWidth
+                                            variant="outlined"
+                                            error={!!errors.title}
+                                            helperText={errors.title?.message}
+                                            autoFocus
+                                        />
+
+                                        <IconButton
+                                            type="submit"
+                                        >
+                                            <CheckIcon color="success" />
+                                        </IconButton>
+
+                                        <IconButton
+                                            onClick={() => setEditingCategoryId(null)}
+                                        >
+                                            <CloseIcon color="error" />
+                                        </IconButton>
+                                    </Stack>
+                                </form>
+                        }
+                    </Stack>
+                </CardContent>
             </Card>
 
             <Dialog
