@@ -55,9 +55,11 @@ export class Todo {
     @ApiProperty()
         delete_at: Date;
 
-    @ManyToOne(() => Category, (category) => category.todos, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Category, (category) => category.todos, {
+        nullable: true, onDelete: 'CASCADE', 
+    })
     @JoinColumn({ name: 'category_id' })
-        category: Category;
+        category: Category | null;
 
     @ManyToOne(() => Account, (account) => account.todos, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'account_id' })
