@@ -1,5 +1,4 @@
 import { Category } from '../types/category';
-import { Todo } from '../types/todo';
 import { request } from './util/agent';
 
 const agent = request('/api/v1/categories');
@@ -32,13 +31,6 @@ export const CategoryApi = {
         return agent({
             method: 'GET',
             url: '',
-        });
-    },
-
-    listTodos: async (data: GetCategoryTodosRequest): Promise<Todo[]> => {
-        return agent({
-            method: 'GET',
-            url: `/${data.categoryId}/todos`,
         });
     },
 

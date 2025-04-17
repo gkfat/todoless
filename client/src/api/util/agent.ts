@@ -33,7 +33,7 @@ export const request = (apiBase: string) => {
     const requestAsync = async (args: {
         method: 'GET'|'POST'|'DELETE'|'PUT',
         url: string,
-        params?: URLSearchParams,
+        params?: Record<string, any> | URLSearchParams,
         data?: object
         customHeaders?: { [key: string]: string }
     }) => {

@@ -3,6 +3,9 @@ import { request } from './util/agent';
 
 const agent = request('/api/v1/todos');
 
+export interface GetTodosRequest {
+    categoryId?: number;
+}
 interface CreateTodoRequest {
     title: string;
     categoryId: number;
@@ -20,10 +23,11 @@ interface CompletedTodoRequest {
 }
 
 export const TodoApi = {
-    list: async (): Promise<Todo[]> => {
+    list: async (data?: GetTodosRequest): Promise<Todo[]> => {
         return agent({
             method: 'GET',
             url: '',
+            params: data,
         });
     },
 
