@@ -18,6 +18,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Res,
     UnauthorizedException,
     UseGuards,
@@ -50,9 +51,21 @@ export class TodosController {
     @ApiOkResponse({ type: [Todo] })
     async list(
         @$TokenPayload() payload: ITokenPayload | null,
+        @Query('categoryId') categoryId: string,
         @Res() res: Response<Todo[]>,
     ) {
         const { scope: { sub } } = payload;
+
+        if (categoryId) {
+            const findCategory = await this.categoriesService.findOne(+categoryId);
+
+            if (!findCategory || findCategory.account.id !== sub) {
+                throw new UnauthorizedException('Unauthorized to  this category');
+            }
+
+            const rs = await this.todosService.findAllByCategoryId(findCategory.id);
+            return res.json(rs);
+        }
 
         const rs = await this.todosService.findAllByAccountId(+sub);
 

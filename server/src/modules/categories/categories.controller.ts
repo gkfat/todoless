@@ -27,7 +27,6 @@ import {
 } from '@nestjs/swagger';
 
 import { AccountsService } from '../accounts/accounts.service';
-import { Todo } from '../todos/entities/todo.entity';
 import { TodosService } from '../todos/todos.service';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -55,28 +54,6 @@ export class CategoriesController {
         const { scope: { sub } } = payload;
 
         const rs = await this.categoriesService.findAllByAccountId(+sub);
-
-        return res.json(rs);
-    }
-
-    @Get('/:id/todos')
-    @UseGuards(AuthGuard, PermissionsGuard)
-    @RequirePermissions(Permissions.todo.todos.get)
-    @ApiOkResponse({ type: [Todo] })
-    async listTodos(
-        @$TokenPayload() payload: ITokenPayload | null,
-        @Param('id') id: string,
-        @Res() res: Response<Todo[]>,
-    ) {
-        const { scope: { sub } } = payload;
-
-        const findCategory = await this.categoriesService.findOne(+id);
-
-        if (findCategory.account.id !== sub) {
-            throw new UnauthorizedException('Unauthorized to  this category');
-        }
-
-        const rs = await this.todosService.findAllByCategoryId(findCategory.id);
 
         return res.json(rs);
     }

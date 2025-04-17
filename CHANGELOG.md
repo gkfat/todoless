@@ -38,7 +38,6 @@ server
   - API 取得權限列表
 - 類別相關
   - API 取得類別
-  - API 取得類別下的 Todo
   - API 建立類別
   - API 更新類別
   - API 排序類別
