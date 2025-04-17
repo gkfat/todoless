@@ -14,6 +14,7 @@ interface CreateTodoRequest {
 
 interface UpdateTodoRequest {
     todoId: number;
+    categoryId?: number;
     title: string;
     dueDate?: string;
 }
