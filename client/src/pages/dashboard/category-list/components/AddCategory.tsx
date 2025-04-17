@@ -65,7 +65,7 @@ export const AddCategory = ({
                 <Stack
                     direction="row"
                     spacing={1}
-                    alignItems="center"
+                    alignItems="start"
                 >
                     <TextField
                         {...register('title')}
