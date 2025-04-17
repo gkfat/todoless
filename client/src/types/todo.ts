@@ -7,7 +7,7 @@ export interface Todo {
     due_date?: string;
     completed: boolean;
 
-    category: Category;
+    category: Category | null;
     
     create_at: string;
     update_at: string | null;
