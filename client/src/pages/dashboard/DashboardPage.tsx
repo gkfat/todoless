@@ -20,6 +20,7 @@ import { TodoList } from './todo-list/TodoList';
 export const DashboardPage = () => {
     const {
         data: categories,
+        isLoading: isLoadingCategories,
         refetch: refetchCategories, 
     } = useQuery({
         queryKey: ['categories', 'list'],
@@ -32,6 +33,7 @@ export const DashboardPage = () => {
     
     const {
         data: todos,
+        isLoading: isLoadingTodos,
         refetch: refetchTodos,
     } = useQuery({
         queryKey: ['todos', params],
@@ -69,10 +71,12 @@ export const DashboardPage = () => {
                     <Stack spacing={1}>
                         <CategoryList
                             onRefresh={onCategoryListUpdate}
+                            isLoading={isLoadingCategories}
                             categories={categories ?? []}
                         />
                         <TodoList
                             todos={todos ?? []}
+                            isLoading={isLoadingTodos}
                             categories={categories ?? []}
                             selectedCategory={selectedCategory}
                             onSelectedCategoryChange={(c?: Category) => setSelectedCategory(c)}

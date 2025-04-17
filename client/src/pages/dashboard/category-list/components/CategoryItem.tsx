@@ -135,7 +135,6 @@ export const CategoryItem = ({
             <Card
                 variant="outlined"
                 sx={{
-                    py: 1,
                     px: 2,
                     borderRadius: 2,
                 }}
@@ -184,6 +183,7 @@ export const CategoryItem = ({
                                         variant="outlined"
                                         error={!!errors.title}
                                         helperText={errors.title?.message}
+                                        autoFocus
                                     />
 
                                     <IconButton
@@ -210,7 +210,7 @@ export const CategoryItem = ({
                 <DialogContent sx={{ p: 5 }}>
                     <Stack spacing={2}>
                         <Typography variant="h4">
-                            確定刪除類別？
+                            確定刪除分類？
                         </Typography>
 
                         <Typography

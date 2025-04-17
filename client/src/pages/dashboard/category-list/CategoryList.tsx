@@ -1,7 +1,4 @@
-import {
-    useEffect,
-    useState,
-} from 'react';
+import { useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -13,11 +10,8 @@ import {
     IconButton,
     Stack,
     Typography,
-    useTheme,
 } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 
-import { CategoryApi } from '../../../api/categories';
 import { Category } from '../../../types/category';
 import { Card } from '../components/Card';
 import { AddCategory } from './components/AddCategory';
@@ -25,35 +19,15 @@ import { CategoryItem } from './components/CategoryItem';
 
 interface CategoryListProps {
     categories: Category[];
+    isLoading: boolean;
     onRefresh: () => void;
 }
 
 export const CategoryList = ({
-    categories, onRefresh, 
+    categories, isLoading, onRefresh, 
 }: CategoryListProps) => {
-    const theme = useTheme();
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
-
-    const createCategoryMutation = useMutation({
-        mutationFn: CategoryApi.create,
-        onSuccess: () => {
-            onRefresh();
-        },
-    });
-
-    useEffect(() => {
-        if (categories && !categories.length) {
-            createCategoryMutation.mutate({
-                title: '未分類',
-                color: theme.palette.primary.main,
-            });
-        }
-    }, [
-        categories,
-        createCategoryMutation,
-        theme,
-    ]);
 
     const onAddCategory =() => {
         setShowAddCategory(false);
@@ -125,21 +99,25 @@ export const CategoryList = ({
                     flexWrap="wrap"
                     gap={1}
                 >
-                    {
-                        !categories
-                            ? <Typography>Loading...</Typography>
-                            : categories.map((item) => {
-                                return (
-                                    <CategoryItem
-                                        key={item.id}
-                                        category={item}
-                                        onUpdate={() => onRefresh()}
-                                        editingCategoryId={editingCategoryId}
-                                        setEditingCategoryId={setEditingCategoryId}
-                                    />
-                                );
-                            })
-                    }
+                    {isLoading && (
+                        <Typography>Loading...</Typography>
+                    )}
+
+                    {!isLoading && !categories.length && (
+                        <Typography>沒有分類。</Typography>
+                    )}
+
+                    {categories.map((item) => {
+                        return (
+                            <CategoryItem
+                                key={item.id}
+                                category={item}
+                                onUpdate={() => onRefresh()}
+                                editingCategoryId={editingCategoryId}
+                                setEditingCategoryId={setEditingCategoryId}
+                            />
+                        );
+                    })}
                 </Stack>
             </CardContent>
         </Card>

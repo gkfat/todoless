@@ -74,6 +74,12 @@ export const AddCategory = ({
                         variant="outlined"
                         error={!!errors.title}
                         helperText={errors.title?.message}
+                        autoFocus
+                        onKeyUp={(e) => {
+                            if (e.key === 'Escape') {
+                                handleCloseClick();
+                            }
+                        }}
                     />
 
                     <IconButton

@@ -16,16 +16,18 @@ import { TodoItem } from './components/TodoItem';
 
 interface TodoListProps {
     todos: Todo[];
-    onRefresh: () => void;
+    isLoading: boolean;
     categories: Category[];
+    onRefresh: () => void;
     selectedCategory?: Category;
     onSelectedCategoryChange: (c?: Category) => void
 }
 
 export const TodoList = ({
     todos,
-    onRefresh,
     categories,
+    isLoading,
+    onRefresh,
     selectedCategory,
     onSelectedCategoryChange,
 }: TodoListProps) => {
@@ -67,23 +69,24 @@ export const TodoList = ({
                     flexWrap="wrap"
                     gap={1}
                 >
-                    {
-                        (!todos || !todos.length)
-                            ? <Typography>沒有待辦事項。</Typography>
+                    {isLoading && (
+                        <Typography>Loading...</Typography>
+                    )}
 
-                            : todos.map((todo) => {
-                                return (
-                                    <Paper
-                                        key={todo.id}
-                                        sx={{ width: '100%' }}
-                                    >
-                                        <TodoItem
-                                            todo={todo}
-                                        />
-                                    </Paper>
-                                );
-                            })
-                    }
+                    {!isLoading && !categories.length && (
+                        <Typography>沒有分類。</Typography>
+                    )}
+
+                    {todos.map((todo) => (
+                        <Paper
+                            key={todo.id}
+                            sx={{ width: '100%' }}
+                        >
+                            <TodoItem
+                                todo={todo}
+                            />
+                        </Paper>
+                    ))}
                 </Stack>
             </CardContent>
         </Card>
