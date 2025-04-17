@@ -122,7 +122,7 @@ export const TodoList = ({
                     )}
 
                     {!isLoading && !todos.length && (
-                        <Typography>沒有分類。</Typography>
+                        <Typography>沒有待辦。</Typography>
                     )}
 
                     {todos.map((todo) => (
