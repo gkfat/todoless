@@ -190,6 +190,15 @@ export const inputsCustomizations: Components<Theme> = {
             }),
         },
     },
+    MuiIcon: {
+        styleOverrides: {
+            root: () => ({
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }),
+        },
+    },
     MuiIconButton: {
         styleOverrides: {
             root: ({
