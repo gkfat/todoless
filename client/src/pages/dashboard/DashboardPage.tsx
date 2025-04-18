@@ -13,6 +13,10 @@ import { ControlPanel } from '../../components/ControlPanel';
 import { PageContainer } from '../../components/PageContainer';
 import { CategoryList } from './category-list/CategoryList';
 import {
+    DueDatesTodoList,
+    DueDatesTodoListRef,
+} from './due-dates-todo-list/DueDatesTodoList';
+import {
     RecentlyAddedTodoList,
     RecentlyAddedTodoListRef,
 } from './recently-added-todo-list/RecentlyAddedTodoList';
@@ -30,6 +34,7 @@ export const DashboardPage = () => {
     const recentlyCompletedTodoListRef = useRef<RecentlyCompletedTodoListRef>(null);
     const recentlyAddedTodoListRef = useRef<RecentlyAddedTodoListRef>(null);
     const starredTodoListRef = useRef<StarredTodoListRef>(null);
+    const dueDatesTodoListRef = useRef<DueDatesTodoListRef>(null);
         
     const {
         data: categories,
@@ -70,6 +75,10 @@ export const DashboardPage = () => {
                         />
                         <RecentlyAddedTodoList
                             ref={recentlyAddedTodoListRef}
+                            categories={categories ?? []}
+                        />
+                        <DueDatesTodoList
+                            ref={dueDatesTodoListRef}
                             categories={categories ?? []}
                         />
                     </Stack>
