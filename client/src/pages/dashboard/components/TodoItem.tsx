@@ -13,6 +13,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import {
     alpha,
     Card,
@@ -131,6 +133,15 @@ export const TodoItem = (props: TodoItemProps) => {
         deleteTodoMutation.mutate(todo.id);
     };
 
+    const handleStarClick = () => {
+        const target = !todo.starred;
+
+        updateTodoMutation.mutate({
+            todoId: todo.id,
+            starred: target,
+        });
+    };
+
     return (
         <>
             <Card
@@ -151,15 +162,27 @@ export const TodoItem = (props: TodoItemProps) => {
                         flex: 1,
                     }}
                 >
+                    {/* header */}
                     <Stack
                         direction="row"
-                        justifyContent="space-between"
                         spacing={1}
                         sx={{
                             mb: 1,
                             flex: 1, 
                         }}
                     >
+                        <IconButton
+                            sx={{
+                                p: 0,
+                                height: '1.5rem', 
+                            }}
+                            onClick={handleStarClick}
+                        >
+                            {todo.starred ? <StarIcon
+                                color="warning"
+                            /> : <StarBorderIcon />}
+                        </IconButton>
+
                         <Chip
                             size="small"
                             label={todo.category?.title ?? '未分類'}
@@ -180,6 +203,7 @@ export const TodoItem = (props: TodoItemProps) => {
                         </Stack>
                     </Stack>
 
+                    {/* content */}
                     {
                         !isEditing
                             ? <Grid

@@ -6,6 +6,7 @@ export interface Todo {
     title: string;
     due_date?: string;
     completed_at: string | null;
+    starred: boolean;
 
     category: Category | null;
     

@@ -15,8 +15,9 @@ interface CreateTodoRequest {
 interface UpdateTodoRequest {
     todoId: number;
     categoryId?: number;
-    title: string;
+    title?: string;
     dueDate?: string;
+    starred?: boolean;
 }
 
 interface CompletedTodoRequest {
