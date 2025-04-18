@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import {
-    Button,
     IconButton,
     InputAdornment,
     MenuItem,
@@ -118,13 +118,13 @@ export const AddTodo = (props: AddTodoProps) => {
                             },
                         }}
                     />
-
-                    <Button
+                    
+                    <IconButton
                         type="submit"
-                        variant="contained"
+                        sx={{ borderRadius: '50%' }}
                     >
-                        {t('common.btn_add')}
-                    </Button>
+                        <CheckIcon color="success" />
+                    </IconButton>
                 </Stack>
             </form>
         </Paper>
