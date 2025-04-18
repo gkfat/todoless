@@ -17,6 +17,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import {
     alpha,
+    Box,
     Card,
     CardContent,
     Chip,
@@ -149,17 +150,46 @@ export const TodoItem = (props: TodoItemProps) => {
                 sx={{
                     cursor: 'pointer',
                     position: 'relative',
-                    borderColor: bgColor,
                     transition: 'all 0.3s',
 
                     '&:hover': { backgroundColor: alpha(bgColor, 0.1) }, 
                 }}
             >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        width: '40px',
+                        backgroundColor: bgColor,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <IconButton
+                        onClick={handleStarClick}
+                        disableRipple
+                        sx={{
+                            backgroundColor: 'transparent',
+                            '&:hover': { backgroundColor: 'transparent' }, 
+                        }}
+                    >
+                        {
+                            todo.starred
+                                ? <StarIcon color="warning" />
+                                : <StarBorderIcon />
+                        }
+                    </IconButton>
+                </Box>
+
                 <CardContent
                     sx={{
                         p: 1,
                         '&:last-child': { pb: 1 },
                         flex: 1,
+                        pl: '50px',
                     }}
                 >
                     {/* header */}
@@ -171,20 +201,6 @@ export const TodoItem = (props: TodoItemProps) => {
                             flex: 1, 
                         }}
                     >
-                        <IconButton
-                            sx={{
-                                p: 0,
-                                height: '1.5rem', 
-                            }}
-                            onClick={handleStarClick}
-                        >
-                            {
-                                todo.starred
-                                    ? <StarIcon color="warning" />
-                                    : <StarBorderIcon />
-                            }
-                        </IconButton>
-
                         <Chip
                             size="small"
                             label={todo.category?.title ?? '未分類'}
@@ -218,7 +234,10 @@ export const TodoItem = (props: TodoItemProps) => {
                                         direction="row"
                                         spacing={1}
                                     >
-                                        <Typography variant="h6">
+                                        <Typography
+                                            variant="h6"
+                                            sx={{ wordBreak: 'break-all' }}
+                                        >
                                             {todo.title}
                                         </Typography>
                                     </Stack>
@@ -229,7 +248,6 @@ export const TodoItem = (props: TodoItemProps) => {
                                     <Stack
                                         direction="row"
                                         spacing={1}
-                                        alignItems="center"
                                     >
                                         <IconButton
                                             onClick={() => setEditingTodoId(todo.id)}
