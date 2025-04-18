@@ -178,9 +178,11 @@ export const TodoItem = (props: TodoItemProps) => {
                             }}
                             onClick={handleStarClick}
                         >
-                            {todo.starred ? <StarIcon
-                                color="warning"
-                            /> : <StarBorderIcon />}
+                            {
+                                todo.starred
+                                    ? <StarIcon color="warning" />
+                                    : <StarBorderIcon />
+                            }
                         </IconButton>
 
                         <Chip

@@ -20,11 +20,16 @@ import {
     RecentlyCompletedTodoList,
     RecentlyCompletedTodoListRef,
 } from './recently-completed-todo-list/RecentlyCompletedTodoList';
+import {
+    StarredTodoList,
+    StarredTodoListRef,
+} from './starred-todo-list/StarredTodoList';
 
 export const DashboardPage = () => {
     const { t } = useTranslation();
     const recentlyCompletedTodoListRef = useRef<RecentlyCompletedTodoListRef>(null);
     const recentlyAddedTodoListRef = useRef<RecentlyAddedTodoListRef>(null);
+    const starredTodoListRef = useRef<StarredTodoListRef>(null);
         
     const {
         data: categories,
@@ -40,6 +45,7 @@ export const DashboardPage = () => {
         refetchCategories();
         recentlyCompletedTodoListRef.current?.onRefresh();
         recentlyAddedTodoListRef.current?.onRefresh();
+        starredTodoListRef.current?.onRefresh();
     };
 
     return (
@@ -53,7 +59,7 @@ export const DashboardPage = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 6,
+                        md: 6,
                     }}
                 >
                     <Stack spacing={1}>
@@ -72,13 +78,19 @@ export const DashboardPage = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 6,
+                        md: 6,
                     }}
                 >
-                    <RecentlyCompletedTodoList
-                        ref={recentlyCompletedTodoListRef}
-                        categories={categories ?? []}
-                    />
+                    <Stack spacing={1}>
+                        <StarredTodoList
+                            ref={starredTodoListRef}
+                            categories={categories ?? []}
+                        />
+                        <RecentlyCompletedTodoList
+                            ref={recentlyCompletedTodoListRef}
+                            categories={categories ?? []}
+                        />
+                    </Stack>
                 </Grid>
             </Grid>
             
