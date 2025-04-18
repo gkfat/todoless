@@ -167,6 +167,7 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                                 onUpdate={() => onRefresh()}
                                 editingTodoId={editingTodoId}
                                 setEditingTodoId={setEditingTodoId}
+                                editable={false}
                             />
                         </Paper>
                     ))}

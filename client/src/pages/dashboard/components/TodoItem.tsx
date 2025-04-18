@@ -52,6 +52,7 @@ interface TodoItemProps {
     onUpdate: () => void;
     editingTodoId: number | null;
     setEditingTodoId: (id: number | null) => void;
+    editable?: boolean;
 }
 
 export const TodoItem = (props: TodoItemProps) => {
@@ -60,6 +61,7 @@ export const TodoItem = (props: TodoItemProps) => {
         onUpdate,
         editingTodoId,
         setEditingTodoId,
+        editable = true,
     } = props;
     
     const theme = useTheme();
@@ -285,28 +287,31 @@ export const TodoItem = (props: TodoItemProps) => {
                                         </Typography>
                                     </Stack>
                                 </Grid>
-                                <Grid
-                                    justifyContent="end"
-                                >
-                                    <Stack
-                                        direction="row"
-                                        spacing={1}
-                                    >
-                                        <IconButton
-                                            onClick={() => setEditingTodoId(todo.id)}
-                                            sx={{ p: 0 }}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
 
-                                        <IconButton
-                                            onClick={handleDeleteClick}
-                                            sx={{ p: 0 }}
+                                {
+                                    editable && <Grid
+                                        justifyContent="end"
+                                    >
+                                        <Stack
+                                            direction="row"
+                                            spacing={1}
                                         >
-                                            <DeleteIcon color="error" />
-                                        </IconButton>
-                                    </Stack>
-                                </Grid>
+                                            <IconButton
+                                                onClick={() => setEditingTodoId(todo.id)}
+                                                sx={{ p: 0 }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+
+                                            <IconButton
+                                                onClick={handleDeleteClick}
+                                                sx={{ p: 0 }}
+                                            >
+                                                <DeleteIcon color="error" />
+                                            </IconButton>
+                                        </Stack>
+                                    </Grid>
+                                }
                             </Grid>
                             : <form onSubmit={handleSubmit(onSubmit)}>
                                 <Stack
