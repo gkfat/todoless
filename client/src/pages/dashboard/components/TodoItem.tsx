@@ -37,6 +37,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { TodoApi } from '../../../api/todos';
 import { Todo } from '../../../types/todo';
+import { sleepSeconds } from '../../../utils/common';
 import { timeFormat } from '../../../utils/time';
 
 const updateTodoFormSchema = yup.object({
@@ -62,6 +63,7 @@ export const TodoItem = (props: TodoItemProps) => {
     } = props;
     
     const theme = useTheme();
+    const [completed, setCompleted] = useState(!!todo.completed_at);
     const bgColor = todo.category?.color ?? theme.palette.primary.main;
     const isBgDark = getContrastRatio(bgColor, '#fff') >= 4.5;
     const textColor = isBgDark ? theme.palette.common.white : theme.palette.common.black;
@@ -143,6 +145,41 @@ export const TodoItem = (props: TodoItemProps) => {
         });
     };
 
+    const completedTodoMutation = useMutation({
+        mutationFn: TodoApi.completed,
+        onSuccess: () => {
+            onUpdate();
+        },
+        onError: (error: any) => {
+            console.error(error);
+        },
+    });
+
+    const unCompletedTodoMutation = useMutation({
+        mutationFn: TodoApi.unCompleted,
+        onSuccess: () => {
+            onUpdate();
+        },
+        onError: (error: any) => {
+            console.error(error);
+        },
+    });
+
+    /**
+     * FIXME: should not completed if click some buttons
+     */
+    const handleTodoItemClick = async () => {
+        if (!todo.completed_at) {
+            setCompleted(true);
+            await sleepSeconds(0.5);
+            completedTodoMutation.mutate({ todoId: todo.id });
+        } else {
+            setCompleted(false);
+            await sleepSeconds(0.5);
+            unCompletedTodoMutation.mutate({ todoId: todo.id });
+        }
+    };
+
     return (
         <>
             <Card
@@ -154,6 +191,7 @@ export const TodoItem = (props: TodoItemProps) => {
 
                     '&:hover': { backgroundColor: alpha(bgColor, 0.1) }, 
                 }}
+                onClick={() => handleTodoItemClick()}
             >
                 <Box
                     sx={{
@@ -236,7 +274,12 @@ export const TodoItem = (props: TodoItemProps) => {
                                     >
                                         <Typography
                                             variant="h6"
-                                            sx={{ wordBreak: 'break-all' }}
+                                            sx={{
+                                                wordBreak: 'break-all',
+                                                color: completed ? 'text.disabled': 'text.primary',
+                                                transition: 'all 0.3s',
+                                                textDecoration: completed ? 'line-through' : 'none', 
+                                            }}
                                         >
                                             {todo.title}
                                         </Typography>

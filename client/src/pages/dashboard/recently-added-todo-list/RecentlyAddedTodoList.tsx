@@ -64,7 +64,9 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
     });
 
     useEffect(() => {
-        setTodos(data ?? []);
+        setTodos(
+            (data ?? []).filter((todo) => todo.completed_at === null),
+        );
     }, [data]);
         
     const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {

@@ -66,7 +66,7 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
     useEffect(() => {
         setTodos(
             (data ?? [])
-                .filter((todo) => !!todo.starred)
+                .filter((todo) => !!todo.starred && todo.completed_at === null)
                 .sort((a, b) => createDate(b.update_at).valueOf() - createDate(a.update_at).valueOf()),
         );
 
@@ -137,6 +137,10 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                     direction="row"
                     flexWrap="wrap"
                     gap={1}
+                    sx={{
+                        maxHeight: '500px',
+                        overflowY: 'scroll', 
+                    }}
                 >
                     {isLoading && (
                         <Typography>Loading...</Typography>

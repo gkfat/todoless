@@ -144,6 +144,10 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                     direction="row"
                     flexWrap="wrap"
                     gap={1}
+                    sx={{
+                        maxHeight: '500px',
+                        overflowY: 'scroll', 
+                    }}
                 >
                     {isLoading && (
                         <Typography>Loading...</Typography>
