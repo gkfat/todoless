@@ -45,6 +45,9 @@ export class Todo {
     @ApiProperty({ description: 'Completed status of a todo' })
         completed_at: Date;
 
+    @Column({ default: false })
+        starred: boolean;
+
     @CreateDateColumn()
     @ApiProperty()
         create_at: Date;

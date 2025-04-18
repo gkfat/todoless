@@ -35,6 +35,7 @@ export class TodosService {
                 order: true,
                 completed_at: true,
                 due_date: true,
+                starred: true,
                 create_at: true,
                 update_at: true,
                 delete_at: true,
@@ -73,6 +74,7 @@ export class TodosService {
                 order: true,
                 completed_at: true,
                 due_date: true,
+                starred: true,
                 create_at: true,
                 update_at: true,
                 delete_at: true,
@@ -111,6 +113,7 @@ export class TodosService {
                 order: true,
                 completed_at: true,
                 due_date: true,
+                starred: true,
                 create_at: true,
                 update_at: true,
                 delete_at: true,
@@ -146,6 +149,7 @@ export class TodosService {
             const {
                 title,
                 dueDate,
+                starred,
             } = req;
             
             const findTodo = await trx.findOne(Todo, {
@@ -158,6 +162,10 @@ export class TodosService {
      
             if (dueDate) {
                 findTodo.due_date = dueDate;
+            }
+
+            if (starred !== undefined) {
+                findTodo.starred = starred;
             }
 
             return await trx.save(findTodo);
