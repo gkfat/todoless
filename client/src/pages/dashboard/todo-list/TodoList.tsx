@@ -4,6 +4,7 @@ import {
 } from 'react';
 
 import FactCheckIcon from '@mui/icons-material/FactCheckRounded';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
     CardContent,
@@ -80,8 +81,9 @@ export const TodoList = ({
                         待辦
                     </Typography>
 
-                    {/* 選擇分類 */}
-                    <Typography variant="caption">選擇分類</Typography>
+                    <Icon>
+                        <FilterAltIcon />
+                    </Icon>
                     <Select
                         value={selectedCategoryId}
                         displayEmpty
