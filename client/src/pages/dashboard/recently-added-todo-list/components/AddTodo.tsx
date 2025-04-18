@@ -28,15 +28,18 @@ const addTodoFormSchema = yup.object({
         .required('此為必填欄位')
         .max(150, '待辦事項不可超過 150 個字'),
 });
+
 interface AddTodoProps {
     categories: Category[];
     onRefresh: () => void;
 }
 
-export const AddTodo = ({
-    categories, onRefresh, 
-}: AddTodoProps) => {
+export const AddTodo = (props: AddTodoProps) => {
     const { t } = useTranslation();
+    const {
+        categories,
+        onRefresh, 
+    } = props;
 
     const {
         register,

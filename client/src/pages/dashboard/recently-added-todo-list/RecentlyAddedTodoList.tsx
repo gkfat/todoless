@@ -1,11 +1,13 @@
 import {
+    forwardRef,
     useEffect,
+    useImperativeHandle,
     useState,
 } from 'react';
 
-import FactCheckIcon from '@mui/icons-material/FactCheckRounded';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import {
     CardContent,
     Icon,
@@ -17,43 +19,65 @@ import {
     Stack,
     Typography,
 } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
+import {
+    GetTodosRequest,
+    TodoApi,
+} from '../../../api/todos';
 import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
 import { Card } from '../components/Card';
+import { TodoItem } from '../components/TodoItem';
 import { AddTodo } from './components/AddTodo';
-import { TodoItem } from './components/TodoItem';
 
-interface TodoListProps {
-    todos: Todo[];
-    isLoading: boolean;
-    categories: Category[];
+export interface RecentlyAddedTodoListRef {
     onRefresh: () => void;
-    selectedCategory?: Category;
-    onSelectedCategoryChange: (c?: Category) => void
 }
 
-export const TodoList = ({
-    todos,
-    categories,
-    isLoading,
-    onRefresh,
-    selectedCategory,
-    onSelectedCategoryChange,
-}: TodoListProps) => {
+interface RecentlyAddedTodoListProps {
+    categories: Category[];
+}
+
+export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, RecentlyAddedTodoListProps>((props, ref) => {
+    const { categories } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
+    const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
+    const [todos, setTodos] = useState<Todo[]>([]);
+
+    const {
+        data,
+        isLoading,
+        refetch,
+    } = useQuery({
+        queryKey: ['todos', selectedCategoryId],
+        queryFn: () => {
+            const params: GetTodosRequest = {};
+
+            if (selectedCategoryId >= 0) {
+                params.categoryId = selectedCategoryId;
+            }
+    
+            return TodoApi.list(params);
+        },
+        refetchOnMount: false,
+    });
 
     useEffect(() => {
-        setSelectedCategoryId(selectedCategory?.id ?? -1);
-    }, [selectedCategory]);
-
+        setTodos(data ?? []);
+    }, [data]);
+        
     const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
         const id = e.target.value as number;
 
         setSelectedCategoryId(id);
+        onRefresh();
+    };
 
-        const findCategory = categories.find((c) => c.id === id);
-        onSelectedCategoryChange(findCategory ?? undefined);
+    useImperativeHandle(ref, () => ({ onRefresh }));
+
+    const onRefresh = () => {
+        refetch();
     };
 
     return (
@@ -71,14 +95,14 @@ export const TodoList = ({
                     }}
                 >
                     <Icon>
-                        <FactCheckIcon />
+                        <SpaceDashboardIcon />
                     </Icon>
 
                     <Typography
                         variant="h5"
                         sx={{ mr: 'auto' }}
                     >
-                        待辦
+                        最近新增
                     </Typography>
 
                     <Icon>
@@ -98,7 +122,7 @@ export const TodoList = ({
                     </Select>
 
                     <IconButton
-                        onClick={() => onRefresh()}
+                        onClick={onRefresh}
                     >
                         <RefreshIcon />
                     </IconButton>
@@ -118,22 +142,29 @@ export const TodoList = ({
                     direction="row"
                     flexWrap="wrap"
                     gap={1}
+                    sx={{
+                        maxHeight: '500px',
+                        overflowY: 'scroll', 
+                    }}
                 >
                     {isLoading && (
                         <Typography>Loading...</Typography>
                     )}
 
-                    {!isLoading && !todos.length && (
+                    {!isLoading && !todos?.length && (
                         <Typography>沒有待辦。</Typography>
                     )}
 
-                    {todos.map((todo) => (
+                    {todos!.map((todo) => (
                         <Paper
                             key={todo.id}
                             sx={{ width: '100%' }}
                         >
                             <TodoItem
                                 todo={todo}
+                                onUpdate={onRefresh}
+                                editingTodoId={editingTodoId}
+                                setEditingTodoId={setEditingTodoId}
                             />
                         </Paper>
                     ))}
@@ -141,4 +172,4 @@ export const TodoList = ({
             </CardContent>
         </Card>
     );
-};
+});

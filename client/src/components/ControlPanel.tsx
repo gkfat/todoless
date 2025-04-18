@@ -1,5 +1,3 @@
-import { useTranslation } from 'react-i18next';
-
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
     IconButton,
@@ -7,8 +5,14 @@ import {
     Typography,
 } from '@mui/material';
 
-export const ControlPanel = ({ onRefresh } : { onRefresh?: () => void}) => {
-    const { t } = useTranslation();
+interface ControlPanelProps {
+    title: string;
+    onRefresh?: () => void;
+}
+
+export const ControlPanel = ({
+    title, onRefresh, 
+} : ControlPanelProps) => {
 
     return (
         <>
@@ -18,9 +22,9 @@ export const ControlPanel = ({ onRefresh } : { onRefresh?: () => void}) => {
                 sx={{ py: 1 }}
             >
                 <Typography variant="h4">
-                    {t('view_dashboard.title')}
+                    {title}
                 </Typography>
-                
+
                 {
                     onRefresh && <IconButton
                         sx={{ ml: 'auto' }}
@@ -29,7 +33,6 @@ export const ControlPanel = ({ onRefresh } : { onRefresh?: () => void}) => {
                         <RefreshIcon/>
                     </IconButton>
                 }
-             
             </Stack>
         </>
     );

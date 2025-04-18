@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useRef } from 'react';
+
+import { useTranslation } from 'react-i18next';
 
 import {
     Grid,
@@ -7,17 +9,23 @@ import {
 import { useQuery } from '@tanstack/react-query';
 
 import { CategoryApi } from '../../api/categories';
-import {
-    GetTodosRequest,
-    TodoApi,
-} from '../../api/todos';
+import { ControlPanel } from '../../components/ControlPanel';
 import { PageContainer } from '../../components/PageContainer';
-import { Category } from '../../types/category';
 import { CategoryList } from './category-list/CategoryList';
-import { ControlPanel } from './components/ControlPanel';
-import { TodoList } from './todo-list/TodoList';
+import {
+    RecentlyAddedTodoList,
+    RecentlyAddedTodoListRef,
+} from './recently-added-todo-list/RecentlyAddedTodoList';
+import {
+    RecentlyCompletedTodoList,
+    RecentlyCompletedTodoListRef,
+} from './recently-completed-todo-list/RecentlyCompletedTodoList';
 
 export const DashboardPage = () => {
+    const { t } = useTranslation();
+    const recentlyCompletedTodoListRef = useRef<RecentlyCompletedTodoListRef>(null);
+    const recentlyAddedTodoListRef = useRef<RecentlyAddedTodoListRef>(null);
+        
     const {
         data: categories,
         isLoading: isLoadingCategories,
@@ -28,34 +36,15 @@ export const DashboardPage = () => {
         refetchOnMount: false,
     });
 
-    const [selectedCategory, setSelectedCategory] = useState<Category>();
-    
-    const {
-        data: todos,
-        isLoading: isLoadingTodos,
-        refetch: refetchTodos,
-    } = useQuery({
-        queryKey: ['todos', selectedCategory?.id],
-        queryFn: () => {
-            const params: GetTodosRequest = { categoryId: selectedCategory?.id };
-    
-            return TodoApi.list(params);
-        },
-        refetchOnMount: false,
-    });
-
     const onCategoryListUpdate = () => {
         refetchCategories();
-        refetchTodos();
-    };
-
-    const onTodoListUpdate = () => {
-        refetchTodos();
+        recentlyCompletedTodoListRef.current?.onRefresh();
+        recentlyAddedTodoListRef.current?.onRefresh();
     };
 
     return (
         <PageContainer>
-            <ControlPanel />
+            <ControlPanel title={t('view_dashboard.title')}  />
 
             <Grid
                 container
@@ -64,7 +53,7 @@ export const DashboardPage = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 8,
+                        sm: 6,
                     }}
                 >
                     <Stack spacing={1}>
@@ -73,26 +62,24 @@ export const DashboardPage = () => {
                             isLoading={isLoadingCategories}
                             categories={categories ?? []}
                         />
-                        <TodoList
-                            todos={todos ?? []}
-                            isLoading={isLoadingTodos}
+                        <RecentlyAddedTodoList
+                            ref={recentlyAddedTodoListRef}
                             categories={categories ?? []}
-                            selectedCategory={selectedCategory}
-                            onSelectedCategoryChange={(c?: Category) => setSelectedCategory(c)}
-                            onRefresh={onTodoListUpdate}
                         />
                     </Stack>
                 </Grid>
-            
-                {/* <Grid
+
+                <Grid
                     size={{
                         xs: 12,
                         sm: 6,
                     }}
                 >
-
-                    <TotalAccounts ref={totalAccountsRef} />
-                </Grid> */}
+                    <RecentlyCompletedTodoList
+                        ref={recentlyCompletedTodoListRef}
+                        categories={categories ?? []}
+                    />
+                </Grid>
             </Grid>
             
         </PageContainer>

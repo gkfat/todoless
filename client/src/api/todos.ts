@@ -56,4 +56,18 @@ export const TodoApi = {
         });
     },
    
+    unCompleted(data: CompletedTodoRequest): Promise<Todo> {
+        return agent({
+            method: 'PUT',
+            url: `/${data.todoId}/un-completed`,
+            data,
+        });
+    },
+
+    delete(id: number) {
+        return agent({
+            method: 'DELETE',
+            url: `/${id}`,
+        });
+    },
 };

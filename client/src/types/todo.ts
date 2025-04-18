@@ -5,7 +5,7 @@ export interface Todo {
     order: number;
     title: string;
     due_date?: string;
-    completed: boolean;
+    completed_at: string | null;
 
     category: Category | null;
     
