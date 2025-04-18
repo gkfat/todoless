@@ -22,10 +22,17 @@ const addCategoryFormSchema = yup.object({
         .max(20, '類別標題不可超過 20 個字'),
 });
 
-export const AddCategory = ({
-    onRefresh, onClose, 
-} : { onRefresh: () => void; onClose: () => void }) => {
+interface AddCategoryProps {
+    onRefresh: () => void;
+    onClose: () => void;
+}
+
+export const AddCategory = (props: AddCategoryProps) => {
     const theme = useTheme();
+    const {
+        onRefresh,
+        onClose,
+    } = props;
 
     const {
         register,

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
-import CategoryIcon from '@mui/icons-material/Category';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import {
     CardContent,
     Collapse,
@@ -23,9 +23,12 @@ interface CategoryListProps {
     onRefresh: () => void;
 }
 
-export const CategoryList = ({
-    categories, isLoading, onRefresh, 
-}: CategoryListProps) => {
+export const CategoryList = (props: CategoryListProps) => {
+    const {
+        categories,
+        isLoading,
+        onRefresh, 
+    } = props;
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
 
@@ -49,14 +52,14 @@ export const CategoryList = ({
                     }}
                 >
                     <Icon>
-                        <CategoryIcon />
+                        <SpaceDashboardIcon />
                     </Icon>
 
                     <Typography
                         variant="h5"
                         sx={{ mr: 'auto' }}
                     >
-                        分類
+                        所有分類
                     </Typography>
 
                     {

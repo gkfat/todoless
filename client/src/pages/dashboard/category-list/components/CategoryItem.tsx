@@ -27,10 +27,10 @@ import {
 import { useMutation } from '@tanstack/react-query';
 
 import { CategoryApi } from '../../../../api/categories';
+import { ColorPicker } from '../../../../components/ColorPicker';
 import { Category } from '../../../../types/category';
-import { ColorPicker } from '../../../accounts/components/ColorPicker';
 
-const addCategoryFormSchema = yup.object({
+const updateCategoryFormSchema = yup.object({
     title: yup
         .string()
         .required('此為必填欄位')
@@ -46,12 +46,14 @@ interface CategoryItemProps {
     setEditingCategoryId: (id: number | null) => void;
 }
 
-export const CategoryItem = ({
-    category,
-    onUpdate, 
-    editingCategoryId,
-    setEditingCategoryId,
-}: CategoryItemProps) => {
+export const CategoryItem = (props: CategoryItemProps) => {
+    const {
+        category,
+        onUpdate, 
+        editingCategoryId,
+        setEditingCategoryId,
+    } = props;
+    
     const theme = useTheme();
     const isEditing = editingCategoryId === category.id;
 
@@ -61,7 +63,7 @@ export const CategoryItem = ({
         formState: { errors },
         reset,
         setValue,
-    } = useForm({ resolver: yupResolver(addCategoryFormSchema) });
+    } = useForm({ resolver: yupResolver(updateCategoryFormSchema) });
 
     useEffect(() => {
         if (isEditing) {
@@ -184,6 +186,7 @@ export const CategoryItem = ({
                                 <form onSubmit={handleSubmit(onSubmit)}>
                                     <Stack
                                         direction="row"
+                                        spacing={1}
                                     >
                                         <TextField
                                             {...register('title')}
