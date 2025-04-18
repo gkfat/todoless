@@ -157,6 +157,33 @@ export class TodosController {
         return res.json(rs);
     }
 
+    @Put(':id/un-completed')
+    @UseGuards(AuthGuard, PermissionsGuard)
+    @RequirePermissions(Permissions.todo.todos.update)
+    @ApiOkResponse({ type: Todo })
+    async unCompleted(
+        @$TokenPayload() payload: ITokenPayload,
+        @Param('id') id: string,
+        @Res() res: Response<Todo>,
+    ) {
+        const { scope: { sub } } = payload;
+
+        const findTodo = await this.todosService.findOne(+id);
+
+        if (!findTodo) {
+            throw new NotFoundException(`Todo ${id} not found`);
+        }
+
+        if (findTodo.account.id !== sub) {
+            throw new UnauthorizedException('Unauthorized to update this todo');
+        }
+
+        const todoId = await this.todosService.unCompleted(+id);
+        const rs = await this.todosService.findOne(todoId);
+        
+        return res.json(rs);
+    }
+
     @Post('sort')
         @UseGuards(AuthGuard, PermissionsGuard)
         @RequirePermissions(Permissions.todo.todos.update)

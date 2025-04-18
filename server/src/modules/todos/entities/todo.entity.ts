@@ -39,9 +39,11 @@ export class Todo {
     @ApiProperty({ description: 'Due date of a todo' })
         due_date: Date;
 
-    @Column({ default: false })
+    @Column({
+        type: 'date', default: null, 
+    })
     @ApiProperty({ description: 'Completed status of a todo' })
-        completed: boolean;
+        completed_at: Date;
 
     @CreateDateColumn()
     @ApiProperty()

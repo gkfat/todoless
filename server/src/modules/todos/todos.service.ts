@@ -33,7 +33,7 @@ export class TodosService {
                 id: true,
                 title: true,
                 order: true,
-                completed: true,
+                completed_at: true,
                 due_date: true,
                 create_at: true,
                 update_at: true,
@@ -71,7 +71,7 @@ export class TodosService {
                 id: true,
                 title: true,
                 order: true,
-                completed: true,
+                completed_at: true,
                 due_date: true,
                 create_at: true,
                 update_at: true,
@@ -109,7 +109,7 @@ export class TodosService {
                 id: true,
                 title: true,
                 order: true,
-                completed: true,
+                completed_at: true,
                 due_date: true,
                 create_at: true,
                 update_at: true,
@@ -172,7 +172,21 @@ export class TodosService {
                 where: { id }, withDeleted: false, 
             });
 
-            findTodo.completed = !findTodo.completed;
+            findTodo.completed_at = new Date();
+
+            return await trx.save(findTodo);
+        });
+
+        return result.id;
+    }
+
+    async unCompleted(id: number) {
+        const result = await this.entityManager.transaction(async (trx) => {
+            const findTodo = await trx.findOne(Todo, {
+                where: { id }, withDeleted: false, 
+            });
+
+            findTodo.completed_at = null;
 
             return await trx.save(findTodo);
         });
