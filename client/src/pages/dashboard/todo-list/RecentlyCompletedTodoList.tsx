@@ -27,19 +27,19 @@ import {
 } from '../../../api/todos';
 import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
+import { createDate } from '../../../utils/time';
 import { Card } from '../components/Card';
-import { TodoItem } from '../components/TodoItem';
-import { AddTodo } from './components/AddTodo';
+import { TodoItem } from './components/TodoItem';
 
-export interface RecentlyAddedTodoListRef {
+export interface RecentlyCompletedTodoListRef {
     onRefresh: () => void;
 }
 
-interface RecentlyAddedTodoListProps {
+interface RecentlyCompletedTodoListProps {
     categories: Category[];
 }
 
-export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, RecentlyAddedTodoListProps>((props, ref) => {
+export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef, RecentlyCompletedTodoListProps>((props, ref) => {
     const { categories } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
     const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
@@ -53,22 +53,32 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
         queryKey: ['todos', selectedCategoryId],
         queryFn: () => {
             const params: GetTodosRequest = {};
-
+    
             if (selectedCategoryId >= 0) {
                 params.categoryId = selectedCategoryId;
             }
-    
+
             return TodoApi.list(params);
         },
         refetchOnMount: false,
     });
 
+    const sortByRecentlyCompleted = (a: Todo, b: Todo) => {
+        const aTime = a.completed_at ? createDate(a.completed_at).valueOf() : 0;
+        const bTime = b.completed_at ? createDate(b.completed_at).valueOf() : 0;
+
+        return bTime - aTime;
+    };
+
     useEffect(() => {
         setTodos(
-            (data ?? []).filter((todo) => todo.completed_at === null),
+            (data ?? [])
+                .filter((todo) => !!todo.completed_at)
+                .sort(sortByRecentlyCompleted),
         );
+
     }, [data]);
-        
+
     const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
         const id = e.target.value as number;
 
@@ -104,7 +114,7 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
                         variant="h5"
                         sx={{ mr: 'auto' }}
                     >
-                        最近新增
+                        最近完成
                     </Typography>
 
                     <Icon>
@@ -129,16 +139,6 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
                         <RefreshIcon />
                     </IconButton>
                 </Stack>
-
-                <Stack
-                    direction="row"
-                    sx={{ mb: 2 }}
-                >
-                    <AddTodo
-                        categories={categories}
-                        onRefresh={onRefresh}
-                    />
-                </Stack>
                     
                 <Stack
                     direction="row"
@@ -157,16 +157,17 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
                         <Typography>沒有待辦。</Typography>
                     )}
 
-                    {todos!.map((todo) => (
+                    {todos.map((todo) => (
                         <Paper
                             key={todo.id}
                             sx={{ width: '100%' }}
                         >
                             <TodoItem
                                 todo={todo}
-                                onUpdate={onRefresh}
+                                onUpdate={() => onRefresh()}
                                 editingTodoId={editingTodoId}
                                 setEditingTodoId={setEditingTodoId}
+                                editable={false}
                             />
                         </Paper>
                     ))}

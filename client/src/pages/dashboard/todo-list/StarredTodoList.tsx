@@ -29,17 +29,17 @@ import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
 import { createDate } from '../../../utils/time';
 import { Card } from '../components/Card';
-import { TodoItem } from '../components/TodoItem';
+import { TodoItem } from './components/TodoItem';
 
-export interface RecentlyCompletedTodoListRef {
+export interface StarredTodoListRef {
     onRefresh: () => void;
 }
 
-interface RecentlyCompletedTodoListProps {
+interface StarredTodoListProps {
     categories: Category[];
 }
 
-export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef, RecentlyCompletedTodoListProps>((props, ref) => {
+export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListProps>((props, ref) => {
     const { categories } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
     const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
@@ -63,18 +63,11 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
         refetchOnMount: false,
     });
 
-    const sortByRecentlyCompleted = (a: Todo, b: Todo) => {
-        const aTime = a.completed_at ? createDate(a.completed_at).valueOf() : 0;
-        const bTime = b.completed_at ? createDate(b.completed_at).valueOf() : 0;
-
-        return bTime - aTime;
-    };
-
     useEffect(() => {
         setTodos(
             (data ?? [])
-                .filter((todo) => !!todo.completed_at)
-                .sort(sortByRecentlyCompleted),
+                .filter((todo) => !!todo.starred && todo.completed_at === null)
+                .sort((a, b) => createDate(b.update_at).valueOf() - createDate(a.update_at).valueOf()),
         );
 
     }, [data]);
@@ -114,7 +107,7 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                         variant="h5"
                         sx={{ mr: 'auto' }}
                     >
-                        最近完成
+                        精選
                     </Typography>
 
                     <Icon>
@@ -167,7 +160,6 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                                 onUpdate={() => onRefresh()}
                                 editingTodoId={editingTodoId}
                                 setEditingTodoId={setEditingTodoId}
-                                editable={false}
                             />
                         </Paper>
                     ))}

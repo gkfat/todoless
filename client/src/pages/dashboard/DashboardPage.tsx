@@ -15,19 +15,19 @@ import { CategoryList } from './category-list/CategoryList';
 import {
     DueDatesTodoList,
     DueDatesTodoListRef,
-} from './due-dates-todo-list/DueDatesTodoList';
+} from './todo-list/DueDatesTodoList';
 import {
     RecentlyAddedTodoList,
     RecentlyAddedTodoListRef,
-} from './recently-added-todo-list/RecentlyAddedTodoList';
+} from './todo-list/RecentlyAddedTodoList';
 import {
     RecentlyCompletedTodoList,
     RecentlyCompletedTodoListRef,
-} from './recently-completed-todo-list/RecentlyCompletedTodoList';
+} from './todo-list/RecentlyCompletedTodoList';
 import {
     StarredTodoList,
     StarredTodoListRef,
-} from './starred-todo-list/StarredTodoList';
+} from './todo-list/StarredTodoList';
 
 export const DashboardPage = () => {
     const { t } = useTranslation();

@@ -35,10 +35,10 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { TodoApi } from '../../../api/todos';
-import { Todo } from '../../../types/todo';
-import { sleepSeconds } from '../../../utils/common';
-import { timeFormat } from '../../../utils/time';
+import { TodoApi } from '../../../../api/todos';
+import { Todo } from '../../../../types/todo';
+import { sleepSeconds } from '../../../../utils/common';
+import { timeFormat } from '../../../../utils/time';
 
 const updateTodoFormSchema = yup.object({
     todoTitle: yup

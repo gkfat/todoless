@@ -29,7 +29,7 @@ import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
 import { createDate } from '../../../utils/time';
 import { Card } from '../components/Card';
-import { TodoItem } from '../components/TodoItem';
+import { TodoItem } from './components/TodoItem';
 
 export interface DueDatesTodoListRef {
     onRefresh: () => void;

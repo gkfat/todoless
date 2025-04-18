@@ -27,19 +27,19 @@ import {
 } from '../../../api/todos';
 import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
-import { createDate } from '../../../utils/time';
 import { Card } from '../components/Card';
-import { TodoItem } from '../components/TodoItem';
+import { AddTodo } from './components/AddTodo';
+import { TodoItem } from './components/TodoItem';
 
-export interface StarredTodoListRef {
+export interface RecentlyAddedTodoListRef {
     onRefresh: () => void;
 }
 
-interface StarredTodoListProps {
+interface RecentlyAddedTodoListProps {
     categories: Category[];
 }
 
-export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListProps>((props, ref) => {
+export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, RecentlyAddedTodoListProps>((props, ref) => {
     const { categories } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
     const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
@@ -53,11 +53,11 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
         queryKey: ['todos', selectedCategoryId],
         queryFn: () => {
             const params: GetTodosRequest = {};
-    
+
             if (selectedCategoryId >= 0) {
                 params.categoryId = selectedCategoryId;
             }
-
+    
             return TodoApi.list(params);
         },
         refetchOnMount: false,
@@ -65,13 +65,10 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
 
     useEffect(() => {
         setTodos(
-            (data ?? [])
-                .filter((todo) => !!todo.starred && todo.completed_at === null)
-                .sort((a, b) => createDate(b.update_at).valueOf() - createDate(a.update_at).valueOf()),
+            (data ?? []).filter((todo) => todo.completed_at === null),
         );
-
     }, [data]);
-
+        
     const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
         const id = e.target.value as number;
 
@@ -107,7 +104,7 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                         variant="h5"
                         sx={{ mr: 'auto' }}
                     >
-                        精選
+                        最近新增
                     </Typography>
 
                     <Icon>
@@ -132,6 +129,16 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                         <RefreshIcon />
                     </IconButton>
                 </Stack>
+
+                <Stack
+                    direction="row"
+                    sx={{ mb: 2 }}
+                >
+                    <AddTodo
+                        categories={categories}
+                        onRefresh={onRefresh}
+                    />
+                </Stack>
                     
                 <Stack
                     direction="row"
@@ -150,14 +157,14 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                         <Typography>沒有待辦。</Typography>
                     )}
 
-                    {todos.map((todo) => (
+                    {todos!.map((todo) => (
                         <Paper
                             key={todo.id}
                             sx={{ width: '100%' }}
                         >
                             <TodoItem
                                 todo={todo}
-                                onUpdate={() => onRefresh()}
+                                onUpdate={onRefresh}
                                 editingTodoId={editingTodoId}
                                 setEditingTodoId={setEditingTodoId}
                             />
