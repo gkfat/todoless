@@ -37,7 +37,6 @@ import { useMutation } from '@tanstack/react-query';
 
 import { TodoApi } from '../../../../api/todos';
 import { Todo } from '../../../../types/todo';
-import { sleepSeconds } from '../../../../utils/common';
 import { timeFormat } from '../../../../utils/time';
 
 const updateTodoFormSchema = yup.object({
@@ -170,11 +169,9 @@ export const TodoItem = (props: TodoItemProps) => {
     const handleCompletedClick = async () => {
         if (!todo.completed_at) {
             setCompleted(true);
-            await sleepSeconds(0.5);
             completedTodoMutation.mutate({ todoId: todo.id });
         } else {
             setCompleted(false);
-            await sleepSeconds(0.5);
             unCompletedTodoMutation.mutate({ todoId: todo.id });
         }
     };
