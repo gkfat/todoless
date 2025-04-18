@@ -167,10 +167,7 @@ export const TodoItem = (props: TodoItemProps) => {
         },
     });
 
-    /**
-     * FIXME: should not completed if click some buttons
-     */
-    const handleTodoItemClick = async () => {
+    const handleCompletedClick = async () => {
         if (!todo.completed_at) {
             setCompleted(true);
             await sleepSeconds(0.5);
@@ -193,7 +190,6 @@ export const TodoItem = (props: TodoItemProps) => {
 
                     '&:hover': { backgroundColor: alpha(bgColor, 0.1) }, 
                 }}
-                onClick={() => handleTodoItemClick()}
             >
                 <Box
                     sx={{
@@ -232,33 +228,48 @@ export const TodoItem = (props: TodoItemProps) => {
                         pl: '50px',
                     }}
                 >
-                    {/* header */}
                     <Stack
                         direction="row"
-                        spacing={1}
                         sx={{
                             mb: 1,
-                            flex: 1, 
+                            flex: 1,
+                            justifyContent: 'space-between',
                         }}
                     >
-                        <Chip
-                            size="small"
-                            label={todo.category?.title ?? '未分類'}
-                            sx={{
-                                backgroundColor: bgColor,
-                                color: textColor,
-                            }}
-                        />
-
                         <Stack
                             direction="row"
+                            spacing={1}
                             alignItems="center"
                         >
-                            <Icon>
-                                <EventIcon fontSize="small" />
-                            </Icon>
-                            <Typography>{todo.due_date ? timeFormat(todo.due_date) : '無期限'}</Typography>
+                            {/* 分類 TODO: 變更分類 */}
+                            <Chip
+                                size="small"
+                                label={todo.category?.title ?? '未分類'}
+                                sx={{
+                                    backgroundColor: bgColor,
+                                    color: textColor,
+                                }}
+                            />
+
+                            {/* 截止日期 TODO: 變更截止日期 */}
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                            >
+                                <Icon >
+                                    <EventIcon fontSize="small" />
+                                </Icon>
+                                <Typography>{todo.due_date ? timeFormat(todo.due_date) : '無期限'}</Typography>
+                            </Stack>
                         </Stack>
+
+                        {/* 完成 */}
+                        <Chip
+                            size="small"
+                            label={todo.completed_at ? '標示為未完成' : '標示為完成'}
+                            color="success"
+                            onClick={handleCompletedClick}
+                        />
                     </Stack>
 
                     {/* content */}
