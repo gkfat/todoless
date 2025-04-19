@@ -118,7 +118,7 @@ export class TodosController {
             throw new UnauthorizedException('Unauthorized to update this todo');
         }
 
-        if (reqBody.categoryId >= 0) {
+        if (reqBody.categoryId !== undefined && reqBody.categoryId >= 0) {
             const findCategory = await this.categoriesService.findOne(reqBody.categoryId);
 
             if (findCategory?.account.id !== sub) {

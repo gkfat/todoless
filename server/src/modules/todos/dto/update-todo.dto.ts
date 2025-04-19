@@ -5,8 +5,10 @@ import {
 
 @ApiSchema({ name: 'UpdateTodoRequest' })
 export class UpdateTodoDto {
-    @ApiProperty({ description: 'todo category id' })
-        categoryId: number;
+    @ApiProperty({
+        description: 'todo category id', required: false, 
+    })
+        categoryId?: number;
     
     @ApiProperty({
         description: 'todo title', required: false, 
@@ -16,7 +18,7 @@ export class UpdateTodoDto {
     @ApiProperty({
         description: 'todo due date', required: false, 
     })
-        dueDate?: Date;
+        dueDate?: string | null;
 
     @ApiProperty({
         description: 'todo be starred or not', required: false,

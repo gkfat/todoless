@@ -170,8 +170,8 @@ export class TodosService {
                 findTodo.title = title;
             }
      
-            if (dueDate) {
-                findTodo.due_date = dueDate;
+            if (dueDate !== undefined) {
+                findTodo.due_date = dueDate !== null ? new Date(dueDate) : null;
             }
 
             if (starred !== undefined) {
