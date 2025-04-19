@@ -1,11 +1,6 @@
 import fs from 'node:fs';
 
 import { AppModule } from 'src/app.module';
-import { AccountAuth } from 'src/modules/accounts/entities/account-auth.entity';
-import { Account } from 'src/modules/accounts/entities/account.entity';
-import { Category } from 'src/modules/categories/entities/categories.entity';
-import { Role } from 'src/modules/privileges/entities/role.entity';
-import { Todo } from 'src/modules/todos/entities/todo.entity';
 import {
     DataSource,
     DataSourceOptions,
@@ -18,6 +13,8 @@ import {
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+
+import { entities } from './entities';
 
 const logger = new Logger('seeder');
 
@@ -38,13 +35,7 @@ async function run() {
                 rejectUnauthorized: true,
                 ca: fs.readFileSync('./ca.pem'),
             },
-            entities: [
-                Account,
-                AccountAuth,
-                Role,
-                Todo,
-                Category,
-            ],
+            entities,
     
             seeds: ['src/database/seeds/**/*{.ts,.js}'],
         };
