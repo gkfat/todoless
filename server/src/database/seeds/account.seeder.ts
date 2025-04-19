@@ -2,6 +2,7 @@ import {
     EnumLoginType,
     EnumRole,
 } from 'src/enums';
+import { makeDefaultDashboardConfigs } from 'src/modules/accounts/accounts.service';
 import { AccountAuth } from 'src/modules/accounts/entities/account-auth.entity';
 import { Account } from 'src/modules/accounts/entities/account.entity';
 import { Role } from 'src/modules/privileges/entities/role.entity';
@@ -41,6 +42,7 @@ const seedSuperAccount = async (accountRepository: Repository<Account>, roleRepo
         email_verified: true,
         auths: [accountAuth],
         roles: [superRole],
+        dashboard_configs: makeDefaultDashboardConfigs(),
     });
 
     const findConflict = await accountRepository.findOne({
@@ -48,6 +50,7 @@ const seedSuperAccount = async (accountRepository: Repository<Account>, roleRepo
         relations: {
             auths: true,
             roles: true, 
+            dashboard_configs: true,
         },
         withDeleted: false,
     });

@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 
 import { AccountAuth } from './account-auth.entity';
+import { AccountDashboardConfig } from './account-dashboard-config.entity';
 
 @ApiSchema({ name: 'AccountDto' })
 @Entity()
@@ -72,6 +73,11 @@ export class Account {
     @JoinTable({ name: 'account_role' })
     @ApiProperty({ type: [Role] })
         roles: Role[];
+
+    @OneToMany(() => AccountDashboardConfig, (config) => config.account, {
+        cascade: true, onDelete: 'CASCADE', 
+    })
+        dashboard_configs: AccountDashboardConfig[];
 
     @OneToMany(() => AccountAuth, (auth) => auth.account, {
         cascade: true, onDelete: 'CASCADE', 

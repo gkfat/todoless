@@ -1,4 +1,5 @@
 import {
+    DashboardCardType,
     EnumLoginType,
     EnumRole,
 } from 'src/enums';
@@ -17,8 +18,43 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SignUpDto } from '../auth/dto/sign-up.dto';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { UpdateConfigDto } from './dto/update-config.dto';
 import { AccountAuth } from './entities/account-auth.entity';
+import { AccountDashboardConfig } from './entities/account-dashboard-config.entity';
 import { Account } from './entities/account.entity';
+
+export const makeDefaultDashboardConfigs = () => ([
+    {
+        type: DashboardCardType.CATEGORY_LIST,
+        col: 1,
+        order: 1,
+        display: true,
+    },
+    {
+        type: DashboardCardType.RECENTLY_ADDED,
+        col: 1,
+        order: 2,
+        display: true,
+    },
+    {
+        type: DashboardCardType.DUE_DATES,
+        col: 1,
+        order: 3,
+        display: true,
+    },
+    {
+        type: DashboardCardType.STARRED,
+        col: 2,
+        order: 1,
+        display: true,
+    },
+    {
+        type: DashboardCardType.RECENTLY_COMPLETED,
+        col: 2,
+        order: 2,
+        display: true,
+    },
+].map((config) => new AccountDashboardConfig(config)));
 
 @Injectable()
 export class AccountsService {
@@ -42,9 +78,12 @@ export class AccountsService {
             roles: [findMemberRole],
             auths: [
                 new AccountAuth({
-                    type: EnumLoginType.PASSWORD, identifier: email, credential: hashPassword(password), 
+                    type: EnumLoginType.PASSWORD,
+                    identifier: email,
+                    credential: hashPassword(password), 
                 }),
             ],
+            dashboard_configs: makeDefaultDashboardConfigs(),
         });
 
         const { id } = await this.accountRepository.save(newAccount);
@@ -77,6 +116,21 @@ export class AccountsService {
 
         return account;
     }
+
+    async updateConfig(id: number, updateConfigDto: UpdateConfigDto) {
+        const { dashboardConfigs } = updateConfigDto;
+
+        const account = await this.accountRepository.findOne({
+            where: { id },
+            relations: { dashboard_configs: true },
+        });
+
+        account.dashboard_configs = dashboardConfigs.map((config) => new AccountDashboardConfig(config));
+
+        await this.accountRepository.save(account);
+
+        return account;
+    }
     
     async findAll() {
         return this.accountRepository.find({ relations: { roles: true } });
@@ -96,7 +150,10 @@ export class AccountsService {
                 email_verified: true,
                 enabled: true,
             },
-            relations: { roles: true },
+            relations: {
+                roles: true,
+                dashboard_configs: true, 
+            },
             withDeleted: false,
         });
 
@@ -135,8 +192,11 @@ export class AccountsService {
 
     async deleteAccount(id: number) {
         return await this.entityManager.transaction(async (trx) => {
-            const accountAuth = await trx.findBy(AccountAuth, { account_id: id });
-            await trx.remove(accountAuth);
+            const accountAuths = await trx.findBy(AccountAuth, { account_id: id });
+            await trx.remove(accountAuths);
+
+            const dashboardConfigs = await trx.findBy(AccountDashboardConfig, { account_id: id });
+            await trx.remove(dashboardConfigs);
 
             const account = await trx.findOneBy(Account, { id });
 

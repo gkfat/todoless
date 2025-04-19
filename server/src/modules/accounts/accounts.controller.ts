@@ -36,6 +36,10 @@ import {
     UpdateAccountDto,
     UpdateAccountResponseDto,
 } from './dto/update-account.dto';
+import {
+    UpdateConfigDto,
+    UpdateConfigResponseDto,
+} from './dto/update-config.dto';
 import { Account } from './entities/account.entity';
 
 @ApiBearerAuth('Authorization')
@@ -78,7 +82,7 @@ export class AccountsController {
     @RequirePermissions(Permissions.account.accounts.add)
     @ApiOkResponse({ type: Account })
     async createAccount(@Body() createAccountDto: CreateAccountDto, @Res() res: Response<Account>) {
-        const account =  await this.accountsService.create(createAccountDto);
+        const account = await this.accountsService.create(createAccountDto);
 
         return res.json(account);
     }
@@ -137,6 +141,26 @@ export class AccountsController {
         const token = await this.authService.generateJwt(account);
 
         return res.json({ token });
+    }
+
+    @Put(':id/update-config')
+    @UseGuards(AuthGuard, PermissionsGuard)
+    @RequirePermissions(Permissions.account.me.update)
+    @ApiOkResponse({ type: UpdateConfigResponseDto })
+    async updateConfig(
+        @$TokenPayload() payload: ITokenPayload, @Param('id') id: string,
+        @Body() reqBody: UpdateConfigDto,
+        @Res() res: Response<UpdateConfigResponseDto>,
+    ) {
+        const { scope: { sub } } = payload;
+
+        if (+id !== sub) {
+            throw new UnauthorizedException('Unauthorized to update others account');
+        }
+
+        const account = await this.accountsService.updateConfig(+id, reqBody);
+
+        return res.json({ dashboardConfigs: account.dashboard_configs });
     }
 
     @Delete(':id')
