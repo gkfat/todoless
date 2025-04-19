@@ -1,32 +1,25 @@
 import {
     useEffect,
+    useRef,
     useState,
 } from 'react';
 
+import { Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import EventIcon from '@mui/icons-material/Event';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import {
     alpha,
-    Box,
     Card,
     CardContent,
     Chip,
-    Dialog,
-    DialogActions,
-    DialogContent,
     getContrastRatio,
     Grid,
-    Icon,
     IconButton,
     Stack,
     TextField,
@@ -38,8 +31,13 @@ import { useMutation } from '@tanstack/react-query';
 import { TodoApi } from '../../../../../api/todos';
 import { Category } from '../../../../../types/category';
 import { Todo } from '../../../../../types/todo';
-import { timeFormat } from '../../../../../utils/time';
 import { CategoryChip } from './components/CategoryChip';
+import {
+    DeleteTodoDialog,
+    DeleteTodoDialogRef,
+} from './components/DeleteTodoDialog';
+import { DueDateChip } from './components/DueDateChip';
+import { StarBox } from './components/StarBox';
 
 const updateTodoFormSchema = yup.object({
     todoTitle: yup
@@ -73,6 +71,8 @@ export const TodoItem = (props: TodoItemProps) => {
     const isBgDark = getContrastRatio(bgColor, '#fff') >= 4.5;
     const textColor = isBgDark ? theme.palette.common.white : theme.palette.common.black;
 
+    const deleteTodoDialogRef = useRef<DeleteTodoDialogRef>(null);
+
     const {
         register,
         handleSubmit,
@@ -82,14 +82,13 @@ export const TodoItem = (props: TodoItemProps) => {
     } = useForm({ resolver: yupResolver(updateTodoFormSchema) });
 
     const isEditing = editingTodoId === todo.id;
-    const [openConfirm, setOpenConfirm] = useState(false);
     
     const handleDeleteClick = () => {
-        setOpenConfirm(true);
+        deleteTodoDialogRef.current?.setOpen(true);
     };
     
     const handleCancelDelete = () => {
-        setOpenConfirm(false);
+        deleteTodoDialogRef.current?.setOpen(false);
     };
 
     useEffect(() => {
@@ -128,9 +127,8 @@ export const TodoItem = (props: TodoItemProps) => {
     const deleteTodoMutation = useMutation({
         mutationFn: TodoApi.delete,
         onSuccess: () => {
-            // reset();
             onUpdate();
-            setOpenConfirm(false);
+            deleteTodoDialogRef.current?.setOpen(false);
         },
         onError: (error: any) => {
             console.error(error);
@@ -139,16 +137,6 @@ export const TodoItem = (props: TodoItemProps) => {
     
     const handleConfirmDelete = () => {
         deleteTodoMutation.mutate(todo.id);
-    };
-
-    const handleStarClick = () => {
-        const target = !todo.starred;
-
-        updateTodoMutation.mutate({
-            categoryId: todo.category?.id ?? -1,
-            todoId: todo.id,
-            starred: target,
-        });
     };
 
     const completedTodoMutation = useMutation({
@@ -171,6 +159,16 @@ export const TodoItem = (props: TodoItemProps) => {
         },
     });
 
+    const handleStarClick = () => {
+        const target = !todo.starred;
+
+        updateTodoMutation.mutate({
+            categoryId: todo.category?.id ?? -1,
+            todoId: todo.id,
+            starred: target,
+        });
+    };
+
     const handleCompletedClick = async () => {
         if (!todo.completed_at) {
             setCompleted(true);
@@ -188,6 +186,13 @@ export const TodoItem = (props: TodoItemProps) => {
         });
     };
 
+    const onDueDateChange = (date: Dayjs | null) => {
+        updateTodoMutation.mutate({
+            todoId: todo.id,
+            dueDate: date ? date.toISOString() : null,
+        });
+    };
+
     return (
         <>
             <Card
@@ -200,34 +205,11 @@ export const TodoItem = (props: TodoItemProps) => {
                     '&:hover': { backgroundColor: alpha(bgColor, 0.1) }, 
                 }}
             >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        width: '40px',
-                        backgroundColor: bgColor,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
-                    <IconButton
-                        onClick={handleStarClick}
-                        disableRipple
-                        sx={{
-                            backgroundColor: 'transparent',
-                            '&:hover': { backgroundColor: 'transparent' }, 
-                        }}
-                    >
-                        {
-                            todo.starred
-                                ? <StarIcon color="warning" />
-                                : <StarBorderIcon />
-                        }
-                    </IconButton>
-                </Box>
+                <StarBox
+                    todo={todo}
+                    bgColor={bgColor}
+                    handleStarClick={handleStarClick}
+                />
 
                 <CardContent
                     sx={{
@@ -258,16 +240,10 @@ export const TodoItem = (props: TodoItemProps) => {
                                 onCategoryChange={onCategoryChange}
                             />
 
-                            {/* 截止日期 TODO: 變更截止日期 */}
-                            <Stack
-                                direction="row"
-                                alignItems="center"
-                            >
-                                <Icon >
-                                    <EventIcon fontSize="small" />
-                                </Icon>
-                                <Typography>{todo.due_date ? timeFormat(todo.due_date) : '無期限'}</Typography>
-                            </Stack>
+                            <DueDateChip
+                                todo={todo}
+                                onDueDateChange={onDueDateChange}
+                            />
                         </Stack>
 
                         {/* 完成 */}
@@ -364,41 +340,12 @@ export const TodoItem = (props: TodoItemProps) => {
                 </CardContent>
             </Card>
 
-            <Dialog
-                open={openConfirm}
-                onClose={handleCancelDelete}
-            >
-                <DialogContent sx={{ p: 5 }}>
-                    <Stack spacing={2}>
-                        <Typography variant="h4">
-                            確定刪除待辦？
-                        </Typography>
-
-                        <Typography
-                            variant="h3"
-                            fontWeight="bold"
-                        >
-                            {todo.title}
-                        </Typography>
-                    </Stack>
-                </DialogContent>
-                
-                <DialogActions>
-                    <IconButton
-                        sx={{ borderRadius: '50%' }}
-                        onClick={handleConfirmDelete}
-                    >
-                        <CheckIcon color="success" />
-                    </IconButton>
-
-                    <IconButton
-                        sx={{ borderRadius: '50%' }}
-                        onClick={handleCancelDelete}
-                    >
-                        <ClearIcon color="secondary" />
-                    </IconButton>
-                </DialogActions>
-            </Dialog>
+            <DeleteTodoDialog
+                ref={deleteTodoDialogRef}
+                todo={todo}
+                handleConfirmDelete={handleConfirmDelete}
+                handleCancelDelete={handleCancelDelete}
+            />
         </>
     );
 };

@@ -46,7 +46,6 @@ export const LanguageSelector = () => {
     };
 
     const onLangChange = (lang: Language) => () => {
-        console.log(lang);
         i18n.changeLanguage(lang);
         changeDayjsLanguage(lang);
     };

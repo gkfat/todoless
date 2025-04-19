@@ -17,9 +17,12 @@ interface UpdateTodoRequest {
     /**
      * 帶 -1 為未分類
      */
-    categoryId: number;
+    categoryId?: number;
     title?: string;
-    dueDate?: string;
+    /**
+     * 帶 null 為清空
+     */
+    dueDate?: string | null;
     starred?: boolean;
 }
 
