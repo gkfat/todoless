@@ -157,13 +157,15 @@ export class TodosService {
                 where: { id }, withDeleted: false, 
             });
 
-            // 若 categoryId = -1 會設為未分類
-            if (categoryId === -1) {
-                findTodo.category = null;
-            } else {
-                const findCategory = await trx.findOne(Category, { where: { id: categoryId } });
-
-                findTodo.category = findCategory;
+            if (categoryId !== undefined) {
+                // 若 categoryId = -1 會設為未分類
+                if (categoryId === -1) {
+                    findTodo.category = null;
+                } else {
+                    const findCategory = await trx.findOne(Category, { where: { id: categoryId } });
+    
+                    findTodo.category = findCategory;
+                }
             }
             
             if (title) {
