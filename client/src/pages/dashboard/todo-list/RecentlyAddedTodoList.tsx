@@ -29,7 +29,7 @@ import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
 import { Card } from '../components/Card';
 import { AddTodo } from './components/AddTodo';
-import { TodoItem } from './components/TodoItem';
+import { TodoItem } from './components/todo-item/TodoItem';
 
 export interface RecentlyAddedTodoListRef {
     onRefresh: () => void;
@@ -164,6 +164,7 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
                         >
                             <TodoItem
                                 todo={todo}
+                                categories={categories}
                                 onUpdate={onRefresh}
                                 editingTodoId={editingTodoId}
                                 setEditingTodoId={setEditingTodoId}

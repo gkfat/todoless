@@ -14,7 +14,10 @@ interface CreateTodoRequest {
 
 interface UpdateTodoRequest {
     todoId: number;
-    categoryId?: number;
+    /**
+     * 帶 -1 為未分類
+     */
+    categoryId: number;
     title?: string;
     dueDate?: string;
     starred?: boolean;

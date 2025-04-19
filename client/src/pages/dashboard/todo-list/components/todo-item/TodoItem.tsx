@@ -35,9 +35,11 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { TodoApi } from '../../../../api/todos';
-import { Todo } from '../../../../types/todo';
-import { timeFormat } from '../../../../utils/time';
+import { TodoApi } from '../../../../../api/todos';
+import { Category } from '../../../../../types/category';
+import { Todo } from '../../../../../types/todo';
+import { timeFormat } from '../../../../../utils/time';
+import { CategoryChip } from './components/CategoryChip';
 
 const updateTodoFormSchema = yup.object({
     todoTitle: yup
@@ -51,6 +53,7 @@ interface TodoItemProps {
     onUpdate: () => void;
     editingTodoId: number | null;
     setEditingTodoId: (id: number | null) => void;
+    categories: Category[];
     editable?: boolean;
 }
 
@@ -60,6 +63,7 @@ export const TodoItem = (props: TodoItemProps) => {
         onUpdate,
         editingTodoId,
         setEditingTodoId,
+        categories,
         editable = true,
     } = props;
     
@@ -116,7 +120,7 @@ export const TodoItem = (props: TodoItemProps) => {
     const onSubmit = (data: {todoTitle: string}) => {
         updateTodoMutation.mutate({
             todoId: todo.id,
-            categoryId: todo.category?.id,
+            categoryId: todo.category?.id ?? -1,
             title: data.todoTitle,
         });
     };
@@ -141,6 +145,7 @@ export const TodoItem = (props: TodoItemProps) => {
         const target = !todo.starred;
 
         updateTodoMutation.mutate({
+            categoryId: todo.category?.id ?? -1,
             todoId: todo.id,
             starred: target,
         });
@@ -174,6 +179,13 @@ export const TodoItem = (props: TodoItemProps) => {
             setCompleted(false);
             unCompletedTodoMutation.mutate({ todoId: todo.id });
         }
+    };
+
+    const onCategoryChange = (categoryId: number) => {
+        updateTodoMutation.mutate({
+            todoId: todo.id,
+            categoryId: categoryId,
+        });
     };
 
     return (
@@ -238,14 +250,12 @@ export const TodoItem = (props: TodoItemProps) => {
                             spacing={1}
                             alignItems="center"
                         >
-                            {/* 分類 TODO: 變更分類 */}
-                            <Chip
-                                size="small"
-                                label={todo.category?.title ?? '未分類'}
-                                sx={{
-                                    backgroundColor: bgColor,
-                                    color: textColor,
-                                }}
+                            <CategoryChip
+                                todo={todo}
+                                categories={categories}
+                                bgColor={bgColor}
+                                textColor={textColor}
+                                onCategoryChange={onCategoryChange}
                             />
 
                             {/* 截止日期 TODO: 變更截止日期 */}

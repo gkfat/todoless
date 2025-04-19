@@ -29,7 +29,7 @@ import { Category } from '../../../types/category';
 import { Todo } from '../../../types/todo';
 import { createDate } from '../../../utils/time';
 import { Card } from '../components/Card';
-import { TodoItem } from './components/TodoItem';
+import { TodoItem } from './components/todo-item/TodoItem';
 
 export interface DueDatesTodoListRef {
     onRefresh: () => void;
@@ -163,6 +163,7 @@ export const DueDatesTodoList = forwardRef<DueDatesTodoListRef, DueDatesTodoList
                         >
                             <TodoItem
                                 todo={todo}
+                                categories={categories}
                                 onUpdate={onRefresh}
                                 editingTodoId={editingTodoId}
                                 setEditingTodoId={setEditingTodoId}
