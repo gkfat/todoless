@@ -12,7 +12,9 @@ export const PageContainer = ({ children }: {children: React.ReactNode}) => {
             <Container
                 sx={{
                     p: 1,
+                    pb: 2,
                     height: '100%',
+                    overflowY: 'auto',
                 }}
             >
                 {children}
