@@ -101,7 +101,7 @@ export class AccountsService {
         } = updateAccountDto;
 
         const account = await this.accountRepository.findOne({
-            where: { id }, relations: ['auths'], 
+            where: { id }, relations: { auths: true }, 
         });
 
         account.name = name;
@@ -122,14 +122,17 @@ export class AccountsService {
 
         const account = await this.accountRepository.findOne({
             where: { id },
-            relations: { dashboard_configs: true },
+            relations: {
+                roles: true,
+                dashboard_configs: true, 
+            },
         });
 
         account.dashboard_configs = dashboardConfigs.map((config) => new AccountDashboardConfig(config));
 
-        await this.accountRepository.save(account);
+        const res = await this.accountRepository.save(account);
 
-        return account;
+        return res;
     }
     
     async findAll() {

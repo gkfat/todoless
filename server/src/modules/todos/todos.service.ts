@@ -48,10 +48,6 @@ export class TodosService {
                 account: { id: true },
             },
             order: {
-                category: {
-                    order: 'ASC', 
-                    create_at: 'DESC',
-                },
                 order: 'ASC', 
                 create_at: 'DESC',
             },
@@ -87,10 +83,6 @@ export class TodosService {
                 account: { id: true },
             },
             order: {
-                category: {
-                    order: 'ASC', 
-                    create_at: 'DESC',
-                },
                 order: 'ASC', 
                 create_at: 'DESC',
             },

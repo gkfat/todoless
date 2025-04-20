@@ -1,5 +1,4 @@
 import {
-    IsNotEmpty,
     IsString,
     Matches,
 } from 'class-validator';
@@ -16,11 +15,12 @@ export class UpdateAccountDto {
     @ApiProperty()
         name: string;
 
-    @IsNotEmpty()
     @IsString()
     @Matches(REGEX_PASSWORD, { message: 'Must use only a-z or 0-9' })
-    @ApiProperty({ description: 'At least 6, most 10 characters' })
-        password: string;
+    @ApiProperty({
+        description: 'At least 6, most 10 characters', required: false, 
+    })
+        password?: string;
 }
 
 @ApiSchema({ name: 'UpdateAccountResponse' })

@@ -150,7 +150,7 @@ export class AccountsController {
     async updateConfig(
         @$TokenPayload() payload: ITokenPayload, @Param('id') id: string,
         @Body() reqBody: UpdateConfigDto,
-        @Res() res: Response<UpdateConfigResponseDto>,
+        @Res() res: Response<Account>,
     ) {
         const { scope: { sub } } = payload;
 
@@ -160,7 +160,7 @@ export class AccountsController {
 
         const account = await this.accountsService.updateConfig(+id, reqBody);
 
-        return res.json({ dashboardConfigs: account.dashboard_configs });
+        return res.json(account);
     }
 
     @Delete(':id')
