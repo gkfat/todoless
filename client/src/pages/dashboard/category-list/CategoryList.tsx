@@ -1,19 +1,19 @@
 import { useState } from 'react';
 
+import { useSortable } from '@dnd-kit/sortable';
 import AddIcon from '@mui/icons-material/Add';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import {
-    CardContent,
     Collapse,
-    Icon,
     IconButton,
     Stack,
     Typography,
 } from '@mui/material';
 
 import { Category } from '../../../types/category';
-import { Card } from '../components/Card';
+import { DashboardConfig } from '../../../types/dashboard';
+import { DashboardCard } from '../components/DashboardCard';
 import { AddCategory } from './components/AddCategory';
 import { CategoryItem } from './components/CategoryItem';
 
@@ -21,13 +21,19 @@ interface CategoryListProps {
     categories: Category[];
     isLoading: boolean;
     onRefresh: () => void;
+    dashboardConfig: DashboardConfig;
+    onDashboardConfigUpdate: (c: DashboardConfig) => void;
+    dragListeners?: ReturnType<typeof useSortable>['listeners'];
 }
 
 export const CategoryList = (props: CategoryListProps) => {
     const {
         categories,
         isLoading,
-        onRefresh, 
+        onRefresh,
+        dashboardConfig,
+        onDashboardConfigUpdate,
+        dragListeners,
     } = props;
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
@@ -37,31 +43,31 @@ export const CategoryList = (props: CategoryListProps) => {
         onRefresh();
     };
 
+    const handleDisplayToggle = () => {
+        const config = {
+            ...dashboardConfig,
+            display: !dashboardConfig.display,
+        };
+    
+        onDashboardConfigUpdate(config);
+    };
+    
     return (
-        <Card
-            variant="outlined"
-            sx={{ width: '100%' }}
-        >
-            <CardContent>
-                <Stack
-                    direction="row"
-                    sx={{
-                        alignItems: 'center',
-                        gap: 1,
-                        mb: 1,
-                    }}
+        <DashboardCard
+            title="所有分類"
+            icon={
+                <IconButton
+                    {...dragListeners}
+                    className="drag-handle"
+                    sx={{ cursor: 'grab' }}
                 >
-                    <Icon>
-                        <SpaceDashboardIcon />
-                    </Icon>
-
-                    <Typography
-                        variant="h5"
-                        sx={{ mr: 'auto' }}
-                    >
-                        所有分類
-                    </Typography>
-
+                    <DragIndicatorIcon />
+                </IconButton>
+            }
+            collapsed={!dashboardConfig.display}
+            onToggleCollapse={handleDisplayToggle}
+            toolbar={
+                <>
                     {
                         !showAddCategory && <IconButton
                             onClick={() => setShowAddCategory((prev) => !prev)}
@@ -69,60 +75,60 @@ export const CategoryList = (props: CategoryListProps) => {
                             <AddIcon />
                         </IconButton>
                     }
-
+        
                     <IconButton
-                        onClick={() => onRefresh()}
+                        onClick={onRefresh}
                     >
                         <RefreshIcon />
                     </IconButton>
-                </Stack>
-          
-                {/* 新增分類 */}
-                <Collapse
-                    in={showAddCategory}
-                    timeout={300}
-                    unmountOnExit
-                    orientation="vertical"
-                >
-                    <Stack
-                        direction="row"
-                        gap={1}
-                        sx={{ mb: 2 }}
-                    >
-                        <AddCategory
-                            onRefresh={onAddCategory}
-                            onClose={() => setShowAddCategory(false)}
-                        />
-                    </Stack>
-                </Collapse>
-
-                {/* 分類清單 */}
+                </>
+            }
+        >
+            {/* 新增分類 */}
+            <Collapse
+                in={showAddCategory}
+                timeout={300}
+                unmountOnExit
+                orientation="vertical"
+            >
                 <Stack
                     direction="row"
-                    flexWrap="wrap"
                     gap={1}
+                    sx={{ mb: 2 }}
                 >
-                    {isLoading && (
-                        <Typography>Loading...</Typography>
-                    )}
-
-                    {!isLoading && !categories.length && (
-                        <Typography>沒有分類。</Typography>
-                    )}
-
-                    {categories.map((item) => {
-                        return (
-                            <CategoryItem
-                                key={item.id}
-                                category={item}
-                                onUpdate={() => onRefresh()}
-                                editingCategoryId={editingCategoryId}
-                                setEditingCategoryId={setEditingCategoryId}
-                            />
-                        );
-                    })}
+                    <AddCategory
+                        onRefresh={onAddCategory}
+                        onClose={() => setShowAddCategory(false)}
+                    />
                 </Stack>
-            </CardContent>
-        </Card>
+            </Collapse>
+
+            {/* 分類清單 */}
+            <Stack
+                direction="row"
+                flexWrap="wrap"
+                gap={1}
+            >
+                {isLoading && (
+                    <Typography>Loading...</Typography>
+                )}
+
+                {!isLoading && !categories.length && (
+                    <Typography>沒有分類。</Typography>
+                )}
+
+                {categories.map((item) => {
+                    return (
+                        <CategoryItem
+                            key={item.id}
+                            category={item}
+                            onUpdate={() => onRefresh()}
+                            editingCategoryId={editingCategoryId}
+                            setEditingCategoryId={setEditingCategoryId}
+                        />
+                    );
+                })}
+            </Stack>
+        </DashboardCard>
     );
 };

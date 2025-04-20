@@ -5,11 +5,11 @@ import {
     useState,
 } from 'react';
 
+import { useSortable } from '@dnd-kit/sortable';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import {
-    CardContent,
     Icon,
     IconButton,
     MenuItem,
@@ -26,9 +26,9 @@ import {
     TodoApi,
 } from '../../../api/todos';
 import { Category } from '../../../types/category';
+import { DashboardConfig } from '../../../types/dashboard';
 import { Todo } from '../../../types/todo';
-import { Card } from '../components/Card';
-import { AddTodo } from './components/AddTodo';
+import { DashboardCard } from '../components/DashboardCard';
 import { TodoItem } from './components/todo-item/TodoItem';
 
 export interface RecentlyAddedTodoListRef {
@@ -37,10 +37,18 @@ export interface RecentlyAddedTodoListRef {
 
 interface RecentlyAddedTodoListProps {
     categories: Category[];
+    dashboardConfig: DashboardConfig;
+    dragListeners?: ReturnType<typeof useSortable>['listeners'];
+    onDashboardConfigUpdate: (c: DashboardConfig) => void;
 }
 
 export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, RecentlyAddedTodoListProps>((props, ref) => {
-    const { categories } = props;
+    const {
+        categories,
+        dashboardConfig,
+        dragListeners,
+        onDashboardConfigUpdate,
+    } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
     const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
     const [todos, setTodos] = useState<Todo[]>([]);
@@ -82,31 +90,31 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
         refetch();
     };
 
+    const handleDisplayToggle = () => {
+        const config = {
+            ...dashboardConfig,
+            display: !dashboardConfig.display,
+        };
+
+        onDashboardConfigUpdate(config);
+    };
+    
     return (
-        <Card
-            variant="outlined"
-            sx={{ width: '100%' }}
-        >
-            <CardContent>
-                <Stack
-                    direction="row"
-                    sx={{
-                        alignItems: 'center',
-                        gap: 1,
-                        mb: 2,
-                    }}
+        <DashboardCard
+            title="最近新增"
+            icon={
+                <IconButton
+                    {...dragListeners}
+                    className="drag-handle"
+                    sx={{ cursor: 'grab' }}
                 >
-                    <Icon>
-                        <SpaceDashboardIcon />
-                    </Icon>
-
-                    <Typography
-                        variant="h5"
-                        sx={{ mr: 'auto' }}
-                    >
-                        最近新增
-                    </Typography>
-
+                    <DragIndicatorIcon />
+                </IconButton>
+            }
+            collapsed={!dashboardConfig.display}
+            onToggleCollapse={handleDisplayToggle}
+            toolbar={
+                <>
                     <Icon>
                         <FilterAltIcon />
                     </Icon>
@@ -122,57 +130,47 @@ export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, Recent
                             <MenuItem value={c.id}>{c.title}</MenuItem>
                         ))}
                     </Select>
-
+    
                     <IconButton
                         onClick={onRefresh}
                     >
                         <RefreshIcon />
                     </IconButton>
-                </Stack>
+                </>
+            }
+        >
+            <Stack
+                direction="row"
+                flexWrap="wrap"
+                gap={1}
+                sx={{
+                    maxHeight: '500px',
+                    overflowY: 'scroll', 
+                }}
+            >
+                {isLoading && (
+                    <Typography>Loading...</Typography>
+                )}
 
-                <Stack
-                    direction="row"
-                    sx={{ mb: 2 }}
-                >
-                    <AddTodo
-                        categories={categories}
-                        onRefresh={onRefresh}
-                    />
-                </Stack>
-                    
-                <Stack
-                    direction="row"
-                    flexWrap="wrap"
-                    gap={1}
-                    sx={{
-                        maxHeight: '500px',
-                        overflowY: 'scroll', 
-                    }}
-                >
-                    {isLoading && (
-                        <Typography>Loading...</Typography>
-                    )}
+                {!isLoading && !todos?.length && (
+                    <Typography>沒有待辦。</Typography>
+                )}
 
-                    {!isLoading && !todos?.length && (
-                        <Typography>沒有待辦。</Typography>
-                    )}
-
-                    {todos!.map((todo) => (
-                        <Paper
-                            key={todo.id}
-                            sx={{ width: '100%' }}
-                        >
-                            <TodoItem
-                                todo={todo}
-                                categories={categories}
-                                onUpdate={onRefresh}
-                                editingTodoId={editingTodoId}
-                                setEditingTodoId={setEditingTodoId}
-                            />
-                        </Paper>
-                    ))}
-                </Stack>
-            </CardContent>
-        </Card>
+                {todos!.map((todo) => (
+                    <Paper
+                        key={todo.id}
+                        sx={{ width: '100%' }}
+                    >
+                        <TodoItem
+                            todo={todo}
+                            categories={categories}
+                            onUpdate={onRefresh}
+                            editingTodoId={editingTodoId}
+                            setEditingTodoId={setEditingTodoId}
+                        />
+                    </Paper>
+                ))}
+            </Stack>
+        </DashboardCard>
     );
 });

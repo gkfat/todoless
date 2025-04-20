@@ -1,3 +1,4 @@
+import { DashboardConfig } from './dashboard';
 import { Role } from './roles';
 
 export interface Account {
@@ -12,4 +13,5 @@ export interface Account {
     update_at: string | null;
     roles: Role[];
     permissions: string[];
+    dashboard_configs: DashboardConfig[];
 }

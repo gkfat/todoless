@@ -1,4 +1,5 @@
 import { Account } from '../types/account';
+import { DashboardConfig } from '../types/dashboard';
 import { request } from './util/agent';
 
 const agent = request('/api/v1/accounts');
@@ -7,6 +8,16 @@ interface CreateAccountRequest {
     email: string;
     name: string;
     password: string;
+}
+
+interface UpdateAccountConfigRequest {
+    accountId: number;
+    dashboardConfigs: DashboardConfig[];
+}
+
+interface UpdateAccountRequest {
+    name: string;
+    password?: string;
 }
 
 export const AccountApi = {
@@ -44,6 +55,22 @@ export const AccountApi = {
             method: 'PUT',
             url: `/${id}/roles`,
             data: { roleIds },
+        });
+    },
+
+    update(id: number, data: UpdateAccountRequest): Promise<void> {
+        return agent({
+            method: 'PUT',
+            url: `/${id}/update`,
+            data,
+        });
+    },
+
+    updateConfig(data: UpdateAccountConfigRequest): Promise<Account> {
+        return agent({
+            method: 'PUT',
+            url: `/${data.accountId}/update-config`,
+            data,
         });
     },
 
