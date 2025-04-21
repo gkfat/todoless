@@ -14,6 +14,7 @@
     "dashboard": "Dashboard"
   },
   "roles": {
+    "member": "Member",
     "super": "Super"
   },
   "theme": {

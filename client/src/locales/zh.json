@@ -14,6 +14,7 @@
     "dashboard": "主控板"
   },
   "roles": {
+    "member": "會員",
     "super": "超級管理員"
   },
   "theme": {
