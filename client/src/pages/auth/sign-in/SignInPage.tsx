@@ -1,15 +1,15 @@
-import {
-    FormEvent,
-    useState,
-} from 'react';
+import { useState } from 'react';
 
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import {
     NavLink,
     useNavigate,
 } from 'react-router-dom';
+import * as yup from 'yup';
 
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
     Box,
     Button,
@@ -35,17 +35,37 @@ import { Card } from '../components/Card';
 import { Container } from '../components/Container';
 import ForgotPassword from '../components/ForgotPassword';
 
+type FormValues = {
+    email: string;
+    password: string;
+};
+
+const formSchema = yup.object({
+    email: yup
+        .string()
+        .required('此為必填欄位')
+        .test('email', 'Please enter a valid email address.', (value) => {
+            return Regex.email.test(value);
+        }),
+    password: yup
+        .string()
+        .required('此為必填欄位')
+        .test('password', 'Password must be contains at least 1 character and 1 digit, between 6 ~ 10 long.', (value) => {
+            return Regex.password.test(value);
+        }),
+});
+
 export const SignInPage = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormValues>({ resolver: yupResolver(formSchema) });
+   
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -54,30 +74,6 @@ export const SignInPage = () => {
     
     const handleClose = () => {
         setOpen(false);
-    };
-
-    const validateInputs = () => {
-        let isValid = true;
-
-        if (!email || !Regex.email.test(email)) {
-            setEmailError(true);
-            setEmailErrorMessage('Please enter a valid email address.');
-            isValid = false;
-        } else {
-            setEmailError(false);
-            setEmailErrorMessage('');
-        }
-    
-        if (!password || !Regex.password.test(password)) {
-            setPasswordError(true);
-            setPasswordErrorMessage('Password must be contains at least 1 character and 1 digit, between 6 ~ 10 long.');
-            isValid = false;
-        } else {
-            setPasswordError(false);
-            setPasswordErrorMessage('');
-        }
-    
-        return isValid;
     };
 
     const signInMutation = useMutation({
@@ -95,17 +91,11 @@ export const SignInPage = () => {
         },
     });
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!validateInputs()) {
-            return;
-        }
-       
+    const onSubmit = (data: FormValues) => {
         signInMutation.mutate({
             type: 'password',
-            email,
-            password,
+            email: data.email,
+            password: data.password,
         });
     };
 
@@ -134,8 +124,7 @@ export const SignInPage = () => {
                     </Stack>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
-                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -146,25 +135,24 @@ export const SignInPage = () => {
                         <FormControl>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <TextField
-                                error={emailError}
-                                helperText={emailErrorMessage}
+                                {...register('email')}
+                                error={!!errors.email}
+                                helperText={errors.email?.message}
                                 id="email"
                                 placeholder="your@email.com"
                                 autoComplete="email"
                                 required
                                 fullWidth
                                 variant="outlined"
-                                color={emailError ? 'error': 'primary'}
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </FormControl>
 
                         <FormControl>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <TextField
-                                error={passwordError}
-                                helperText={passwordErrorMessage}
+                                {...register('password')}
+                                error={!!errors.password}
+                                helperText={errors.password?.message}
                                 name="password"
                                 placeholder="••••••"
                                 type="password"
@@ -174,9 +162,6 @@ export const SignInPage = () => {
                                 required
                                 fullWidth
                                 variant="outlined"
-                                color={passwordError ? 'error' : 'primary'}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </FormControl>
 
