@@ -37,6 +37,8 @@ export const AppDataGrid = <T extends GridValidRowModel>({
                 columns={columns}
                 loading={loading}
                 getRowHeight={() => 'auto'}
+                disableColumnMenu
+                disableRowSelectionOnClick
                 localeText={currentLocaleText}
                 autosizeOptions={{
                     includeHeaders: true,

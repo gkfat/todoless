@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
     Chip,
     Stack,
+    Switch,
 } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
@@ -93,7 +94,10 @@ export const AccountsTable = forwardRef((_, ref) => {
             headerName: t('view_accounts.label_enabled'),
             flex: 1,
             sortable: false,
-            renderCell: ({ row }) => <TrueFalseIcon value={row.enabled} />,
+            renderCell: ({ row }) => <Switch
+                color="success"
+                checked={row.enabled}
+            />,
         },
         {
             field: 'roles',
@@ -106,7 +110,7 @@ export const AccountsTable = forwardRef((_, ref) => {
             field: 'last_login_at',
             headerName: t('view_accounts.label_last_login_at'),
             flex: 1,
-            valueFormatter: (_, row) => humanReadable(row.last_login_at, true),
+            valueFormatter: (_, row) => row.last_login_at ?  humanReadable(row.last_login_at, true) : '-',
         },
     ];
 
