@@ -49,7 +49,7 @@ const formSchema = yup.object({
         .string()
         .required('此為必填欄位')
         .test('password', 'Passwords do not match.', (value, ctx) => {
-            return value && value === ctx.parent.password;
+            return !!value && value === ctx.parent.password;
         }),
 });
 

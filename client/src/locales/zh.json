@@ -38,9 +38,12 @@
     "message_forgot_password": "忘記密碼？",
     "message_no_account": "還沒有帳號？",
     "message_reset_password_description": "請輸入註冊時使用的 Email，我們會寄送一封重設密碼確認信到您的 Email。",
+    "message_verify_email": "驗證信箱",
+    "message_verify_email_description": "請輸入發送至您的信箱的驗證碼。",
     "title_reset_password": "重設密碼",
     "title_sign_in": "登入",
-    "title_sign_up": "註冊"
+    "title_sign_up": "註冊",
+    "title_verify_email": "驗證信箱"
   },
   "view_dashboard": {
     "title": "主控板"

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,14 @@ import {
 import { Regex } from '../../../utils/regex';
 import { Card } from '../components/Card';
 import { Container } from '../components/Container';
-import ForgotPassword from '../components/ForgotPassword';
+import {
+    ForgotPassword,
+    ForgotPasswordRef,
+} from '../components/ForgotPassword';
+import {
+    VerifyEmail,
+    VerifyEmailRef,
+} from '../components/VerifyEmail';
 
 type FormValues = {
     email: string;
@@ -59,23 +66,15 @@ export const SignInPage = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const verifyEmailRef = useRef<VerifyEmailRef>(null);
+    const forgotPasswordRef = useRef<ForgotPasswordRef>(null);
 
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<FormValues>({ resolver: yupResolver(formSchema) });
-   
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+ 
     const signInMutation = useMutation({
         mutationFn: AuthApi.signIn,
         onSuccess: (response) => {
@@ -174,15 +173,31 @@ export const SignInPage = () => {
                         >
                             {t('common.btn_continue')}
                         </Button>
-                        <Link
-                            component="button"
-                            type="button"
-                            onClick={handleClickOpen}
-                            variant="body2"
-                            sx={{ alignSelf: 'center' }}
+
+                        <Stack
+                            direction="row"
+                            justifyContent="space-between"
                         >
-                            {t('view_auth.message_forgot_password')}
-                        </Link>
+                            <Link
+                                component="button"
+                                type="button"
+                                onClick={() => forgotPasswordRef.current?.toggleOpen(true)}
+                                variant="body2"
+                                sx={{ alignSelf: 'center' }}
+                            >
+                                {t('view_auth.message_forgot_password')}
+                            </Link>
+
+                            <Link
+                                component="button"
+                                type="button"
+                                onClick={() => verifyEmailRef.current?.toggleOpen(true)}
+                                variant="body2"
+                                sx={{ alignSelf: 'center' }}
+                            >
+                                {t('view_auth.message_verify_email')}
+                            </Link>
+                        </Stack>
                     </Box>
 
                     <Divider>{t('common.label_or')}</Divider>
@@ -214,8 +229,11 @@ export const SignInPage = () => {
             </Container>
 
             <ForgotPassword
-                open={open}
-                handleClose={handleClose}
+                ref={forgotPasswordRef}
+            />
+
+            <VerifyEmail
+                ref={verifyEmailRef}
             />
         </div>
     );

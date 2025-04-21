@@ -1,3 +1,9 @@
+import {
+    forwardRef,
+    useImperativeHandle,
+    useState,
+} from 'react';
+
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -10,26 +16,31 @@ import {
     OutlinedInput,
 } from '@mui/material';
 
-interface ForgotPasswordProps {
-    open: boolean;
-    handleClose: () => void;
+export interface ForgotPasswordRef {
+    toggleOpen: (target: boolean) => void;
 }
 
-export default function ForgotPassword({
-    open, handleClose, 
-}: ForgotPasswordProps) {
+export const ForgotPassword = forwardRef<ForgotPasswordRef>((_, ref) => {
     const { t } = useTranslation();
 
+    const [open, setOpen] = useState(false);
+
+    const toggleOpen = (target: boolean) => {
+        setOpen(target);
+    };
+    
+    useImperativeHandle(ref, () => ({ toggleOpen }));
+    
     return (
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={() => toggleOpen(false)}
             slotProps={{
                 paper: {
                     component: 'form',
                     onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                         event.preventDefault();
-                        handleClose();
+                        toggleOpen(false);
                     },
                     sx: { backgroundImage: 'none' },
                 },
@@ -67,7 +78,7 @@ export default function ForgotPassword({
                     px: 3, 
                 }}
             >
-                <Button onClick={handleClose}>
+                <Button onClick={() => toggleOpen(false)}>
                     {t('common.btn_cancel')}
                 </Button>
                 <Button
@@ -80,4 +91,4 @@ export default function ForgotPassword({
 
         </Dialog>
     );
-}
+});
