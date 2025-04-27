@@ -6,7 +6,7 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
