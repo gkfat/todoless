@@ -8,6 +8,8 @@ import {
     QueryClientProvider,
 } from '@tanstack/react-query';
 
+import NotificationSnackbar
+    from '../components/notification/NotificationSnackbar.tsx';
 import { registerPlugins } from '../plugins/index.ts';
 import { AppTheme } from '../plugins/theme/AppTheme.tsx';
 import { routes } from '../routes/index.tsx';
@@ -24,6 +26,7 @@ export function boot() {
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
                     <AppTheme>
+                        <NotificationSnackbar />
                         <RouterProvider router={routes} />
                     </AppTheme>
                 </QueryClientProvider>
