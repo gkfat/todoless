@@ -38,9 +38,9 @@ import {
     ForgotPasswordRef,
 } from '../components/ForgotPassword';
 import {
-    VerifyEmail,
-    VerifyEmailRef,
-} from '../components/VerifyEmail';
+    ResendVerifyCode,
+    ResendVerifyCodeRef,
+} from '../components/ResendVerifyCode';
 
 type FormValues = {
     email: string;
@@ -66,7 +66,7 @@ export const SignInPage = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const verifyEmailRef = useRef<VerifyEmailRef>(null);
+    const resendVerifyCodeRef = useRef<ResendVerifyCodeRef>(null);
     const forgotPasswordRef = useRef<ForgotPasswordRef>(null);
 
     const {
@@ -191,11 +191,11 @@ export const SignInPage = () => {
                             <Link
                                 component="button"
                                 type="button"
-                                onClick={() => verifyEmailRef.current?.toggleOpen(true)}
+                                onClick={() => resendVerifyCodeRef.current?.toggleOpen(true)}
                                 variant="body2"
                                 sx={{ alignSelf: 'center' }}
                             >
-                                {t('view_auth.message_verify_email')}
+                                {t('view_auth.message_resend_verify_code')}
                             </Link>
                         </Stack>
                     </Box>
@@ -232,8 +232,8 @@ export const SignInPage = () => {
                 ref={forgotPasswordRef}
             />
 
-            <VerifyEmail
-                ref={verifyEmailRef}
+            <ResendVerifyCode
+                ref={resendVerifyCodeRef}
             />
         </div>
     );
