@@ -6,6 +6,7 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { NavLink } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -61,6 +62,7 @@ export const ResendVerifyCode = forwardRef<ResendVerifyCodeRef>((_, ref) => {
     const resendVerificationCodeMutation = useMutation({
         mutationFn: AuthApi.sendVerificationCode,
         onSuccess: () => {
+
         },
         onError: (error: any) => {
             console.error(error);
@@ -114,7 +116,24 @@ export const ResendVerifyCode = forwardRef<ResendVerifyCodeRef>((_, ref) => {
                                 fullWidth
                             />
 
-                            {isCoolingDown && <Typography color="error">{t('view_auth.message_already_send_verify_code')}</Typography>}
+                            {resendVerificationCodeMutation.isSuccess &&
+                                (
+                                    <>
+                                        <Typography>
+                                            {t('view_auth.message_verify_code_has_been_sent')}
+                                        </Typography>
+                                        <NavLink to="/verify-email">
+                                            {t('view_auth.btn_to_verify_email')}
+                                        </NavLink>
+                                    </>
+                                )
+                            }
+
+                            {isCoolingDown &&
+                                <Typography color="error">
+                                    {t('view_auth.message_already_send_verify_code')}
+                                </Typography>
+                            }
                         </Box>
                     </DialogContent>
                     <DialogActions

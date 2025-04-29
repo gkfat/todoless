@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -17,7 +15,6 @@ import {
     Divider,
     FormControl,
     FormLabel,
-    Link,
     Stack,
     TextField,
     Typography,
@@ -25,26 +22,14 @@ import {
 import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
-import { LanguageSelector } from '../../../components/LanguageSelector';
-import {
-    login,
-    setAccount,
-} from '../../../store/authSlice';
+import { showNotification } from '../../../store/notificationSlice';
 import { Regex } from '../../../utils/regex';
 import { Card } from '../components/Card';
 import { Container } from '../components/Container';
-import {
-    ForgotPassword,
-    ForgotPasswordRef,
-} from '../components/ForgotPassword';
-import {
-    ResendVerifyCode,
-    ResendVerifyCodeRef,
-} from '../components/ResendVerifyCode';
 
 type FormValues = {
     email: string;
-    password: string;
+    verificationCode: string;
 };
 
 const formSchema = yup.object({
@@ -54,54 +39,56 @@ const formSchema = yup.object({
         .test('email', 'Please enter a valid email address.', (value) => {
             return Regex.email.test(value);
         }),
-    password: yup
+    verificationCode: yup
         .string()
-        .required('此為必填欄位')
-        .test('password', 'Password must be contains at least 1 character and 1 digit, between 6 ~ 10 long.', (value) => {
-            return Regex.password.test(value);
-        }),
+        .required('此為必填欄位'),
 });
 
-export const SignInPage = () => {
+export const VerifyEmailPage = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const resendVerifyCodeRef = useRef<ResendVerifyCodeRef>(null);
-    const forgotPasswordRef = useRef<ForgotPasswordRef>(null);
+    const dispatch = useDispatch();
 
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<FormValues>({ resolver: yupResolver(formSchema) });
- 
-    const signInMutation = useMutation({
-        mutationFn: AuthApi.signIn,
-        onSuccess: (response) => {
-            const {
-                token, account, 
-            } = response;
-            dispatch(login(token));
-            dispatch(setAccount(account));
-            navigate('/dashboard');
+
+    const verifyEmailMutation = useMutation({
+        mutationFn: AuthApi.verifyCode,
+        onSuccess: () => {
+            dispatch(showNotification({
+                message: t('view_auth.message_email_verified_successfully'),
+                type: 'success',
+            }));
+
+            navigate('/sign-in');
         },
         onError: (error: any) => {
             console.error(error);
         },
     });
 
+    const trigger = () => {
+        dispatch(showNotification({
+            message: '操作成功',
+            type: 'success', 
+        }));
+    };
+
     const onSubmit = (data: FormValues) => {
-        signInMutation.mutate({
-            type: 'password',
+ 
+        verifyEmailMutation.mutate({
             email: data.email,
-            password: data.password,
+            verificationCode: data.verificationCode,
         });
     };
 
     return (
-        <div>
+        <>
             <CssBaseline enableColorScheme />
-
+   
             <Container
                 direction="column"
                 justifyContent="space-between"
@@ -110,20 +97,22 @@ export const SignInPage = () => {
                     variant="outlined"
                     sx={{ backgroundColor: 'white' }}
                 >
+   
+                    <Button onClick={() => trigger()}>type</Button>
                     <Stack direction="row">
                         <Typography
                             component="h1"
                             variant="h4"
                             sx={{ width: '100%' }}
                         >
-                            {t('view_auth.title_sign_in')}
+                            {t('view_auth.title_verify_email')}
                         </Typography>
-
-                        <LanguageSelector />
                     </Stack>
+                 
                     <Box
                         component="form"
                         onSubmit={handleSubmit(onSubmit)}
+                        noValidate
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -131,6 +120,10 @@ export const SignInPage = () => {
                             gap: 2,
                         }}
                     >
+                        <Typography>
+                            {t('view_auth.message_verify_email_description')}
+                        </Typography>
+
                         <FormControl>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <TextField
@@ -147,20 +140,17 @@ export const SignInPage = () => {
                         </FormControl>
 
                         <FormControl>
-                            <FormLabel htmlFor="password">Password</FormLabel>
+                            <FormLabel>Verification Code</FormLabel>
                             <TextField
-                                {...register('password')}
-                                error={!!errors.password}
-                                helperText={errors.password?.message}
-                                name="password"
-                                placeholder="••••••"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                autoFocus
+                                {...register('verificationCode')}
+                                error={!!errors.verificationCode}
+                                helperText={errors.verificationCode?.message}
                                 required
-                                fullWidth
                                 variant="outlined"
+                                id="verificationCode"
+                                name="verificationCode"
+                                placeholder="Enter code"
+                                fullWidth
                             />
                         </FormControl>
 
@@ -168,38 +158,13 @@ export const SignInPage = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            loading={signInMutation.isPending}
-                            disabled={signInMutation.isPending}
+                            loading={verifyEmailMutation.isPending}
+                            disabled={verifyEmailMutation.isPending}
                         >
                             {t('common.btn_continue')}
                         </Button>
-
-                        <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                        >
-                            <Link
-                                component="button"
-                                type="button"
-                                onClick={() => forgotPasswordRef.current?.toggleOpen(true)}
-                                variant="body2"
-                                sx={{ alignSelf: 'center' }}
-                            >
-                                {t('view_auth.message_forgot_password')}
-                            </Link>
-
-                            <Link
-                                component="button"
-                                type="button"
-                                onClick={() => resendVerifyCodeRef.current?.toggleOpen(true)}
-                                variant="body2"
-                                sx={{ alignSelf: 'center' }}
-                            >
-                                {t('view_auth.message_resend_verify_code')}
-                            </Link>
-                        </Stack>
                     </Box>
-
+                      
                     <Divider>{t('common.label_or')}</Divider>
 
                     {/* social login */}
@@ -219,29 +184,14 @@ export const SignInPage = () => {
                             Sign in with Google
                         </Button> */}
                         <Typography sx={{ textAlign: 'center' }}>
-                            {t('view_auth.message_no_account')}
-                            <NavLink to="/sign-up">
-                                {t('view_auth.btn_to_sign_up')}
-                            </NavLink>
-                        </Typography>
-
-                        <Typography sx={{ textAlign: 'center' }}>
-                            {t('view_auth.message_go_verify_email')}
-                            <NavLink to="/verify-email">
-                                {t('view_auth.btn_to_verify_email')}
+                            {t('view_auth.message_already_verify_email')}
+                            <NavLink to="/sign-in">
+                                {t('view_auth.btn_to_sign_in')}
                             </NavLink>
                         </Typography>
                     </Box>
                 </Card>
             </Container>
-
-            <ForgotPassword
-                ref={forgotPasswordRef}
-            />
-
-            <ResendVerifyCode
-                ref={resendVerifyCodeRef}
-            />
-        </div>
+        </>
     );
 };

@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '../layout/Layout';
 import { SignInPage } from '../pages/auth/sign-in/SignInPage';
 import { SignUpPage } from '../pages/auth/sign-up/SignUpPage';
+import { VerifyEmailPage } from '../pages/auth/verify-email/VerifyEmailPage';
 import { NotFoundPage } from '../pages/error/NotfoundPage';
 import { UnauthorizedPage } from '../pages/error/UnauthorizedPage';
 import { AppRoute } from '../types/route';
@@ -54,6 +55,10 @@ export const routes = createBrowserRouter([
     {
         path: 'sign-up',
         element: <SignUpPage />,
+    },
+    {
+        path: 'verify-email',
+        element: <VerifyEmailPage />,
     },
     {
         path: '**',
