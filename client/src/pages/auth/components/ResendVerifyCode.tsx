@@ -6,6 +6,7 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import * as yup from 'yup';
 
@@ -24,6 +25,7 @@ import {
 import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
+import { showNotification } from '../../../store/notificationSlice';
 import { Regex } from '../../../utils/regex';
 
 export interface ResendVerifyCodeRef {
@@ -45,7 +47,8 @@ const formSchema = yup.object({
 
 export const ResendVerifyCode = forwardRef<ResendVerifyCodeRef>((_, ref) => {
     const { t } = useTranslation();
-
+    const dispatch = useDispatch();
+    
     const [open, setOpen] = useState(false);
     const [isCoolingDown, setIsCoolingDown] = useState(false);
 
@@ -62,7 +65,10 @@ export const ResendVerifyCode = forwardRef<ResendVerifyCodeRef>((_, ref) => {
     const resendVerificationCodeMutation = useMutation({
         mutationFn: AuthApi.sendVerificationCode,
         onSuccess: () => {
-
+            dispatch(showNotification({
+                message: t('view_auth.message_verify_code_has_been_sent'),
+                type: 'success',
+            }));
         },
         onError: (error: any) => {
             console.error(error);

@@ -70,15 +70,7 @@ export const VerifyEmailPage = () => {
         },
     });
 
-    const trigger = () => {
-        dispatch(showNotification({
-            message: '操作成功',
-            type: 'success', 
-        }));
-    };
-
     const onSubmit = (data: FormValues) => {
- 
         verifyEmailMutation.mutate({
             email: data.email,
             verificationCode: data.verificationCode,
@@ -98,7 +90,6 @@ export const VerifyEmailPage = () => {
                     sx={{ backgroundColor: 'white' }}
                 >
    
-                    <Button onClick={() => trigger()}>type</Button>
                     <Stack direction="row">
                         <Typography
                             component="h1"

@@ -46,6 +46,8 @@
     "message_no_account": "Don't have an account?",
     "message_resend_verify_code": "Didn't receive verify code?",
     "message_reset_password_description": "Enter your account's email address, and we'll send you a link to reset your password.",
+    "message_sign_in_successfully": "{{name}}, it's good to see you back.",
+    "message_sign_up_successfully": "Thank you for signing up, please verify your email.",
     "message_verify_code_has_been_sent": "Verification code has been sent to your email.",
     "message_verify_email": "Verify Email",
     "message_verify_email_description": "Please enter the verification code which sent to your email.",

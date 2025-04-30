@@ -46,6 +46,8 @@
     "message_no_account": "還沒有帳號？",
     "message_resend_verify_code": "沒有收到驗證碼？",
     "message_reset_password_description": "請輸入註冊時使用的 Email，我們會寄送一封重設密碼確認信到您的 Email。",
+    "message_sign_in_successfully": "歡迎回來，{{name}}",
+    "message_sign_up_successfully": "註冊成功，請前往驗證 Email。",
     "message_verify_code_has_been_sent": "已成功發送驗證碼，請前往信箱查收。",
     "message_verify_email": "驗證信箱",
     "message_verify_email_description": "請輸入發送至您的信箱的驗證碼。",

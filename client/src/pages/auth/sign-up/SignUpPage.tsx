@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import {
     NavLink,
     useNavigate,
@@ -22,6 +23,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { AuthApi } from '../../../api/auth';
 import { LanguageSelector } from '../../../components/LanguageSelector';
+import { showNotification } from '../../../store/notificationSlice';
 import { Regex } from '../../../utils/regex';
 import { Card } from '../components/Card';
 import { Container } from '../components/Container';
@@ -55,6 +57,7 @@ const formSchema = yup.object({
 
 export const SignUpPage = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const {
@@ -66,7 +69,12 @@ export const SignUpPage = () => {
     const signUpMutation = useMutation({
         mutationFn: AuthApi.signUp,
         onSuccess: () => {
-            navigate('/sign-in');
+            dispatch(showNotification({
+                message: t('view_auth.message_sign_up_successfully'),
+                type: 'success',
+            }));
+
+            navigate('/verify-email');
         },
         onError: (error: any) => {
             console.error(error);

@@ -30,6 +30,7 @@ import {
     login,
     setAccount,
 } from '../../../store/authSlice';
+import { showNotification } from '../../../store/notificationSlice';
 import { Regex } from '../../../utils/regex';
 import { Card } from '../components/Card';
 import { Container } from '../components/Container';
@@ -81,6 +82,12 @@ export const SignInPage = () => {
             const {
                 token, account, 
             } = response;
+
+            dispatch(showNotification({
+                message: t('view_auth.message_sign_in_successfully', { name: account.name }),
+                type: 'success',
+            }));
+                    
             dispatch(login(token));
             dispatch(setAccount(account));
             navigate('/dashboard');
