@@ -48,7 +48,7 @@ async function run() {
 
         logger.log('Seeding completed, closing app.');
 
-        app.close();
+        await app.close();
     } catch (err) {
         logger.error('Error running seeders: ', err);
         throw err;
