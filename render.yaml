@@ -22,7 +22,7 @@ services:
     branch: master
     healthCheckPath: /
 
-  - name: todoless-redis
+  - name: redis
     type: redis
     plan: free
     ipAllowList: [{ source: '0.0.0.0/0' }]
