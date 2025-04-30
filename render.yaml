@@ -21,8 +21,3 @@ services:
     repo: https://github.com/gkfat/todoless.git
     branch: master
     healthCheckPath: /
-
-  - name: redis
-    type: redis
-    plan: free
-    ipAllowList: [{ source: '0.0.0.0/0' }]
