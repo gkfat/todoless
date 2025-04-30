@@ -7,8 +7,8 @@ import {
     Stack,
 } from '@mui/material';
 
-import { Category } from '../../../../../../types/category';
-import { Todo } from '../../../../../../types/todo';
+import { Category } from '../../../../../../../types/category';
+import { Todo } from '../../../../../../../types/todo';
 
 interface CategoryChipProps {
     todo: Todo;

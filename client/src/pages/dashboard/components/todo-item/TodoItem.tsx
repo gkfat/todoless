@@ -1,7 +1,6 @@
 import {
     useEffect,
     useRef,
-    useState,
 } from 'react';
 
 import { Dayjs } from 'dayjs';
@@ -9,15 +8,17 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CheckIcon from '@mui/icons-material/Check';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import {
-    alpha,
     Card,
-    CardContent,
-    Chip,
+    Checkbox,
     getContrastRatio,
     Grid,
     IconButton,
@@ -28,16 +29,13 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { TodoApi } from '../../../../../api/todos';
-import { Category } from '../../../../../types/category';
-import { Todo } from '../../../../../types/todo';
-import { CategoryChip } from './components/CategoryChip';
+import { TodoApi } from '../../../../api/todos';
+import { Category } from '../../../../types/category';
+import { Todo } from '../../../../types/todo';
 import {
     DeleteTodoDialog,
     DeleteTodoDialogRef,
 } from './components/DeleteTodoDialog';
-import { DueDateChip } from './components/DueDateChip';
-import { StarBox } from './components/StarBox';
 
 const updateTodoFormSchema = yup.object({
     todoTitle: yup
@@ -66,7 +64,6 @@ export const TodoItem = (props: TodoItemProps) => {
     } = props;
     
     const theme = useTheme();
-    const [completed, setCompleted] = useState(!!todo.completed_at);
     const bgColor = todo.category?.color ?? theme.palette.primary.main;
     const isBgDark = getContrastRatio(bgColor, '#fff') >= 4.5;
     const textColor = isBgDark ? theme.palette.common.white : theme.palette.common.black;
@@ -171,10 +168,8 @@ export const TodoItem = (props: TodoItemProps) => {
 
     const handleCompletedClick = async () => {
         if (!todo.completed_at) {
-            setCompleted(true);
             completedTodoMutation.mutate({ todoId: todo.id });
         } else {
-            setCompleted(false);
             unCompletedTodoMutation.mutate({ todoId: todo.id });
         }
     };
@@ -196,122 +191,59 @@ export const TodoItem = (props: TodoItemProps) => {
     return (
         <>
             <Card
-                variant="outlined"
                 sx={{
                     cursor: 'pointer',
                     position: 'relative',
-                    transition: 'all 0.3s',
+                    transition: 'all 0.3s ease',
+                    p: 1,
+                    border: '1px solid',
+                    borderColor: theme.palette.grey[300],
 
-                    '&:hover': { backgroundColor: alpha(bgColor, 0.1) }, 
+                    '&:hover': {
+                        backgroundColor: theme.palette.grey[100],
+                        '& .action-icons': { visibility: 'visible' }, 
+                    },
                 }}
             >
-                <StarBox
-                    todo={todo}
-                    bgColor={bgColor}
-                    handleStarClick={handleStarClick}
-                />
-
-                <CardContent
-                    sx={{
-                        p: 1,
-                        '&:last-child': { pb: 1 },
-                        flex: 1,
-                        pl: '50px',
-                    }}
+                <Grid
+                    container
+                    spacing={1}
+                    alignItems="center"
                 >
-                    <Stack
-                        direction="row"
-                        sx={{
-                            mb: 1,
-                            flex: 1,
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
-                        >
-                            <CategoryChip
-                                todo={todo}
-                                categories={categories}
-                                bgColor={bgColor}
-                                textColor={textColor}
-                                onCategoryChange={onCategoryChange}
-                            />
-
-                            <DueDateChip
-                                todo={todo}
-                                onDueDateChange={onDueDateChange}
-                            />
-                        </Stack>
-
-                        {/* 完成 */}
-                        <Chip
-                            size="small"
-                            label={todo.completed_at ? '標示為未完成' : '標示為完成'}
-                            color="success"
-                            onClick={handleCompletedClick}
+                    <Grid size="auto">
+                        <Checkbox
+                            checked={todo.starred}
+                            onChange={handleStarClick}
+                            icon={<BookmarkBorderIcon />}
+                            checkedIcon={<BookmarkIcon />}
                         />
-                    </Stack>
+                        
+                        <Checkbox
+                            checked={!!todo.completed_at}
+                            onChange={handleCompletedClick}
+                            icon={<RadioButtonUncheckedIcon />}
+                            checkedIcon={<CheckCircleIcon />}
+                            color="success"
+                        />
+                    </Grid>
 
-                    {/* content */}
-                    {
-                        !isEditing
-                            ? <Grid
-                                container
-                                spacing={1}
-                                alignItems="center"
-                            >
-                                <Grid sx={{ flex: 1 }}>
-                                    <Stack
-                                        direction="row"
-                                        spacing={1}
+                    <Grid size="grow">
+                        {
+                            !isEditing
+                                ? (
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            wordBreak: 'break-all',
+                                            transition: 'all 0.3s',
+                                            color: todo.completed_at ? 'text.disabled': 'text.primary',
+                                            textDecoration: todo.completed_at ? 'line-through' : 'none', 
+                                        }}
                                     >
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                wordBreak: 'break-all',
-                                                color: completed ? 'text.disabled': 'text.primary',
-                                                transition: 'all 0.3s',
-                                                textDecoration: completed ? 'line-through' : 'none', 
-                                            }}
-                                        >
-                                            {todo.title}
-                                        </Typography>
-                                    </Stack>
-                                </Grid>
-
-                                {
-                                    editable && <Grid
-                                        justifyContent="end"
-                                    >
-                                        <Stack
-                                            direction="row"
-                                            spacing={1}
-                                        >
-                                            <IconButton
-                                                onClick={() => setEditingTodoId(todo.id)}
-                                                sx={{ p: 0 }}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-
-                                            <IconButton
-                                                onClick={handleDeleteClick}
-                                                sx={{ p: 0 }}
-                                            >
-                                                <DeleteIcon color="error" />
-                                            </IconButton>
-                                        </Stack>
-                                    </Grid>
-                                }
-                            </Grid>
-                            : <form onSubmit={handleSubmit(onSubmit)}>
-                                <Stack
-                                    direction="row"
-                                    spacing={1}
-                                >
+                                        {todo.title}
+                                    </Typography>
+                                )
+                                : (
                                     <TextField
                                         {...register('todoTitle')}
                                         placeholder={'請輸入待辦事項'}
@@ -321,23 +253,71 @@ export const TodoItem = (props: TodoItemProps) => {
                                         helperText={errors.todoTitle?.message}
                                         autoFocus
                                     />
+                                )
+                        }
+                    </Grid>
+
+                    <Grid size="auto">
+                        {
+                            !isEditing ? editable && (
+                                <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    className="action-icons"
+                                    sx={{
+                                        visibility: 'hidden',
+                                        transition: 'all 0.3s',
+                                    }}
+                                >
+                                    <IconButton
+                                        onClick={() => setEditingTodoId(todo.id)}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
 
                                     <IconButton
-                                        type="submit"
+                                        onClick={handleDeleteClick}
+                                    >
+                                        <DeleteIcon color="error" />
+                                    </IconButton>
+                                </Stack>
+                            ) : (
+                                <Stack
+                                    direction="row"
+                                    spacing={1}
+                                >
+                                    <IconButton
+                                        className="app-button"
+                                        onClick={() => handleSubmit(onSubmit)()}
                                     >
                                         <CheckIcon color="success" />
                                     </IconButton>
 
                                     <IconButton
+                                        className="app-button"
                                         onClick={() => setEditingTodoId(null)}
                                     >
                                         <CloseIcon color="error" />
                                     </IconButton>
                                 </Stack>
-                            </form>
-                    }
-                    
-                </CardContent>
+                            )
+                        }
+                    </Grid>
+
+                </Grid>
+
+                {/* <CategoryChip
+                        todo={todo}
+                        categories={categories}
+                        bgColor={bgColor}
+                        textColor={textColor}
+                        onCategoryChange={onCategoryChange}
+                    /> */}
+                {/* 
+                    <DueDateChip
+                        todo={todo}
+                        onDueDateChange={onDueDateChange}
+                    /> */}
             </Card>
 
             <DeleteTodoDialog

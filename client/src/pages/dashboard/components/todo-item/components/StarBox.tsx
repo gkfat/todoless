@@ -5,7 +5,7 @@ import {
     IconButton,
 } from '@mui/material';
 
-import { Todo } from '../../../../../../types/todo';
+import { Todo } from '../../../../../types/todo';
 
 interface StarBoxProps {
     todo: Todo;

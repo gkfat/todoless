@@ -15,7 +15,7 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Todo } from '../../../../../../types/todo';
+import { Todo } from '../../../../../types/todo';
 
 export interface DeleteTodoDialogRef {
     setOpen: (target: boolean) => void;

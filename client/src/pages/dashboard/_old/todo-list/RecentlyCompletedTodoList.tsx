@@ -24,31 +24,31 @@ import { useQuery } from '@tanstack/react-query';
 import {
     GetTodosRequest,
     TodoApi,
-} from '../../../api/todos';
-import { Category } from '../../../types/category';
-import { DashboardConfig } from '../../../types/dashboard';
-import { Todo } from '../../../types/todo';
-import { createDate } from '../../../utils/time';
+} from '../../../../api/todos';
+import { Category } from '../../../../types/category';
+import { DashboardConfig } from '../../../../types/dashboard';
+import { Todo } from '../../../../types/todo';
+import { createDate } from '../../../../utils/time';
 import { DashboardCard } from '../components/DashboardCard';
 import { TodoItem } from './components/todo-item/TodoItem';
 
-export interface StarredTodoListRef {
+export interface RecentlyCompletedTodoListRef {
     onRefresh: () => void;
 }
 
-interface StarredTodoListProps {
+interface RecentlyCompletedTodoListProps {
     categories: Category[];
     dashboardConfig: DashboardConfig;
     dragListeners?: ReturnType<typeof useSortable>['listeners'];
     onDashboardConfigUpdate: (c: DashboardConfig) => void;
 }
 
-export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListProps>((props, ref) => {
+export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef, RecentlyCompletedTodoListProps>((props, ref) => {
     const {
         categories,
         dashboardConfig,
+        onDashboardConfigUpdate,
         dragListeners,
-        onDashboardConfigUpdate, 
     } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
     const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
@@ -72,11 +72,18 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
         refetchOnMount: false,
     });
 
+    const sortByRecentlyCompleted = (a: Todo, b: Todo) => {
+        const aTime = a.completed_at ? createDate(a.completed_at).valueOf() : 0;
+        const bTime = b.completed_at ? createDate(b.completed_at).valueOf() : 0;
+
+        return bTime - aTime;
+    };
+
     useEffect(() => {
         setTodos(
             (data ?? [])
-                .filter((todo) => !!todo.starred && todo.completed_at === null)
-                .sort((a, b) => createDate(b.update_at).valueOf() - createDate(a.update_at).valueOf()),
+                .filter((todo) => !!todo.completed_at)
+                .sort(sortByRecentlyCompleted),
         );
 
     }, [data]);
@@ -105,7 +112,7 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
 
     return (
         <DashboardCard
-            title="精選"
+            title="最近完成"
             icon={
                 <IconButton
                     {...dragListeners}
@@ -129,12 +136,12 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                         onChange={handleSelectCategoryChange}
                     >
                         <MenuItem value={-1}>全部</MenuItem>
-                    
+                                    
                         {categories.map((c) => (
                             <MenuItem value={c.id}>{c.title}</MenuItem>
                         ))}
                     </Select>
-
+                
                     <IconButton
                         onClick={onRefresh}
                     >
@@ -171,6 +178,7 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                             onUpdate={() => onRefresh()}
                             editingTodoId={editingTodoId}
                             setEditingTodoId={setEditingTodoId}
+                            editable={false}
                         />
                     </Paper>
                 ))}

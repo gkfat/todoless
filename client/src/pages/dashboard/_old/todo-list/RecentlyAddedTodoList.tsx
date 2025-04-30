@@ -24,31 +24,30 @@ import { useQuery } from '@tanstack/react-query';
 import {
     GetTodosRequest,
     TodoApi,
-} from '../../../api/todos';
-import { Category } from '../../../types/category';
-import { DashboardConfig } from '../../../types/dashboard';
-import { Todo } from '../../../types/todo';
-import { createDate } from '../../../utils/time';
+} from '../../../../api/todos';
+import { Category } from '../../../../types/category';
+import { DashboardConfig } from '../../../../types/dashboard';
+import { Todo } from '../../../../types/todo';
 import { DashboardCard } from '../components/DashboardCard';
 import { TodoItem } from './components/todo-item/TodoItem';
 
-export interface DueDatesTodoListRef {
+export interface RecentlyAddedTodoListRef {
     onRefresh: () => void;
 }
 
-interface DueDatesTodoListProps {
+interface RecentlyAddedTodoListProps {
     categories: Category[];
     dashboardConfig: DashboardConfig;
     dragListeners?: ReturnType<typeof useSortable>['listeners'];
     onDashboardConfigUpdate: (c: DashboardConfig) => void;
 }
 
-export const DueDatesTodoList = forwardRef<DueDatesTodoListRef, DueDatesTodoListProps>((props, ref) => {
+export const RecentlyAddedTodoList = forwardRef<RecentlyAddedTodoListRef, RecentlyAddedTodoListProps>((props, ref) => {
     const {
         categories,
         dashboardConfig,
-        onDashboardConfigUpdate,
         dragListeners,
+        onDashboardConfigUpdate,
     } = props;
     const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
     const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
@@ -72,18 +71,9 @@ export const DueDatesTodoList = forwardRef<DueDatesTodoListRef, DueDatesTodoList
         refetchOnMount: false,
     });
 
-    const sortByDueDate = (a: Todo, b: Todo) => {
-        const aTime = a.due_date ? createDate(a.due_date).valueOf() : 0;
-        const bTime = b.due_date ? createDate(b.due_date).valueOf() : 0;
-    
-        return aTime - bTime;
-    };
-
     useEffect(() => {
         setTodos(
-            (data ?? [])
-                .filter((todo) => todo.due_date !== null && todo.completed_at === null)
-                .sort(sortByDueDate),
+            (data ?? []).filter((todo) => todo.completed_at === null),
         );
     }, [data]);
         
@@ -108,10 +98,10 @@ export const DueDatesTodoList = forwardRef<DueDatesTodoListRef, DueDatesTodoList
 
         onDashboardConfigUpdate(config);
     };
-
+    
     return (
         <DashboardCard
-            title="即將到來"
+            title="最近新增"
             icon={
                 <IconButton
                     {...dragListeners}

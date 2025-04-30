@@ -24,26 +24,26 @@ import { useQuery } from '@tanstack/react-query';
 import {
     GetTodosRequest,
     TodoApi,
-} from '../../../api/todos';
-import { Category } from '../../../types/category';
-import { DashboardConfig } from '../../../types/dashboard';
-import { Todo } from '../../../types/todo';
-import { createDate } from '../../../utils/time';
+} from '../../../../api/todos';
+import { Category } from '../../../../types/category';
+import { DashboardConfig } from '../../../../types/dashboard';
+import { Todo } from '../../../../types/todo';
+import { createDate } from '../../../../utils/time';
 import { DashboardCard } from '../components/DashboardCard';
 import { TodoItem } from './components/todo-item/TodoItem';
 
-export interface RecentlyCompletedTodoListRef {
+export interface DueDatesTodoListRef {
     onRefresh: () => void;
 }
 
-interface RecentlyCompletedTodoListProps {
+interface DueDatesTodoListProps {
     categories: Category[];
     dashboardConfig: DashboardConfig;
     dragListeners?: ReturnType<typeof useSortable>['listeners'];
     onDashboardConfigUpdate: (c: DashboardConfig) => void;
 }
 
-export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef, RecentlyCompletedTodoListProps>((props, ref) => {
+export const DueDatesTodoList = forwardRef<DueDatesTodoListRef, DueDatesTodoListProps>((props, ref) => {
     const {
         categories,
         dashboardConfig,
@@ -62,32 +62,31 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
         queryKey: ['todos', selectedCategoryId],
         queryFn: () => {
             const params: GetTodosRequest = {};
-    
+
             if (selectedCategoryId >= 0) {
                 params.categoryId = selectedCategoryId;
             }
-
+    
             return TodoApi.list(params);
         },
         refetchOnMount: false,
     });
 
-    const sortByRecentlyCompleted = (a: Todo, b: Todo) => {
-        const aTime = a.completed_at ? createDate(a.completed_at).valueOf() : 0;
-        const bTime = b.completed_at ? createDate(b.completed_at).valueOf() : 0;
-
-        return bTime - aTime;
+    const sortByDueDate = (a: Todo, b: Todo) => {
+        const aTime = a.due_date ? createDate(a.due_date).valueOf() : 0;
+        const bTime = b.due_date ? createDate(b.due_date).valueOf() : 0;
+    
+        return aTime - bTime;
     };
 
     useEffect(() => {
         setTodos(
             (data ?? [])
-                .filter((todo) => !!todo.completed_at)
-                .sort(sortByRecentlyCompleted),
+                .filter((todo) => todo.due_date !== null && todo.completed_at === null)
+                .sort(sortByDueDate),
         );
-
     }, [data]);
-
+        
     const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
         const id = e.target.value as number;
 
@@ -112,7 +111,7 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
 
     return (
         <DashboardCard
-            title="最近完成"
+            title="即將到來"
             icon={
                 <IconButton
                     {...dragListeners}
@@ -136,12 +135,12 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                         onChange={handleSelectCategoryChange}
                     >
                         <MenuItem value={-1}>全部</MenuItem>
-                                    
+                        
                         {categories.map((c) => (
                             <MenuItem value={c.id}>{c.title}</MenuItem>
                         ))}
                     </Select>
-                
+    
                     <IconButton
                         onClick={onRefresh}
                     >
@@ -167,7 +166,7 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                     <Typography>沒有待辦。</Typography>
                 )}
 
-                {todos.map((todo) => (
+                {todos!.map((todo) => (
                     <Paper
                         key={todo.id}
                         sx={{ width: '100%' }}
@@ -175,10 +174,9 @@ export const RecentlyCompletedTodoList = forwardRef<RecentlyCompletedTodoListRef
                         <TodoItem
                             todo={todo}
                             categories={categories}
-                            onUpdate={() => onRefresh()}
+                            onUpdate={onRefresh}
                             editingTodoId={editingTodoId}
                             setEditingTodoId={setEditingTodoId}
-                            editable={false}
                         />
                     </Paper>
                 ))}

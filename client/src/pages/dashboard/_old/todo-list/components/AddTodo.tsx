@@ -19,8 +19,8 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { TodoApi } from '../../../../api/todos';
-import { Category } from '../../../../types/category';
+import { TodoApi } from '../../../../../api/todos';
+import { Category } from '../../../../../types/category';
 
 const addTodoFormSchema = yup.object({
     todoTitle: yup
