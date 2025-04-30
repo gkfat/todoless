@@ -11,8 +11,8 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Category } from '../../../types/category';
-import { DashboardConfig } from '../../../types/dashboard';
+import { Category } from '../../../../types/category';
+import { DashboardConfig } from '../../../../types/dashboard';
 import { DashboardCard } from '../components/DashboardCard';
 import { AddCategory } from './components/AddCategory';
 import { CategoryItem } from './components/CategoryItem';

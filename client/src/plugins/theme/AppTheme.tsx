@@ -25,7 +25,7 @@ const STORAGE_THEME = 'todoless-theme';
   
 export const AppTheme = ({ children }: { children: ReactNode}) => {
     const [mode, setMode] = useState<ThemeMode>(() => {
-        return (localStorage.getItem(STORAGE_THEME as ThemeMode) || 'light');
+        return (localStorage.getItem(STORAGE_THEME as ThemeMode) || 'light') as ThemeMode;
     });
 
     const resolvedMode = useMemo(() => {

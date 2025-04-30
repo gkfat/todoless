@@ -3,7 +3,6 @@ import {
     useRef,
 } from 'react';
 
-import { Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -19,7 +18,6 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import {
     Card,
     Checkbox,
-    getContrastRatio,
     Grid,
     IconButton,
     Stack,
@@ -59,14 +57,10 @@ export const TodoItem = (props: TodoItemProps) => {
         onUpdate,
         editingTodoId,
         setEditingTodoId,
-        categories,
         editable = true,
     } = props;
     
     const theme = useTheme();
-    const bgColor = todo.category?.color ?? theme.palette.primary.main;
-    const isBgDark = getContrastRatio(bgColor, '#fff') >= 4.5;
-    const textColor = isBgDark ? theme.palette.common.white : theme.palette.common.black;
 
     const deleteTodoDialogRef = useRef<DeleteTodoDialogRef>(null);
 
@@ -174,19 +168,19 @@ export const TodoItem = (props: TodoItemProps) => {
         }
     };
 
-    const onCategoryChange = (categoryId: number) => {
-        updateTodoMutation.mutate({
-            todoId: todo.id,
-            categoryId: categoryId,
-        });
-    };
+    // const onCategoryChange = (categoryId: number) => {
+    //     updateTodoMutation.mutate({
+    //         todoId: todo.id,
+    //         categoryId: categoryId,
+    //     });
+    // };
 
-    const onDueDateChange = (date: Dayjs | null) => {
-        updateTodoMutation.mutate({
-            todoId: todo.id,
-            dueDate: date ? date.toISOString() : null,
-        });
-    };
+    // const onDueDateChange = (date: Dayjs | null) => {
+    //     updateTodoMutation.mutate({
+    //         todoId: todo.id,
+    //         dueDate: date ? date.toISOString() : null,
+    //     });
+    // };
 
     return (
         <>

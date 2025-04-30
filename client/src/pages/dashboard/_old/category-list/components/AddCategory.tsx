@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { CategoryApi } from '../../../../api/categories';
+import { CategoryApi } from '../../../../../api/categories';
 
 const addCategoryFormSchema = yup.object({
     title: yup

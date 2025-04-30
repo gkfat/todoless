@@ -26,9 +26,9 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { CategoryApi } from '../../../../api/categories';
-import { ColorPicker } from '../../../../components/ColorPicker';
-import { Category } from '../../../../types/category';
+import { CategoryApi } from '../../../../../api/categories';
+import { ColorPicker } from '../../../../../components/ColorPicker';
+import { Category } from '../../../../../types/category';
 
 const updateCategoryFormSchema = yup.object({
     title: yup

@@ -7,7 +7,7 @@
     "generate-version": "node generateVersion.cjs",
     "dev": "pnpm run generate-version && vite --mode development",
     "prod": "pnpm i && pnpm run generate-version && vite --mode production",
-    "build": "pnpm run generate-version && tsc -b && vite build",
+    "build": "pnpm run generate-version && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "test:coverage": "vitest run --coverage"

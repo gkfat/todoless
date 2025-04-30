@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,7 +11,6 @@ import {
     IconButton,
     InputBase,
     Paper,
-    SelectChangeEvent,
     useTheme,
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
@@ -32,12 +30,8 @@ interface AddTodoProps {
 }
 
 export const AddTodo = (props: AddTodoProps) => {
-    const { t } = useTranslation();
     const theme = useTheme();
-    const {
-        categories,
-        onRefresh, 
-    } = props;
+    const { onRefresh } = props;
 
     const {
         register,
@@ -46,13 +40,13 @@ export const AddTodo = (props: AddTodoProps) => {
         reset,
     } = useForm({ resolver: yupResolver(addTodoFormSchema) });
 
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number>(-1);
+    const [selectedCategoryId] = useState<number>(-1);
 
-    const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
-        const id = e.target.value as number;
+    // const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
+    //     const id = e.target.value as number;
  
-        setSelectedCategoryId(id);
-    };
+    //     setSelectedCategoryId(id);
+    // };
 
     const createTodoMutation = useMutation({
         mutationFn: TodoApi.create,

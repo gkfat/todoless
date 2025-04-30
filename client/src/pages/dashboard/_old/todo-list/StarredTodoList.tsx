@@ -82,7 +82,7 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
     }, [data]);
 
     const handleSelectCategoryChange = (e: SelectChangeEvent<{value: number}>) => {
-        const id = e.target.value as number;
+        const id = e.target.value as unknown as number;
 
         setSelectedCategoryId(id);
         onRefresh();
@@ -123,7 +123,7 @@ export const StarredTodoList = forwardRef<StarredTodoListRef, StarredTodoListPro
                         <FilterAltIcon />
                     </Icon>
                     <Select
-                        value={selectedCategoryId}
+                        value={{ value: selectedCategoryId }}
                         displayEmpty
                         sx={{ borderRadius: '15px' }}
                         onChange={handleSelectCategoryChange}
