@@ -4,6 +4,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import { Account } from '../types/account';
+import { RootState } from './';
 
 const TOKEN = 'todoless-token';
 
@@ -47,6 +48,16 @@ const authSlice = createSlice({
         },
     },
 });
+
+export const havePermissions = (state: RootState, requiredPermissions: string[], strategy: 'allOf' | 'oneOf' = 'allOf') => {
+    const permissions = state.auth.account?.permissions ?? [];
+    
+    if (strategy === 'allOf') {
+        return requiredPermissions.every((p) => permissions.includes(p));
+    }
+
+    return requiredPermissions.some((p) => permissions.includes(p));
+};
 
 export const {
     init, login, setAccount, logout, 

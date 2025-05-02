@@ -6,7 +6,10 @@ import {
 } from 'react';
 
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import {
+    useDispatch,
+    useSelector,
+} from 'react-redux';
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,6 +26,9 @@ import {
 
 import { AccountApi } from '../../../api/accounts';
 import { AppDataGrid } from '../../../components/AppDataGrid';
+import { Permissions } from '../../../enums/permissions.enum';
+import { RootState } from '../../../store';
+import { havePermissions } from '../../../store/authSlice';
 import { showNotification } from '../../../store/notificationSlice';
 import { Account } from '../../../types/account';
 import { humanReadable } from '../../../utils/time';
@@ -72,7 +78,13 @@ export const AccountsTable = forwardRef((_, ref) => {
     const enableAccountDialogRef = useRef<EnableAccountDialogRef>(null);
     const [selectedAccount, setSelectedAccount] = useState<Account | null>(null); 
 
+    const havePermissionsTo = { enableAccount: useSelector((state: RootState) => havePermissions(state, [Permissions.account.accounts.update])) };
+
     const handleClickEnable = (account: Account) => {
+        if (!havePermissionsTo.enableAccount) {
+            return;
+        }
+        
         setSelectedAccount(account);
         enableAccountDialogRef.current?.setOpen(true);
     };
