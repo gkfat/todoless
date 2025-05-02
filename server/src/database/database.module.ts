@@ -1,16 +1,28 @@
 import fs from 'node:fs';
 
+import { snakeCase } from 'lodash';
 import {
-  Global,
-  Module,
+    DefaultNamingStrategy,
+    NamingStrategyInterface,
+} from 'typeorm';
+
+import {
+    Global,
+    Module,
 } from '@nestjs/common';
 import {
-  ConfigModule,
-  ConfigService,
+    ConfigModule,
+    ConfigService,
 } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TypeOrmFeatureModule } from './typeorm-feature.module';
+
+export class TodolessNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
+    tableName(className: string, customName: string): string {
+        return 'todoless_' + (customName || snakeCase(className));
+    }
+}
 
 @Global()
 @Module({
@@ -32,6 +44,7 @@ import { TypeOrmFeatureModule } from './typeorm-feature.module';
                     synchronize: true,
                     autoLoadEntities: true,
                     timezone: 'Z',
+                    namingStrategy: new TodolessNamingStrategy(),
                     ssl: isDev ? false : {
                         rejectUnauthorized: true,
                         ca: fs.readFileSync('./ca.pem'),
