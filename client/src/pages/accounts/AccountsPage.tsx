@@ -20,7 +20,9 @@ export const AccountsPage = () => {
                 title={t('view_accounts.title')}
                 onRefresh={handleRefresh}
             />
-            <AccountsTable ref={tableRef} />
+            <AccountsTable
+                ref={tableRef}
+            />
         </PageContainer>
     );
 };

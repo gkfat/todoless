@@ -72,6 +72,7 @@ export const AddTodo = (props: AddTodoProps) => {
 
     return (
         <FormControl 
+            component="form"
             error={!!errors.todoTitle}
             sx={{ width: '100%' }}
             onSubmit={handleSubmit(onSubmit)}

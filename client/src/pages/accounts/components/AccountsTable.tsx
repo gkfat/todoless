@@ -1,9 +1,12 @@
 import {
     forwardRef,
     useImperativeHandle,
+    useRef,
+    useState,
 } from 'react';
 
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,12 +16,20 @@ import {
     Switch,
 } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { useQuery } from '@tanstack/react-query';
+import {
+    useMutation,
+    useQuery,
+} from '@tanstack/react-query';
 
 import { AccountApi } from '../../../api/accounts';
 import { AppDataGrid } from '../../../components/AppDataGrid';
+import { showNotification } from '../../../store/notificationSlice';
 import { Account } from '../../../types/account';
 import { humanReadable } from '../../../utils/time';
+import {
+    EnableAccountDialog,
+    EnableAccountDialogRef,
+} from './EnableAccountDialog';
 
 const TrueFalseIcon = ({ value }: {value: boolean}) => {
     return (
@@ -57,6 +68,43 @@ const RolesDataCell = ({ account }: {account: Account}) => {
 
 export const AccountsTable = forwardRef((_, ref) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const enableAccountDialogRef = useRef<EnableAccountDialogRef>(null);
+    const [selectedAccount, setSelectedAccount] = useState<Account | null>(null); 
+
+    const handleClickEnable = (account: Account) => {
+        setSelectedAccount(account);
+        enableAccountDialogRef.current?.setOpen(true);
+    };
+
+    const enableAccountMutation = useMutation({
+        mutationFn: AccountApi.enable,
+        onSuccess: () => {
+            enableAccountDialogRef.current?.setOpen(false);
+            
+            dispatch(showNotification({
+                message: t('view_accounts.message_enbale_account_successfully'),
+                type: 'success',
+            }));
+
+            refetch();
+        },
+        onError: (error: any) => {
+            console.error(error);
+        },
+    });
+
+    const handleConfirmEnable = () => {
+        if (!selectedAccount) {
+            return;
+        }
+
+        enableAccountMutation.mutate(selectedAccount.id);
+    };
+
+    const handleCancelEnable = () => {
+        enableAccountDialogRef.current?.setOpen(false);
+    };
 
     const columns: GridColDef<Account>[] = [
         {
@@ -97,6 +145,7 @@ export const AccountsTable = forwardRef((_, ref) => {
             renderCell: ({ row }) => <Switch
                 color="success"
                 checked={row.enabled}
+                onChange={() => handleClickEnable(row)}
             />,
         },
         {
@@ -137,10 +186,20 @@ export const AccountsTable = forwardRef((_, ref) => {
     }
 
     return (
-        <AppDataGrid
-            rows={accounts ?? []}
-            columns={columns}
-            loading={isLoading}
-        />
+        <>
+            <AppDataGrid
+                rows={accounts ?? []}
+                columns={columns}
+                loading={isLoading}
+            />
+
+            { selectedAccount && <EnableAccountDialog
+                ref={enableAccountDialogRef}
+                account={selectedAccount}
+                handleConfirm={handleConfirmEnable}
+                handleCancel={handleCancelEnable}
+            />}
+           
+        </>
     );
 });

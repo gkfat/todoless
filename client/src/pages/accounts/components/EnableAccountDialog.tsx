@@ -18,24 +18,24 @@ import {
     Typography,
 } from '@mui/material';
 
-import { Todo } from '../../../../../types/todo';
+import { Account } from '../../../types/account';
 
-export interface DeleteTodoDialogRef {
+export interface EnableAccountDialogRef {
     setOpen: (target: boolean) => void;
 }
 
-interface DeleteTodoDialogProps {
-    todo: Todo;
-    handleConfirmDelete: () => void;
-    handleCancelDelete: () => void;
+interface EnableAccountDialogProps {
+    account: Account;
+    handleConfirm: () => void;
+    handleCancel: () => void;
 }
 
-export const DeleteTodoDialog = forwardRef<DeleteTodoDialogRef, DeleteTodoDialogProps>((props, ref) => {
+export const EnableAccountDialog = forwardRef<EnableAccountDialogRef, EnableAccountDialogProps>((props, ref) => {
     const { t } = useTranslation();
     const {
-        todo, handleCancelDelete, handleConfirmDelete, 
+        account, handleConfirm, handleCancel, 
     } = props;
-
+    
     const [open, setOpen] = useState(false);
 
     useImperativeHandle(ref, () => ({ setOpen }));
@@ -43,10 +43,10 @@ export const DeleteTodoDialog = forwardRef<DeleteTodoDialogRef, DeleteTodoDialog
     return (
         <Dialog
             open={open}
-            onClose={handleCancelDelete}
+            onClose={handleCancel}
         >
             <DialogTitle>
-                {t('view_dashboard.title_delete_todo')}
+                {t('view_accounts.title_confirm_enable')}
             </DialogTitle>
             
             <DialogContent sx={{ p: 2 }}>
@@ -59,20 +59,26 @@ export const DeleteTodoDialog = forwardRef<DeleteTodoDialogRef, DeleteTodoDialog
                         variant="h4"
                         fontWeight="bold"
                     >
-                        {todo.title}
+                        {
+                            account.enabled && t('view_accounts.message_confirm_disble_account', { email: account.email })
+                        }
+
+                        {
+                            !account.enabled && t('view_accounts.message_confirm_enable_account', { email: account.email })
+                        }
                     </Typography>
                 </Stack>
             </DialogContent>
             
             <DialogActions>
                 <IconButton
-                    onClick={handleConfirmDelete}
+                    onClick={handleConfirm}
                 >
                     <CheckIcon color="success" />
                 </IconButton>
 
                 <IconButton
-                    onClick={handleCancelDelete}
+                    onClick={handleCancel}
                 >
                     <ClearIcon color="secondary" />
                 </IconButton>

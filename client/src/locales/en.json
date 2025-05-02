@@ -7,7 +7,8 @@
     "label_category": "Category",
     "label_create_at": "Created At",
     "label_or": "or",
-    "label_please_select_category": "Please Select Category"
+    "label_please_select_category": "Please Select Category",
+    "label_up_coming": "Up Coming"
   },
   "nav": {
     "accounts": "Accounts",
@@ -29,7 +30,11 @@
     "label_last_login_at": "Last Login At",
     "label_name": "Name",
     "label_roles": "Roles",
-    "title": "Accounts Management"
+    "message_confirm_disble_account": "Confirm disable {{email}} ?",
+    "message_confirm_enable_account": "Confirm enable {{email}} ?",
+    "message_enbale_account_successfully": "Successfully enabled / disabled account.",
+    "title": "Accounts Management",
+    "title_confirm_enable": "Enable / Disable Account"
   },
   "view_auth": {
     "btn_continue": "Continue",
@@ -58,6 +63,8 @@
     "title_verify_email": "Verify Email"
   },
   "view_dashboard": {
-    "title": "Dashboard"
+    "message_no_todos": "There is no todo.",
+    "title": "Dashboard",
+    "title_delete_todo": "Confirm Delete Todo?"
   }
 }

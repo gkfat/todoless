@@ -3,6 +3,7 @@ import {
     useRef,
 } from 'react';
 
+import { Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -30,10 +31,12 @@ import { useMutation } from '@tanstack/react-query';
 import { TodoApi } from '../../../../api/todos';
 import { Category } from '../../../../types/category';
 import { Todo } from '../../../../types/todo';
+import { timeFormat } from '../../../../utils/time';
 import {
     DeleteTodoDialog,
     DeleteTodoDialogRef,
 } from './components/DeleteTodoDialog';
+import { DueDateChip } from './components/DueDateChip';
 
 const updateTodoFormSchema = yup.object({
     todoTitle: yup
@@ -175,12 +178,12 @@ export const TodoItem = (props: TodoItemProps) => {
     //     });
     // };
 
-    // const onDueDateChange = (date: Dayjs | null) => {
-    //     updateTodoMutation.mutate({
-    //         todoId: todo.id,
-    //         dueDate: date ? date.toISOString() : null,
-    //     });
-    // };
+    const onDueDateChange = (date: Dayjs | null) => {
+        updateTodoMutation.mutate({
+            todoId: todo.id,
+            dueDate: date ? date.toISOString() : null,
+        });
+    };
 
     return (
         <>
@@ -254,41 +257,59 @@ export const TodoItem = (props: TodoItemProps) => {
                     <Grid size="auto">
                         {
                             !isEditing ? editable && (
-                                <Stack
-                                    direction="row"
-                                    spacing={1}
-                                    className="action-icons"
-                                    sx={{
-                                        visibility: 'hidden',
-                                        transition: 'all 0.3s',
-                                    }}
-                                >
-                                    <IconButton
-                                        onClick={() => setEditingTodoId(todo.id)}
+                                <>
+                                    <Stack
+                                        direction="row"
+                                        spacing={1}
+                                        alignItems="center"
                                     >
-                                        <EditIcon />
-                                    </IconButton>
+                                        {/* 建立時間 */}
+                                        <Typography>
+                                            {timeFormat(todo.create_at)}
+                                        </Typography>
 
-                                    <IconButton
-                                        onClick={handleDeleteClick}
+                                        {/* 到期日 */}
+                                        <DueDateChip
+                                            todo={todo}
+                                            onDueDateChange={onDueDateChange}
+                                        />
+                                    </Stack>
+
+                                    <Stack
+                                        direction="row"
+                                        spacing={1}
+                                        className="action-icons"
+                                        sx={{
+                                            mt: 1,
+                                            visibility: 'hidden',
+                                            transition: 'all 0.3s',
+                                        }}
                                     >
-                                        <DeleteIcon color="error" />
-                                    </IconButton>
-                                </Stack>
+                                        <IconButton
+                                            onClick={() => setEditingTodoId(todo.id)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+
+                                        <IconButton
+                                            onClick={handleDeleteClick}
+                                        >
+                                            <DeleteIcon color="error" />
+                                        </IconButton>
+                                    </Stack>
+                                </>
                             ) : (
                                 <Stack
                                     direction="row"
                                     spacing={1}
                                 >
                                     <IconButton
-                                        className="app-button"
                                         onClick={() => handleSubmit(onSubmit)()}
                                     >
                                         <CheckIcon color="success" />
                                     </IconButton>
 
                                     <IconButton
-                                        className="app-button"
                                         onClick={() => setEditingTodoId(null)}
                                     >
                                         <CloseIcon color="error" />
@@ -306,11 +327,6 @@ export const TodoItem = (props: TodoItemProps) => {
                         bgColor={bgColor}
                         textColor={textColor}
                         onCategoryChange={onCategoryChange}
-                    /> */}
-                {/* 
-                    <DueDateChip
-                        todo={todo}
-                        onDueDateChange={onDueDateChange}
                     /> */}
             </Card>
 

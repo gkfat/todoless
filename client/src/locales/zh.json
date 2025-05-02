@@ -7,7 +7,8 @@
     "label_category": "類別",
     "label_create_at": "建立時間",
     "label_or": "或",
-    "label_please_select_category": "請選擇類別"
+    "label_please_select_category": "請選擇類別",
+    "label_up_coming": "即將到來"
   },
   "nav": {
     "accounts": "帳號管理",
@@ -29,7 +30,11 @@
     "label_last_login_at": "最後登入時間",
     "label_name": "名稱",
     "label_roles": "角色",
-    "title": "帳號管理"
+    "message_confirm_disble_account": "確定停用 {{email}}？",
+    "message_confirm_enable_account": "確定啟用 {{email}}？",
+    "message_enbale_account_successfully": "啟／停用帳號成功。",
+    "title": "帳號管理",
+    "title_confirm_enable": "啟／停用帳號"
   },
   "view_auth": {
     "btn_continue": "繼續",
@@ -58,6 +63,8 @@
     "title_verify_email": "驗證信箱"
   },
   "view_dashboard": {
-    "title": "主控板"
+    "message_no_todos": "目前沒有待辦。非常 Less！",
+    "title": "主控板",
+    "title_delete_todo": "確定刪除待辦？"
   }
 }
