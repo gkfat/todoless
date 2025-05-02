@@ -2,12 +2,12 @@ import fs from 'node:fs';
 
 import { AppModule } from 'src/app.module';
 import {
-    DataSource,
-    DataSourceOptions,
+  DataSource,
+  DataSourceOptions,
 } from 'typeorm';
 import {
-    runSeeders,
-    SeederOptions,
+  runSeeders,
+  SeederOptions,
 } from 'typeorm-extension';
 
 import { Logger } from '@nestjs/common';
@@ -35,6 +35,7 @@ async function run() {
                 rejectUnauthorized: true,
                 ca: fs.readFileSync('./ca.pem'),
             },
+            timezone: 'Z',
             entities,
     
             seeds: ['src/database/seeds/**/*{.ts,.js}'],
