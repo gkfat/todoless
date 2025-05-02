@@ -27,6 +27,7 @@ import {
 import { AccountApi } from '../../../api/accounts';
 import { AppDataGrid } from '../../../components/AppDataGrid';
 import { Permissions } from '../../../enums/permissions.enum';
+import { RoleEnum } from '../../../enums/role';
 import { RootState } from '../../../store';
 import { havePermissions } from '../../../store/authSlice';
 import { showNotification } from '../../../store/notificationSlice';
@@ -81,7 +82,7 @@ export const AccountsTable = forwardRef((_, ref) => {
     const havePermissionsTo = { enableAccount: useSelector((state: RootState) => havePermissions(state, [Permissions.account.accounts.update])) };
 
     const handleClickEnable = (account: Account) => {
-        if (!havePermissionsTo.enableAccount) {
+        if (!havePermissionsTo.enableAccount || account.roles.some((r) => r.role === RoleEnum.SUPER)) {
             return;
         }
         
